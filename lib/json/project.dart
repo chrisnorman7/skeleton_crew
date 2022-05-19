@@ -1,0 +1,56 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:ziggurat/ziggurat.dart';
+import 'package:ziggurat_sounds/ziggurat_sounds.dart';
+
+part 'project.g.dart';
+
+/// The top-level project class.
+@JsonSerializable()
+class Project {
+  /// Create an instance.
+  Project({
+    required this.title,
+    required this.commandTriggers,
+    required this.assetStores,
+    this.orgName = 'com.example',
+    this.appName = 'untitled_game',
+    this.version = '0.0.0',
+    this.outputDirectory = 'lib',
+    this.commandTriggersFilename = 'triggers.dart',
+  });
+
+  /// Create an instance from a JSON object.
+  factory Project.fromJson(final Map<String, dynamic> json) =>
+      _$ProjectFromJson(json);
+
+  /// The name of the project.
+  ///
+  /// This will be used as the title for the game.
+  String title;
+
+  /// The org name for this game.
+  String orgName;
+
+  /// The app name.
+  String appName;
+
+  /// The version string for the game.
+  String version;
+
+  /// The output directory for files.
+  String outputDirectory;
+
+  /// The file where command triggers will be stored.
+  ///
+  /// This value will be joined to the [outputDirectory] to get the full path.
+  String commandTriggersFilename;
+
+  /// The command triggers to use.
+  final List<CommandTrigger> commandTriggers;
+
+  /// The asset stores that have been defined.
+  final List<AssetStore> assetStores;
+
+  /// Convert an instance to JSON.
+  Map<String, dynamic> toJson() => _$ProjectToJson(this);
+}
