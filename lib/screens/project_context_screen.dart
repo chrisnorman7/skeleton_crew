@@ -138,52 +138,39 @@ class ProjectContextScreenState
             title: 'Command Triggers',
             icon: const Icon(Icons.mouse),
             builder: (final context) {
+              final Widget child;
               if (commandTriggers.isEmpty) {
-                return const CenterText(
+                child = const CenterText(
                   text: 'There are no command triggers yet.',
                 );
+              } else {
+                child = ListView.builder(
+                  itemBuilder: (final context, final index) {
+                    final commandTriggerReference = commandTriggers[index];
+                    final commandTrigger =
+                        commandTriggerReference.commandTrigger;
+                    return ListTile(
+                      autofocus: index == 0,
+                      title: Text(commandTrigger.name),
+                      subtitle: Text(commandTrigger.description),
+                      onTap: () => editCommandTrigger(
+                        buildContext: context,
+                        commandTriggerReference: commandTriggerReference,
+                      ),
+                    );
+                  },
+                  itemCount: project.commandTriggers.length,
+                );
               }
-              return ListView.builder(
-                itemBuilder: (final context, final index) {
-                  final commandTriggerReference = commandTriggers[index];
-                  final commandTrigger = commandTriggerReference.commandTrigger;
-                  return ListTile(
-                    autofocus: index == 0,
-                    title: Text(commandTrigger.name),
-                    subtitle: Text(commandTrigger.description),
-                    onTap: () => editCommandTrigger(
-                      buildContext: context,
-                      commandTriggerReference: commandTriggerReference,
-                    ),
-                  );
-                },
-                itemCount: project.commandTriggers.length,
+              return CallbackShortcuts(
+                bindings: {newShortcut: () => createCommandTrigger(context)},
+                child: child,
               );
             },
             floatingActionButton: FloatingActionButton(
               autofocus: commandTriggers.isEmpty,
               child: addIcon,
-              onPressed: () async {
-                final commandTrigger = CommandTrigger(
-                  name: newId(),
-                  description: 'Do something fun',
-                );
-                final commandTriggerReference = CommandTriggerReference(
-                  id: newId(),
-                  variableName: 'commandTrigger${commandTriggers.length + 1}',
-                  commandTrigger: commandTrigger,
-                );
-                project.commandTriggers.add(commandTriggerReference);
-                projectContext.save();
-                await pushWidget(
-                  context: context,
-                  builder: (final context) => EditCommandTrigger(
-                    projectContext: projectContext,
-                    commandTriggerReference: commandTriggerReference,
-                  ),
-                );
-                setState(() {});
-              },
+              onPressed: () => createCommandTrigger(context),
               tooltip: 'Add Command Trigger',
             ),
           )
@@ -231,5 +218,29 @@ class ProjectContextScreenState
     } on FormatterException catch (e, s) {
       showError(context: context, message: '$e\n$s');
     }
+  }
+
+  /// Create a new command trigger.
+  Future<void> createCommandTrigger(final BuildContext context) async {
+    final project = projectContext.project;
+    final commandTrigger = CommandTrigger(
+      name: newId(),
+      description: 'Do something fun',
+    );
+    final commandTriggerReference = CommandTriggerReference(
+      id: newId(),
+      variableName: 'commandTrigger${project.commandTriggers.length + 1}',
+      commandTrigger: commandTrigger,
+    );
+    project.commandTriggers.add(commandTriggerReference);
+    projectContext.save();
+    await pushWidget(
+      context: context,
+      builder: (final context) => EditCommandTrigger(
+        projectContext: projectContext,
+        commandTriggerReference: commandTriggerReference,
+      ),
+    );
+    setState(() {});
   }
 }
