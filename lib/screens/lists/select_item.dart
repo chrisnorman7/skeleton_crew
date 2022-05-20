@@ -56,7 +56,7 @@ class SelectItem<T> extends StatelessWidget {
               ? item.toString()
               : getSearchStringFunction(item),
           child: ListTile(
-            autofocus: item == value || (value != null && i == 0),
+            autofocus: item == value || (value == null && i == 0),
             selected: item == value,
             title: getWidgetFunction == null
                 ? Text(item.toString())
