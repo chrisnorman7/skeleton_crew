@@ -68,11 +68,19 @@ class ProjectContext {
         stringBuffer.writeln('button: $button,');
       }
       if (keyboardKey != null) {
-        stringBuffer
-          ..writeln('keyboardKey: CommandKeyboardKey(${keyboardKey.scanCode},')
-          ..writeln('altKey: ${keyboardKey.altKey},')
-          ..writeln('controlKey: ${keyboardKey.controlKey},')
-          ..writeln('shiftKey: ${keyboardKey.shiftKey},),');
+        stringBuffer.writeln(
+          'keyboardKey: CommandKeyboardKey(${keyboardKey.scanCode},',
+        );
+        if (keyboardKey.altKey) {
+          stringBuffer.writeln('altKey: ${keyboardKey.altKey},');
+        }
+        if (keyboardKey.controlKey) {
+          stringBuffer.writeln('controlKey: ${keyboardKey.controlKey},');
+        }
+        if (keyboardKey.shiftKey) {
+          stringBuffer.writeln('shiftKey: ${keyboardKey.shiftKey},');
+        }
+        stringBuffer.writeln('),');
       }
       stringBuffer.writeln(');');
     }
