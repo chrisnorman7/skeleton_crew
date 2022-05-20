@@ -1,6 +1,10 @@
 /// Provides validators.
 import 'dart:io';
 
+import 'package:dart_style/dart_style.dart';
+
+import 'constants.dart';
+
 /// Returns [message] if [value] is `null` or empty.
 String? validateNonEmptyValue({
   required final String? value,
@@ -43,3 +47,21 @@ String? validateInt({
     value == null || value.isEmpty || int.tryParse(value) == null
         ? message
         : null;
+
+/// Validate a variable name.
+String? validateVariableName({
+  required final String? value,
+  final String emptyMessage = 'You must supply a value',
+  final String invalidMessage = 'Invalid variable name',
+}) {
+  if (value == null || value.isEmpty) {
+    return emptyMessage;
+  }
+  final code = 'const int $value = 1;';
+  try {
+    dartFormatter.format(code);
+    return null;
+  } on FormatterException {
+    return invalidMessage;
+  }
+}

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'widgets/keyboard_shortcuts_list.dart';
+
 /// Whether we're running on Mac OS.
 final macOs = Platform.isMacOS;
 
@@ -18,4 +20,29 @@ final openShortcut = SingleActivator(
   LogicalKeyboardKey.keyO,
   control: !macOs,
   meta: macOs,
+);
+
+/// The "Close Project" shortcut.
+final closeProjectShortcut = SingleActivator(
+  LogicalKeyboardKey.keyW,
+  control: !macOs,
+  meta: macOs,
+);
+
+/// The short to build the project.
+final buildProjectShortcut = SingleActivator(
+  LogicalKeyboardKey.keyB,
+  control: !macOs,
+  meta: macOs,
+);
+
+/// The search shortcut.
+const searchShortcut = SingleActivator(LogicalKeyboardKey.slash);
+
+/// The intent to get help from a [WithKeyboardShortcuts] widget.
+final helpShortcut = SingleActivator(
+  LogicalKeyboardKey.slash,
+  control: !macOs,
+  meta: macOs,
+  shift: true,
 );

@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
+
+import 'command_trigger_reference.dart';
 
 part 'project.g.dart';
 
@@ -15,8 +16,8 @@ class Project {
     this.orgName = 'com.example',
     this.appName = 'untitled_game',
     this.version = '0.0.0',
-    this.outputDirectory = 'lib',
-    this.commandTriggersFilename = 'triggers.dart',
+    this.outputDirectory = 'lib/generated',
+    this.commandTriggersFilename = 'command_triggers.dart',
   });
 
   /// Create an instance from a JSON object.
@@ -46,7 +47,7 @@ class Project {
   String commandTriggersFilename;
 
   /// The command triggers to use.
-  final List<CommandTrigger> commandTriggers;
+  final List<CommandTriggerReference> commandTriggers;
 
   /// The asset stores that have been defined.
   final List<AssetStore> assetStores;

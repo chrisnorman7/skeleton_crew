@@ -6,8 +6,10 @@
     "dialog",
     "formals",
     "pubspec",
+    "sdl",
     "synthizer",
     "todos",
-    "unawaited"
+    "unawaited",
+    "writeln"
   ]
 }
