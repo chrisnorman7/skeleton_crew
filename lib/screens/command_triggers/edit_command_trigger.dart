@@ -13,6 +13,7 @@ import '../../widgets/push_widget_list_tile.dart';
 import '../../widgets/simple_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
 import '../lists/select_item.dart';
+import 'edit_command_keyboard_key.dart';
 
 /// A widget for editing the given [commandTriggerReference].
 class EditCommandTrigger extends StatefulWidget {
@@ -53,6 +54,7 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
   Widget build(final BuildContext context) {
     final project = projectContext.project;
     final button = commandTrigger.button;
+    final commandKeyboardKey = commandTrigger.keyboardKey;
     return Cancel(
       child: SimpleScaffold(
         actions: [
@@ -98,6 +100,7 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
               value: commandTrigger.name,
               onChanged: (final value) => editCommandTrigger(
                 name: value,
+                description: commandTrigger.description,
                 button: commandTrigger.button,
                 keyboardKey: commandTrigger.keyboardKey,
               ),
@@ -108,6 +111,7 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
             TextListTile(
               value: commandTrigger.description,
               onChanged: (final value) => editCommandTrigger(
+                name: commandTrigger.name,
                 description: value,
                 button: commandTrigger.button,
                 keyboardKey: commandTrigger.keyboardKey,
@@ -120,6 +124,8 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
               builder: (final context) => SelectItem<GameControllerButton?>(
                 values: const [null, ...GameControllerButton.values],
                 onDone: (final value) => editCommandTrigger(
+                  name: commandTrigger.name,
+                  description: commandTrigger.description,
                   button: value,
                   keyboardKey: commandTrigger.keyboardKey,
                 ),
@@ -128,9 +134,39 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
                 getWidget: (final value) =>
                     value == null ? const Text('Clear') : Text(value.name),
                 title: 'Select Game Controller Button',
-                value: commandTrigger.button,
+                value: button,
               ),
-              subtitle: button == null ? 'Not set' : button.name,
+              subtitle: button == null ? notSet : button.name,
+            ),
+            PushWidgetListTile(
+              title: 'Keyboard Key',
+              builder: (final context) {
+                if (commandKeyboardKey == null) {
+                  return SelectItem<ScanCode>(
+                    values: ScanCode.values,
+                    onDone: (final value) => editCommandTrigger(
+                      name: commandTrigger.name,
+                      description: commandTrigger.description,
+                      button: commandTrigger.button,
+                      keyboardKey: CommandKeyboardKey(value),
+                    ),
+                    getSearchString: (final value) => value.name,
+                    getWidget: (final value) => Text(value.name),
+                    title: 'Select Scan Code',
+                  );
+                } else {
+                  return EditCommandKeyboardKey(
+                    commandKeyboardKey: commandKeyboardKey,
+                    onChanged: (final value) => editCommandTrigger(
+                      name: commandTrigger.name,
+                      description: commandTrigger.description,
+                      button: button,
+                      keyboardKey: value,
+                    ),
+                  );
+                }
+              },
+              subtitle: commandKeyboardKey?.toPrintableString() ?? notSet,
             )
           ],
         ),
@@ -140,16 +176,16 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
 
   /// Change something about the command trigger.
   void editCommandTrigger({
-    final String? name,
-    final String? description,
-    final GameControllerButton? button,
-    final CommandKeyboardKey? keyboardKey,
+    required final String name,
+    required final String description,
+    required final GameControllerButton? button,
+    required final CommandKeyboardKey? keyboardKey,
   }) {
     commandTrigger = CommandTrigger(
-      name: name ?? commandTrigger.name,
-      description: description ?? commandTrigger.description,
-      button: button ?? commandTrigger.button,
-      keyboardKey: keyboardKey ?? commandTrigger.keyboardKey,
+      name: name,
+      description: description,
+      button: button,
+      keyboardKey: keyboardKey,
     );
     widget.commandTriggerReference.commandTrigger = commandTrigger;
     save();

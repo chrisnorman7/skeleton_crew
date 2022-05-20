@@ -25,3 +25,6 @@ const deleteIcon = Icon(
   Icons.delete,
   semanticLabel: 'Delete',
 );
+
+/// The string to use when a value is not set.
+const notSet = 'Not Set';
