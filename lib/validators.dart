@@ -1,9 +1,7 @@
 /// Provides validators.
 import 'dart:io';
 
-import 'package:dart_style/dart_style.dart';
-
-import 'constants.dart';
+final _variableRegExp = RegExp(r'^[a-z][A-Za-z0-9]*$');
 
 /// Returns [message] if [value] is `null` or empty.
 String? validateNonEmptyValue({
@@ -57,11 +55,8 @@ String? validateVariableName({
   if (value == null || value.isEmpty) {
     return emptyMessage;
   }
-  final code = 'const int $value = 1;';
-  try {
-    dartFormatter.format(code);
-    return null;
-  } on FormatterException {
+  if (_variableRegExp.firstMatch(value) == null) {
     return invalidMessage;
   }
+  return null;
 }
