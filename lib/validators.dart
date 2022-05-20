@@ -2,6 +2,7 @@
 import 'dart:io';
 
 final _variableRegExp = RegExp(r'^[a-z][A-Za-z0-9]*$');
+final _classNameRegExp = RegExp(r'^[A-Z][a-zA-Z0-9]*$');
 
 /// Returns [message] if [value] is `null` or empty.
 String? validateNonEmptyValue({
@@ -56,6 +57,21 @@ String? validateVariableName({
     return emptyMessage;
   }
   if (_variableRegExp.firstMatch(value) == null) {
+    return invalidMessage;
+  }
+  return null;
+}
+
+/// Validate a class name.
+String? validateClassName({
+  required final String? value,
+  final String emptyMessage = 'You must supply a value',
+  final String invalidMessage = 'Invalid class name',
+}) {
+  if (value == null || value.isEmpty) {
+    return emptyMessage;
+  }
+  if (_classNameRegExp.firstMatch(value) == null) {
     return invalidMessage;
   }
   return null;
