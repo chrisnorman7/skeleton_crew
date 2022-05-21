@@ -174,8 +174,9 @@ class AddAssetState extends State<AddAsset> {
             id: newId(),
             variableName: variableName,
             comment: comment,
-            assetType: reference.reference.type,
             name: reference.reference.name,
+            assetType: reference.reference.type,
+            encryptionKey: reference.reference.encryptionKey,
           ),
         );
       } else if (directory.existsSync()) {
@@ -190,8 +191,9 @@ class AddAssetState extends State<AddAsset> {
             id: newId(),
             variableName: variableName,
             comment: comment,
-            assetType: reference.reference.type,
             name: reference.reference.name,
+            assetType: reference.reference.type,
+            encryptionKey: reference.reference.encryptionKey,
           ),
         );
       } else {

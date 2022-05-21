@@ -12,8 +12,9 @@ PretendAssetReference _$PretendAssetReferenceFromJson(
       id: json['id'] as String,
       variableName: json['variableName'] as String,
       comment: json['comment'] as String,
-      assetType: $enumDecode(_$AssetTypeEnumMap, json['assetType']),
       name: json['name'] as String,
+      assetType: $enumDecode(_$AssetTypeEnumMap, json['assetType']),
+      encryptionKey: json['encryptionKey'] as String?,
     );
 
 Map<String, dynamic> _$PretendAssetReferenceToJson(
@@ -22,8 +23,9 @@ Map<String, dynamic> _$PretendAssetReferenceToJson(
       'id': instance.id,
       'variableName': instance.variableName,
       'comment': instance.comment,
-      'assetType': _$AssetTypeEnumMap[instance.assetType],
       'name': instance.name,
+      'assetType': _$AssetTypeEnumMap[instance.assetType],
+      'encryptionKey': instance.encryptionKey,
     };
 
 const _$AssetTypeEnumMap = {

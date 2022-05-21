@@ -12,8 +12,9 @@ class PretendAssetReference {
     required this.id,
     required this.variableName,
     required this.comment,
-    required this.assetType,
     required this.name,
+    required this.assetType,
+    required this.encryptionKey,
   });
 
   /// Create an instance from a JSON object.
@@ -29,17 +30,24 @@ class PretendAssetReference {
   /// The comment for this reference.
   String comment;
 
+  /// The name of the encrypted file that holds the data of this reference.
+  final String name;
+
   /// The type of this reference.
   final AssetType assetType;
 
-  /// The name of the encrypted file that holds the data of this reference.
-  final String name;
+  /// The encryption key for this asset reference.
+  final String? encryptionKey;
 
   /// Return an asset reference reference for this instance.
   AssetReferenceReference get assetReferenceReference =>
       AssetReferenceReference(
         variableName: variableName,
-        reference: AssetReference(name, assetType),
+        reference: AssetReference(
+          name,
+          assetType,
+          encryptionKey: encryptionKey,
+        ),
         comment: comment,
       );
 

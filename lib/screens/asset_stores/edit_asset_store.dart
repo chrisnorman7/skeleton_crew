@@ -124,8 +124,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                             },
                             child: PlaySoundSemantics(
                               soundChannel: projectContext.game.interfaceSounds,
-                              assetReference: assetReferenceReference
-                                  .assetReferenceReference.reference,
+                              pretendAssetReference: assetReferenceReference,
                               child: ListTile(
                                 autofocus: i == 0,
                                 title: Text(assetReferenceReference.comment),
