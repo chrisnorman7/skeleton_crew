@@ -193,23 +193,26 @@ class ProjectContextScreenState
                   text: 'There are no command triggers yet.',
                 );
               } else {
-                child = ListView.builder(
-                  itemBuilder: (final context, final index) {
-                    final commandTriggerReference = commandTriggers[index];
-                    final commandTrigger =
-                        commandTriggerReference.commandTrigger;
-                    return ListTile(
-                      autofocus: index == 0,
-                      title: Text(commandTrigger.name),
-                      subtitle: Text(commandTrigger.description),
-                      onTap: () => editCommandTrigger(
-                        buildContext: context,
-                        commandTriggerReference: commandTriggerReference,
+                final children = <SearchableListTile>[];
+                for (var i = 0; i < commandTriggers.length; i++) {
+                  final commandTrigger = commandTriggers[i];
+                  children.add(
+                    SearchableListTile(
+                      searchString: commandTrigger.commandTrigger.description,
+                      child: PushWidgetListTile(
+                        builder: (final context) => EditCommandTrigger(
+                          projectContext: projectContext,
+                          commandTriggerReference: commandTrigger,
+                        ),
+                        autofocus: i == 0,
+                        onSetState: () => setState(() {}),
+                        title: commandTrigger.commandTrigger.description,
+                        subtitle: commandTrigger.variableName,
                       ),
-                    );
-                  },
-                  itemCount: project.commandTriggers.length,
-                );
+                    ),
+                  );
+                }
+                child = SearchableListView(children: children);
               }
               return CallbackShortcuts(
                 bindings: {newShortcut: () => createCommandTrigger(context)},
