@@ -23,7 +23,6 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
           json['commandTriggersFilename'] as String? ?? 'command_triggers.dart',
       assetStoreDartFilesDirectory:
           json['assetStoreDartFilesDirectory'] as String? ?? 'assets',
-      assetsDirectory: json['assetsDirectory'] as String? ?? 'assets',
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -34,7 +33,6 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'outputDirectory': instance.outputDirectory,
       'commandTriggersFilename': instance.commandTriggersFilename,
       'assetStoreDartFilesDirectory': instance.assetStoreDartFilesDirectory,
-      'assetsDirectory': instance.assetsDirectory,
       'commandTriggers': instance.commandTriggers,
       'assetStores': instance.assetStores,
     };

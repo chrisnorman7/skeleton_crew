@@ -19,7 +19,6 @@ class Project {
     this.outputDirectory = 'lib/generated',
     this.commandTriggersFilename = 'command_triggers.dart',
     this.assetStoreDartFilesDirectory = 'assets',
-    this.assetsDirectory = 'assets',
   });
 
   /// Create an instance from a JSON object.
@@ -52,9 +51,6 @@ class Project {
   ///
   /// This directory will be located under [outputDirectory].
   String assetStoreDartFilesDirectory;
-
-  /// The directory where encrypted assets will be stored.
-  final String assetsDirectory;
 
   /// The command triggers to use.
   final List<CommandTriggerReference> commandTriggers;

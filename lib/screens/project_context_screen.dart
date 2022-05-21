@@ -164,7 +164,7 @@ class ProjectContextScreenState
                         onSetState: () => setState(() {}),
                         autofocus: i == 0,
                         title: '${assetStoreReference.name} ($numberOfAssets)',
-                        subtitle: '${assetStoreReference.assetStore.comment}',
+                        subtitle: assetStoreReference.comment,
                       ),
                     ),
                   );

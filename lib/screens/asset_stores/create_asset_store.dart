@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../constants.dart';
 import '../../json/asset_store_reference.dart';
@@ -86,16 +85,12 @@ class CreateAssetStoreState extends State<CreateAssetStore> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_formKey.currentState?.validate() ?? true) {
-                final store = AssetStore(
-                  filename: _dartFilenameController.text,
-                  destination: widget.project.assetsDirectory,
-                  assets: [],
-                  comment: 'An asset store without a comment.',
-                );
                 final reference = AssetStoreReference(
                   id: newId(),
                   name: _nameController.text,
-                  assetStore: store,
+                  comment: 'This asset store has no comment.',
+                  dartFilename: _dartFilenameController.text,
+                  assets: [],
                 );
                 Navigator.pop(context);
                 widget.onDone(reference);

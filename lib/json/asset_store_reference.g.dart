@@ -10,8 +10,11 @@ AssetStoreReference _$AssetStoreReferenceFromJson(Map<String, dynamic> json) =>
     AssetStoreReference(
       id: json['id'] as String,
       name: json['name'] as String,
-      assetStore:
-          AssetStore.fromJson(json['assetStore'] as Map<String, dynamic>),
+      comment: json['comment'] as String,
+      dartFilename: json['dartFilename'] as String,
+      assets: (json['assets'] as List<dynamic>)
+          .map((e) => PretendAssetReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$AssetStoreReferenceToJson(
@@ -19,5 +22,7 @@ Map<String, dynamic> _$AssetStoreReferenceToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'assetStore': instance.assetStore,
+      'comment': instance.comment,
+      'dartFilename': instance.dartFilename,
+      'assets': instance.assets,
     };

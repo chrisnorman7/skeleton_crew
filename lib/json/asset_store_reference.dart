@@ -1,6 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
+import '../constants.dart';
+import 'pretend_asset_reference.dart';
+
 part 'asset_store_reference.g.dart';
 
 /// A reference to an [assetStore].
@@ -10,7 +13,9 @@ class AssetStoreReference {
   AssetStoreReference({
     required this.id,
     required this.name,
-    required this.assetStore,
+    required this.comment,
+    required this.dartFilename,
+    required this.assets,
   });
 
   /// Create an instance from a JSON object.
@@ -23,9 +28,26 @@ class AssetStoreReference {
   /// The name of this asset store.
   String name;
 
-  /// The asset store to reference.
-  AssetStore assetStore;
+  /// The comment for this asset store.
+  String comment;
+
+  /// The dart filename for this asset store.
+  String dartFilename;
+
+  /// The assets this reference holds.
+  final List<PretendAssetReference> assets;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$AssetStoreReferenceToJson(this);
+
+  /// Get an asset store that represents this instance.
+  AssetStore get assetStore => AssetStore(
+        filename: dartFilename,
+        destination: assetsDirectory,
+        assets: assets
+            .map<AssetReferenceReference>(
+              (final e) => e.assetReferenceReference,
+            )
+            .toList(),
+      );
 }

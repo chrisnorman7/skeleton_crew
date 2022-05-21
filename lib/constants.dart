@@ -37,3 +37,6 @@ const filesIcon = Icon(Icons.storage);
 
 /// The string to use when a value is not set.
 const notSet = 'Not Set';
+
+/// The directory where encrypted assets will be stored.
+const assetsDirectory = 'assets';

@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../constants.dart';
+import '../../json/asset_store_reference.dart';
+import '../../json/pretend_asset_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
@@ -20,7 +21,7 @@ class AddAsset extends StatefulWidget {
   /// Create an instance.
   const AddAsset({
     required this.projectContext,
-    required this.assetStore,
+    required this.assetStoreReference,
     super.key,
   });
 
@@ -28,7 +29,7 @@ class AddAsset extends StatefulWidget {
   final ProjectContext projectContext;
 
   /// The asset store to import to.
-  final AssetStore assetStore;
+  final AssetStoreReference assetStoreReference;
 
   /// Create state for this widget.
   @override
@@ -119,7 +120,7 @@ class AddAssetState extends State<AddAsset> {
                       ),
                       validator: (value) => validateAssetStoreVariableName(
                         value: value,
-                        assetStore: widget.assetStore,
+                        assetStoreReference: widget.assetStoreReference,
                       ),
                     ),
                     TextFormField(
@@ -162,18 +163,36 @@ class AddAssetState extends State<AddAsset> {
       final file = File(filename);
       final directory = Directory(filename);
       if (file.existsSync()) {
-        widget.assetStore.importFile(
+        final reference = widget.assetStoreReference.assetStore.importFile(
           source: file,
           variableName: variableName,
           comment: comment,
           relativeTo: widget.projectContext.directory,
         );
+        widget.assetStoreReference.assets.add(
+          PretendAssetReference(
+            id: newId(),
+            variableName: variableName,
+            comment: comment,
+            assetType: reference.reference.type,
+            name: reference.reference.name,
+          ),
+        );
       } else if (directory.existsSync()) {
-        widget.assetStore.importDirectory(
+        final reference = widget.assetStoreReference.assetStore.importDirectory(
           source: directory,
           variableName: variableName,
           comment: comment,
           relativeTo: widget.projectContext.directory,
+        );
+        widget.assetStoreReference.assets.add(
+          PretendAssetReference(
+            id: newId(),
+            variableName: variableName,
+            comment: comment,
+            assetType: reference.reference.type,
+            name: reference.reference.name,
+          ),
         );
       } else {
         throw StateError('Cannot handle $filename.');

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../constants.dart';
 import '../../json/asset_store_reference.dart';
@@ -46,103 +45,114 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
 
   /// Build a widget.
   @override
-  Widget build(final BuildContext context) {
-    final assetStore = widget.assetStoreReference.assetStore;
-    return Cancel(
-      child: TabbedScaffold(
-        tabs: [
-          TabbedScaffoldTab(
-            title: 'Store Settings',
-            icon: const Icon(Icons.settings),
-            builder: (final context) => ListView(
-              children: [
-                TextListTile(
-                  autofocus: true,
-                  value: widget.assetStoreReference.name,
-                  onChanged: (final value) {
-                    widget.assetStoreReference.name = value;
-                    save();
-                  },
-                  header: 'Name',
-                  validator: (final value) => validateNonEmptyValue(
-                    value: value,
-                  ),
-                ),
-                TextListTile(
-                  value: assetStore.comment ?? '',
-                  onChanged: (final value) {
-                    widget.assetStoreReference.assetStore = AssetStore(
-                      filename: assetStore.filename,
-                      destination: assetStore.destination,
-                      assets: assetStore.assets,
-                      comment: value,
-                    );
-                    save();
-                  },
-                  header: 'Comment',
-                  validator: (final value) => validateNonEmptyValue(
-                    value: value,
-                  ),
-                ),
-                TextListTile(
-                  value: assetStore.filename,
-                  onChanged: (final value) {
-                    widget.assetStoreReference.assetStore = AssetStore(
-                      filename: value,
-                      destination: assetStore.destination,
-                      assets: assetStore.assets,
-                      comment: assetStore.comment,
-                    );
-                    save();
-                  },
-                  header: 'Dart Filename',
-                  validator: (final value) => validateAssetStoreDartFilename(
-                    value: value,
-                    project: projectContext.project,
-                  ),
-                )
-              ],
-            ),
-          ),
-          TabbedScaffoldTab(
-            title: 'Assets',
-            icon: filesIcon,
-            builder: (final context) {
-              final Widget child;
-              if (assetStore.assets.isEmpty) {
-                child = const CenterText(text: 'There are no assets to show.');
-              } else {
-                final children = <SearchableListTile>[];
-                for (var i = 0; i < assetStore.assets.length; i++) {
-                  final assetReferenceReference = assetStore.assets[i];
-                  children.add(
-                    SearchableListTile(
-                      searchString: assetReferenceReference.comment ??
-                          assetReferenceReference.variableName,
-                      child: ListTile(
-                        autofocus: i == 0,
-                        title: Text('${assetReferenceReference.comment}'),
-                        subtitle: Text(assetReferenceReference.variableName),
-                        onTap: () => confirm(
-                          context: context,
-                          message:
-                              'Are you sure you want to delete this asset?',
-                        ),
+  Widget build(final BuildContext context) => Cancel(
+        child: CallbackShortcuts(
+          bindings: {newShortcut: () => newAsset(context)},
+          child: TabbedScaffold(
+            tabs: [
+              TabbedScaffoldTab(
+                title: 'Store Settings',
+                icon: const Icon(Icons.settings),
+                builder: (final context) => ListView(
+                  children: [
+                    TextListTile(
+                      autofocus: true,
+                      value: widget.assetStoreReference.name,
+                      onChanged: (final value) {
+                        widget.assetStoreReference.name = value;
+                        save();
+                      },
+                      header: 'Name',
+                      validator: (final value) => validateNonEmptyValue(
+                        value: value,
                       ),
                     ),
+                    TextListTile(
+                      value: widget.assetStoreReference.comment,
+                      onChanged: (final value) {
+                        widget.assetStoreReference.comment = value;
+                        save();
+                      },
+                      header: 'Comment',
+                      validator: (final value) => validateNonEmptyValue(
+                        value: value,
+                      ),
+                    ),
+                    TextListTile(
+                      value: widget.assetStoreReference.dartFilename,
+                      onChanged: (final value) {
+                        widget.assetStoreReference.dartFilename = value;
+                        save();
+                      },
+                      header: 'Dart Filename',
+                      validator: (final value) =>
+                          validateAssetStoreDartFilename(
+                        value: value,
+                        project: projectContext.project,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              TabbedScaffoldTab(
+                title: 'Assets',
+                icon: filesIcon,
+                builder: (final context) {
+                  final Widget child;
+                  final assets = widget.assetStoreReference.assets;
+                  if (assets.isEmpty) {
+                    child =
+                        const CenterText(text: 'There are no assets to show.');
+                  } else {
+                    final children = <SearchableListTile>[];
+                    for (var i = 0; i < assets.length; i++) {
+                      final assetReferenceReference = assets[i];
+                      children.add(
+                        SearchableListTile(
+                          searchString: assetReferenceReference.comment,
+                          child: ListTile(
+                            autofocus: i == 0,
+                            title: Text(assetReferenceReference.comment),
+                            subtitle:
+                                Text(assetReferenceReference.variableName),
+                            onTap: () => confirm(
+                              context: context,
+                              message:
+                                  'Are you sure you want to delete this asset?',
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    child = SearchableListView(children: children);
+                  }
+                  return CallbackShortcuts(
+                    bindings: {newShortcut: () => addAsset(context)},
+                    child: child,
                   );
-                }
-                child = SearchableListView(children: children);
-              }
-              return CallbackShortcuts(
-                bindings: {newShortcut: () => addAsset(context)},
-                child: child,
-              );
-            },
-          )
-        ],
+                },
+                floatingActionButton: FloatingActionButton(
+                  autofocus: widget.assetStoreReference.assets.isEmpty,
+                  child: addIcon,
+                  onPressed: () => newAsset(context),
+                  tooltip: 'Add New Asset',
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+
+  /// Import a new asset.
+  Future<void> newAsset(final BuildContext context) async {
+    await pushWidget(
+      context: context,
+      builder: (final context) => AddAsset(
+        projectContext: projectContext,
+        assetStoreReference: widget.assetStoreReference,
       ),
     );
+    save();
   }
 
   /// Add a new asset.
@@ -151,7 +161,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
       context: context,
       builder: (final context) => AddAsset(
         projectContext: projectContext,
-        assetStore: widget.assetStoreReference.assetStore,
+        assetStoreReference: widget.assetStoreReference,
       ),
     );
     setState(() {});
