@@ -60,3 +60,6 @@ final importDirectoryShortcut = SingleActivator(
   control: !macOs,
   meta: macOs,
 );
+
+/// The delete shortcut.
+const deleteShortcut = SingleActivator(LogicalKeyboardKey.delete);

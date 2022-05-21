@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../json/asset_store_reference.dart';
+import '../../json/pretend_asset_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
 import '../../validators.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/center_text.dart';
+import '../../widgets/play_sound_semantics.dart';
 import '../../widgets/project_context_state.dart';
 import '../../widgets/searchable_list_view.dart';
 import '../../widgets/tabbed_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
 import 'add_asset.dart';
+import 'edit_asset.dart';
 
 /// A widget to edit the given [assetStoreReference].
 class EditAssetStore extends StatefulWidget {
@@ -101,8 +104,9 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                   final Widget child;
                   final assets = widget.assetStoreReference.assets;
                   if (assets.isEmpty) {
-                    child =
-                        const CenterText(text: 'There are no assets to show.');
+                    child = const CenterText(
+                      text: 'There are no assets to show.',
+                    );
                   } else {
                     final children = <SearchableListTile>[];
                     for (var i = 0; i < assets.length; i++) {
@@ -110,15 +114,37 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                       children.add(
                         SearchableListTile(
                           searchString: assetReferenceReference.comment,
-                          child: ListTile(
-                            autofocus: i == 0,
-                            title: Text(assetReferenceReference.comment),
-                            subtitle:
-                                Text(assetReferenceReference.variableName),
-                            onTap: () => confirm(
-                              context: context,
-                              message:
-                                  'Are you sure you want to delete this asset?',
+                          child: CallbackShortcuts(
+                            bindings: {
+                              deleteShortcut: () => deleteAsset(
+                                    context: context,
+                                    pretendAssetReference:
+                                        assetReferenceReference,
+                                  )
+                            },
+                            child: PlaySoundSemantics(
+                              soundChannel: projectContext.game.interfaceSounds,
+                              assetReference: assetReferenceReference
+                                  .assetReferenceReference.reference,
+                              child: ListTile(
+                                autofocus: i == 0,
+                                title: Text(assetReferenceReference.comment),
+                                subtitle:
+                                    Text(assetReferenceReference.variableName),
+                                onTap: () async {
+                                  await pushWidget(
+                                    context: context,
+                                    builder: (final context) => EditAsset(
+                                      projectContext: projectContext,
+                                      assetStoreReference:
+                                          widget.assetStoreReference,
+                                      pretendAssetReference:
+                                          assetReferenceReference,
+                                    ),
+                                  );
+                                  setState(() {});
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -166,4 +192,22 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
     );
     setState(() {});
   }
+
+  /// Delete the given [pretendAssetReference] from the current asset store.
+  void deleteAsset({
+    required final BuildContext context,
+    required final PretendAssetReference pretendAssetReference,
+  }) =>
+      confirm(
+        context: context,
+        message: 'Are you sure you want to delete this asset?',
+        yesCallback: () {
+          projectContext.deleteAssetReferenceReference(
+            assetStoreReference: widget.assetStoreReference,
+            asset: pretendAssetReference,
+          );
+          Navigator.pop(context);
+          setState(() {});
+        },
+      );
 }

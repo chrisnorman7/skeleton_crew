@@ -1,11 +1,17 @@
+// ignore_for_file: avoid_print
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dart_synthizer/dart_synthizer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:ziggurat/ziggurat.dart';
+import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../json/app_preferences.dart';
 import '../json/project.dart';
+import '../project_sound_manager.dart';
 import '../shortcuts.dart';
 import '../src/project_context.dart';
 import '../util.dart';
@@ -25,8 +31,55 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final Synthizer _synthizer;
+  late final Context _audioContext;
+  late final Game _game;
+  late final ProjectSoundManager _projectSoundManager;
   AppPreferences? _appPreferences;
   Directory? _documentsDirectory;
+
+  /// Initialise state.
+  @override
+  void initState() {
+    super.initState();
+    _synthizer = Synthizer();
+    String? libsndfilePath;
+    if (Platform.isLinux) {
+      libsndfilePath = './libsndfile.so';
+    } else if (Platform.isWindows) {
+      libsndfilePath = 'libsndfile-1.dll';
+    } else if (Platform.isMacOS) {
+      libsndfilePath = 'libsndfile.dylib';
+    }
+    if (libsndfilePath == null || File(libsndfilePath).existsSync() == false) {
+      libsndfilePath = null;
+    }
+    _synthizer.initialize(libsndfilePath: libsndfilePath);
+    _audioContext = _synthizer.createContext();
+    _game = Game('Skeleton Crew');
+    _projectSoundManager = ProjectSoundManager(
+      game: _game,
+      context: _audioContext,
+      soundsDirectory: '.',
+      bufferCache: BufferCache(
+        synthizer: _synthizer,
+        maxSize: pow(1024, 3).floor(),
+        random: _game.random,
+      ),
+    );
+    _game.sounds.listen(
+      (final event) {
+        print(event);
+        _projectSoundManager.handleEvent(event);
+      },
+      onDone: () => print('Sound manager shut down.'),
+      onError: (final dynamic e, final dynamic s) {
+        print('*** SOUND ERROR ***');
+        print(e);
+        print(s);
+      },
+    );
+  }
 
   /// Build the widget.
   @override
@@ -86,8 +139,10 @@ class _HomePageState extends State<HomePage> {
         );
       } else {
         final projectContext = ProjectContext.fromFile(
-          File(filename),
+          file: File(filename),
+          game: _game,
         );
+        _projectSoundManager.soundsDirectory = projectContext.directory.path;
         return ProjectContextScreen(
           projectContext: projectContext,
           onClose: () => setState(
@@ -121,7 +176,12 @@ class _HomePageState extends State<HomePage> {
       assetStores: [],
     );
     await AppPreferences(lastLoadedFilename: result).save();
-    final projectContext = ProjectContext(project: project, file: file)..save();
+    _projectSoundManager.soundsDirectory = file.parent.path;
+    final projectContext = ProjectContext(
+      project: project,
+      file: file,
+      game: _game,
+    )..save();
     await pushWidget(
       context: context,
       builder: (final context) => ProjectContextScreen(
@@ -157,12 +217,24 @@ class _HomePageState extends State<HomePage> {
         message: 'File does not exist: $path.',
       );
     }
-    final projectContext = ProjectContext.fromFile(file);
+    _projectSoundManager.soundsDirectory = file.parent.path;
+    final projectContext = ProjectContext.fromFile(
+      file: file,
+      game: _game,
+    );
     await pushWidget(
       context: context,
       builder: (final context) => ProjectContextScreen(
         projectContext: projectContext,
       ),
     );
+  }
+
+  /// Dispose of the widget.
+  @override
+  void dispose() {
+    super.dispose();
+    _audioContext.destroy();
+    _synthizer.shutdown();
   }
 }

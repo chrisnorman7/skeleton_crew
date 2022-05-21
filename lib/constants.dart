@@ -40,3 +40,8 @@ const notSet = 'Not Set';
 
 /// The directory where encrypted assets will be stored.
 const assetsDirectory = 'assets';
+
+/// The directory where asset store dart files will be stored.
+///
+/// This directory will be located beneath `Project.outputDirectory`.
+const assetStoresDirectory = 'asset_stores';
