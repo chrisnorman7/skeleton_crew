@@ -1,13 +1,17 @@
 /// Provides validators.
 import 'dart:io';
 
+import 'json/project.dart';
+
+const _emptyMessage = 'You must supply a value';
 final _variableRegExp = RegExp(r'^[a-z][A-Za-z0-9]*$');
 final _classNameRegExp = RegExp(r'^[A-Z][a-zA-Z0-9]*$');
+final _dartFileRegExp = RegExp(r'^[a-z][a-z0-9_]*\.dart$');
 
 /// Returns [message] if [value] is `null` or empty.
 String? validateNonEmptyValue({
   required final String? value,
-  final String message = 'You must supply a value',
+  final String message = _emptyMessage,
 }) {
   if (value == null || value.isEmpty) {
     return message;
@@ -41,11 +45,16 @@ String? validatePath({
 /// Ensure the given [value] is an integer.
 String? validateInt({
   required final String? value,
+  final String emptyMessage = _emptyMessage,
   final String message = 'Invalid number',
-}) =>
-    value == null || value.isEmpty || int.tryParse(value) == null
-        ? message
-        : null;
+}) {
+  if (value == null || value.isEmpty) {
+    return emptyMessage;
+  } else if (int.tryParse(value) == null) {
+    return message;
+  }
+  return null;
+}
 
 /// Validate a variable name.
 String? validateVariableName({
@@ -55,8 +64,7 @@ String? validateVariableName({
 }) {
   if (value == null || value.isEmpty) {
     return emptyMessage;
-  }
-  if (_variableRegExp.firstMatch(value) == null) {
+  } else if (_variableRegExp.firstMatch(value) == null) {
     return invalidMessage;
   }
   return null;
@@ -65,14 +73,53 @@ String? validateVariableName({
 /// Validate a class name.
 String? validateClassName({
   required final String? value,
-  final String emptyMessage = 'You must supply a value',
+  final String emptyMessage = _emptyMessage,
   final String invalidMessage = 'Invalid class name',
 }) {
   if (value == null || value.isEmpty) {
     return emptyMessage;
-  }
-  if (_classNameRegExp.firstMatch(value) == null) {
+  } else if (_classNameRegExp.firstMatch(value) == null) {
     return invalidMessage;
+  }
+  return null;
+}
+
+/// Validate a dart file name.
+String? validateDartFilename({
+  required final String? value,
+  final String emptyMessage = _emptyMessage,
+  final String message = 'Invalid dart filename',
+}) {
+  if (value == null || value.isEmpty) {
+    return emptyMessage;
+  } else if (_dartFileRegExp.firstMatch(value) == null) {
+    return message;
+  }
+  return null;
+}
+
+/// Validate an asset store dart filename.
+///
+/// This validator ensures that [value] is not only a valid dart filename, but
+/// also hasn't been used for any other asset stores in the given [project].
+String? validateAssetStoreDartFilename({
+  required final String? value,
+  required final Project project,
+  final String emptyMessage = _emptyMessage,
+  final String message = 'That filename is already in use',
+}) {
+  final result = validateDartFilename(
+    value: value,
+    emptyMessage: emptyMessage,
+  );
+  if (result != null) {
+    return result;
+  }
+  for (final assetStoreReference in project.assetStores) {
+    final assetStore = assetStoreReference.assetStore;
+    if (assetStore.filename == value) {
+      return message;
+    }
   }
   return null;
 }

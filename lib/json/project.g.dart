@@ -13,7 +13,7 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
               CommandTriggerReference.fromJson(e as Map<String, dynamic>))
           .toList(),
       assetStores: (json['assetStores'] as List<dynamic>)
-          .map((e) => AssetStore.fromJson(e as Map<String, dynamic>))
+          .map((e) => AssetStoreReference.fromJson(e as Map<String, dynamic>))
           .toList(),
       orgName: json['orgName'] as String? ?? 'com.example',
       appName: json['appName'] as String? ?? 'untitled_game',
@@ -21,6 +21,9 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
       outputDirectory: json['outputDirectory'] as String? ?? 'lib/generated',
       commandTriggersFilename:
           json['commandTriggersFilename'] as String? ?? 'command_triggers.dart',
+      assetStoreDartFilesDirectory:
+          json['assetStoreDartFilesDirectory'] as String? ?? 'assets',
+      assetsDirectory: json['assetsDirectory'] as String? ?? 'assets',
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -30,6 +33,8 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'version': instance.version,
       'outputDirectory': instance.outputDirectory,
       'commandTriggersFilename': instance.commandTriggersFilename,
+      'assetStoreDartFilesDirectory': instance.assetStoreDartFilesDirectory,
+      'assetsDirectory': instance.assetsDirectory,
       'commandTriggers': instance.commandTriggers,
       'assetStores': instance.assetStores,
     };

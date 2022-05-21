@@ -10,8 +10,12 @@ import '../util.dart';
 import '../validators.dart';
 import '../widgets/center_text.dart';
 import '../widgets/project_context_state.dart';
+import '../widgets/push_widget_list_tile.dart';
+import '../widgets/searchable_list_view.dart';
 import '../widgets/tabbed_scaffold.dart';
 import '../widgets/text_list_tile.dart';
+import 'asset_stores/create_asset_store.dart';
+import 'asset_stores/edit_asset_store.dart';
 import 'command_triggers/edit_command_trigger.dart';
 
 /// The main screen for a [projectContext].
@@ -57,6 +61,7 @@ class ProjectContextScreenState
         child: closeIcon,
       )
     ];
+    final assetStores = project.assetStores;
     final commandTriggers = project.commandTriggers;
     return CallbackShortcuts(
       bindings: {
@@ -131,6 +136,50 @@ class ProjectContextScreenState
               child: const Icon(Icons.build),
               onPressed: () => buildProject(context),
               tooltip: 'Build Project',
+            ),
+          ),
+          TabbedScaffoldTab(
+            actions: actions,
+            title: 'Asset Stores',
+            icon: filesIcon,
+            builder: (final context) {
+              final Widget child;
+              if (assetStores.isEmpty) {
+                child =
+                    const CenterText(text: 'There are no asset stores yet.');
+              } else {
+                final children = <SearchableListTile>[];
+                for (var i = 0; i < project.assetStores.length; i++) {
+                  final assetStoreReference = project.assetStores[i];
+                  final numberOfAssets =
+                      assetStoreReference.assetStore.assets.length;
+                  children.add(
+                    SearchableListTile(
+                      searchString: assetStoreReference.name,
+                      child: PushWidgetListTile(
+                        builder: (final context) => EditAssetStore(
+                          projectContext: projectContext,
+                          assetStoreReference: assetStoreReference,
+                        ),
+                        onSetState: () => setState(() {}),
+                        autofocus: i == 0,
+                        title: '${assetStoreReference.name} ($numberOfAssets)',
+                        subtitle: '${assetStoreReference.assetStore.comment}',
+                      ),
+                    ),
+                  );
+                }
+                child = SearchableListView(children: children);
+              }
+              return CallbackShortcuts(
+                bindings: {newShortcut: () => createAssetStore(context)},
+                child: child,
+              );
+            },
+            floatingActionButton: FloatingActionButton(
+              autofocus: assetStores.isEmpty,
+              child: addIcon,
+              onPressed: () => createAssetStore(context),
             ),
           ),
           TabbedScaffoldTab(
@@ -243,4 +292,19 @@ class ProjectContextScreenState
     );
     setState(() {});
   }
+
+  /// Create a new asset store.
+  void createAssetStore(final BuildContext context) => pushWidget(
+        context: context,
+        builder: (final context) {
+          final project = projectContext.project;
+          return CreateAssetStore(
+            project: project,
+            onDone: (final value) {
+              project.assetStores.add(value);
+              save();
+            },
+          );
+        },
+      );
 }

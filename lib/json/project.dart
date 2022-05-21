@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
+import 'asset_store_reference.dart';
 import 'command_trigger_reference.dart';
 
 part 'project.g.dart';
@@ -18,6 +18,8 @@ class Project {
     this.version = '0.0.0',
     this.outputDirectory = 'lib/generated',
     this.commandTriggersFilename = 'command_triggers.dart',
+    this.assetStoreDartFilesDirectory = 'assets',
+    this.assetsDirectory = 'assets',
   });
 
   /// Create an instance from a JSON object.
@@ -46,11 +48,19 @@ class Project {
   /// This value will be joined to the [outputDirectory] to get the full path.
   String commandTriggersFilename;
 
+  /// The directory where asset store dart files will be stored.
+  ///
+  /// This directory will be located under [outputDirectory].
+  String assetStoreDartFilesDirectory;
+
+  /// The directory where encrypted assets will be stored.
+  final String assetsDirectory;
+
   /// The command triggers to use.
   final List<CommandTriggerReference> commandTriggers;
 
   /// The asset stores that have been defined.
-  final List<AssetStore> assetStores;
+  final List<AssetStoreReference> assetStores;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$ProjectToJson(this);

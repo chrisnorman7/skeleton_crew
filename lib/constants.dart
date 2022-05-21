@@ -20,11 +20,20 @@ const closeIcon = Icon(
   semanticLabel: 'Close',
 );
 
+/// The save icon to use.
+const saveIcon = Icon(
+  Icons.save,
+  semanticLabel: 'Save',
+);
+
 /// The delete icon to use.
 const deleteIcon = Icon(
   Icons.delete,
   semanticLabel: 'Delete',
 );
+
+/// The icon to use to denote a series of files.
+const filesIcon = Icon(Icons.storage);
 
 /// The string to use when a value is not set.
 const notSet = 'Not Set';
