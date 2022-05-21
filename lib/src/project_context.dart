@@ -28,6 +28,9 @@ class ProjectContext {
   /// The file where [project] resides.
   final File file;
 
+  /// The directory where [file] lives.
+  Directory get directory => file.parent;
+
   /// Save the [project] to its [file].
   void save() {
     final json = project.toJson();

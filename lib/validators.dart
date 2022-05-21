@@ -1,6 +1,8 @@
 /// Provides validators.
 import 'dart:io';
 
+import 'package:ziggurat_sounds/ziggurat_sounds.dart';
+
 import 'json/project.dart';
 
 const _emptyMessage = 'You must supply a value';
@@ -118,6 +120,29 @@ String? validateAssetStoreDartFilename({
   for (final assetStoreReference in project.assetStores) {
     final assetStore = assetStoreReference.assetStore;
     if (assetStore.filename == value) {
+      return message;
+    }
+  }
+  return null;
+}
+
+/// Validate [value] as a variable name in the context of [assetStore].
+String? validateAssetStoreVariableName({
+  required final String? value,
+  required final AssetStore assetStore,
+  final String emptyMessage = _emptyMessage,
+  final String message = 'That variable name has already been used',
+}) {
+  final result = validateVariableName(
+    value: value,
+    emptyMessage: emptyMessage,
+    invalidMessage: message,
+  );
+  if (result != null) {
+    return result;
+  }
+  for (final assetReferenceReference in assetStore.assets) {
+    if (assetReferenceReference.variableName == value) {
       return message;
     }
   }

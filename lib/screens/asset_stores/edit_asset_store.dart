@@ -3,14 +3,17 @@ import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../constants.dart';
 import '../../json/asset_store_reference.dart';
+import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
 import '../../validators.dart';
 import '../../widgets/cancel.dart';
+import '../../widgets/center_text.dart';
 import '../../widgets/project_context_state.dart';
 import '../../widgets/searchable_list_view.dart';
 import '../../widgets/tabbed_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
+import 'add_asset.dart';
 
 /// A widget to edit the given [assetStoreReference].
 class EditAssetStore extends StatefulWidget {
@@ -105,30 +108,52 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
             title: 'Assets',
             icon: filesIcon,
             builder: (final context) {
-              final children = <SearchableListTile>[];
-              for (var i = 0; i < assetStore.assets.length; i++) {
-                final assetReferenceReference = assetStore.assets[i];
-                children.add(
-                  SearchableListTile(
-                    searchString: assetReferenceReference.comment ??
-                        assetReferenceReference.variableName,
-                    child: ListTile(
-                      autofocus: i == 0,
-                      title: Text('${assetReferenceReference.comment}'),
-                      subtitle: Text(assetReferenceReference.variableName),
-                      onTap: () => confirm(
-                        context: context,
-                        message: 'Are you sure you want to delete this asset?',
+              final Widget child;
+              if (assetStore.assets.isEmpty) {
+                child = const CenterText(text: 'There are no assets to show.');
+              } else {
+                final children = <SearchableListTile>[];
+                for (var i = 0; i < assetStore.assets.length; i++) {
+                  final assetReferenceReference = assetStore.assets[i];
+                  children.add(
+                    SearchableListTile(
+                      searchString: assetReferenceReference.comment ??
+                          assetReferenceReference.variableName,
+                      child: ListTile(
+                        autofocus: i == 0,
+                        title: Text('${assetReferenceReference.comment}'),
+                        subtitle: Text(assetReferenceReference.variableName),
+                        onTap: () => confirm(
+                          context: context,
+                          message:
+                              'Are you sure you want to delete this asset?',
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                }
+                child = SearchableListView(children: children);
               }
-              return SearchableListView(children: children);
+              return CallbackShortcuts(
+                bindings: {newShortcut: () => addAsset(context)},
+                child: child,
+              );
             },
           )
         ],
       ),
     );
+  }
+
+  /// Add a new asset.
+  Future<void> addAsset(final BuildContext context) async {
+    await pushWidget(
+      context: context,
+      builder: (final context) => AddAsset(
+        projectContext: projectContext,
+        assetStore: widget.assetStoreReference.assetStore,
+      ),
+    );
+    setState(() {});
   }
 }

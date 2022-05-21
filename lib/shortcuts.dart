@@ -46,3 +46,17 @@ final helpShortcut = SingleActivator(
   meta: macOs,
   shift: true,
 );
+
+/// The import file shortcut.
+final importFileShortcut = SingleActivator(
+  LogicalKeyboardKey.keyF,
+  control: !macOs,
+  meta: macOs,
+);
+
+/// The import directory shortcut.
+final importDirectoryShortcut = SingleActivator(
+  LogicalKeyboardKey.keyD,
+  control: !macOs,
+  meta: macOs,
+);
