@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:dart_synthizer/dart_synthizer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
@@ -174,6 +175,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Untitled Game',
       commandTriggers: [],
       assetStores: [],
+      appName: path.basename(file.parent.path),
     );
     await AppPreferences(lastLoadedFilename: result).save();
     _projectSoundManager.soundsDirectory = file.parent.path;
