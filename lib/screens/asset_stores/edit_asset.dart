@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../json/asset_store_reference.dart';
 import '../../json/pretend_asset_reference.dart';
 import '../../src/project_context.dart';
+import '../../validators.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/project_context_state.dart';
 import '../../widgets/simple_scaffold.dart';
@@ -43,22 +44,47 @@ class EditAssetState extends ProjectContextState<EditAsset> {
 
   /// Build a widget.
   @override
-  Widget build(final BuildContext context) => Cancel(
-        child: SimpleScaffold(
-          title: 'Edit Asset',
-          body: ListView(
-            children: [
-              TextListTile(
-                value: widget.pretendAssetReference.variableName,
-                onChanged: (final value) {
-                  widget.pretendAssetReference.variableName = value;
-                  save();
-                },
-                header: 'Variable Name',
-                autofocus: true,
-              )
-            ],
-          ),
+  Widget build(final BuildContext context) {
+    final pretendAssetReference = widget.pretendAssetReference;
+    return Cancel(
+      child: SimpleScaffold(
+        title: 'Edit Asset',
+        body: ListView(
+          children: [
+            TextListTile(
+              value: pretendAssetReference.variableName,
+              onChanged: (final value) {
+                pretendAssetReference.variableName = value;
+                save();
+              },
+              header: 'Variable Name',
+              autofocus: true,
+              validator: (final value) => validateAssetStoreVariableName(
+                value: value,
+                assetStoreReference: widget.assetStoreReference,
+              ),
+            ),
+            TextListTile(
+              value: pretendAssetReference.comment,
+              onChanged: (final value) {
+                pretendAssetReference.comment = value;
+                save();
+              },
+              header: 'Comment',
+              validator: (final value) => validateNonEmptyValue(value: value),
+            ),
+            CheckboxListTile(
+              value: pretendAssetReference.isAudio,
+              onChanged: (final value) {
+                pretendAssetReference.isAudio = value ?? false;
+                save();
+              },
+              title: const Text('Audio Asset'),
+              subtitle: Text(pretendAssetReference.isAudio ? 'Yes' : 'No'),
+            )
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

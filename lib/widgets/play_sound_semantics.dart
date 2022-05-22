@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
 
-import '../json/pretend_asset_reference.dart';
-
 /// A widget for playing a sound when selected.
 class PlaySoundSemantics extends StatefulWidget {
   /// Create an instance.
   const PlaySoundSemantics({
     required this.child,
     required this.soundChannel,
-    this.pretendAssetReference,
+    this.assetReference,
     this.gain = 0.7,
     this.looping = false,
     super.key,
@@ -30,7 +28,7 @@ class PlaySoundSemantics extends StatefulWidget {
   /// The sound to play.
   ///
   /// If this value is `null`, no sound will play.
-  final PretendAssetReference? pretendAssetReference;
+  final AssetReference? assetReference;
 
   /// The gain for the resulting sound.
   final double gain;
@@ -66,12 +64,12 @@ class PlaySoundSemanticsState extends State<PlaySoundSemantics> {
   /// Play the sound.
   void play() {
     _playSound?.destroy();
-    final assetReference = widget.pretendAssetReference;
+    final assetReference = widget.assetReference;
     if (assetReference != null) {
       _playSound = widget.soundChannel.playSound(
         AssetReference(
           assetReference.name,
-          assetReference.assetType,
+          assetReference.type,
           encryptionKey: assetReference.encryptionKey,
         ),
         gain: widget.gain,

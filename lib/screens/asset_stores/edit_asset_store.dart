@@ -110,26 +110,30 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                   } else {
                     final children = <SearchableListTile>[];
                     for (var i = 0; i < assets.length; i++) {
-                      final assetReferenceReference = assets[i];
+                      final pretendAssetReference = assets[i];
+                      final assetReference = pretendAssetReference
+                          .assetReferenceReference.reference;
                       children.add(
                         SearchableListTile(
-                          searchString: assetReferenceReference.comment,
+                          searchString: pretendAssetReference.comment,
                           child: CallbackShortcuts(
                             bindings: {
                               deleteShortcut: () => deleteAsset(
                                     context: context,
                                     pretendAssetReference:
-                                        assetReferenceReference,
+                                        pretendAssetReference,
                                   )
                             },
                             child: PlaySoundSemantics(
                               soundChannel: projectContext.game.interfaceSounds,
-                              pretendAssetReference: assetReferenceReference,
+                              assetReference: pretendAssetReference.isAudio
+                                  ? assetReference
+                                  : null,
                               child: ListTile(
                                 autofocus: i == 0,
-                                title: Text(assetReferenceReference.comment),
+                                title: Text(pretendAssetReference.comment),
                                 subtitle:
-                                    Text(assetReferenceReference.variableName),
+                                    Text(pretendAssetReference.variableName),
                                 onTap: () async {
                                   await pushWidget(
                                     context: context,
@@ -138,7 +142,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                                       assetStoreReference:
                                           widget.assetStoreReference,
                                       pretendAssetReference:
-                                          assetReferenceReference,
+                                          pretendAssetReference,
                                     ),
                                   );
                                   setState(() {});
