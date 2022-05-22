@@ -135,7 +135,6 @@ String? validateAssetStoreVariableName({
   final result = validateVariableName(
     value: value,
     emptyMessage: emptyMessage,
-    invalidMessage: message,
   );
   if (result != null) {
     return result;
