@@ -162,6 +162,7 @@ class AddAssetState extends State<AddAsset> {
       final comment = _commentController.text;
       final file = File(filename);
       final directory = Directory(filename);
+      final isAudio = filename.endsWith('.wav') || filename.endsWith('.mp3');
       if (file.existsSync()) {
         final reference = widget.assetStoreReference.assetStore.importFile(
           source: file,
@@ -171,12 +172,14 @@ class AddAssetState extends State<AddAsset> {
         );
         widget.assetStoreReference.assets.add(
           PretendAssetReference(
+            assetStoreId: widget.assetStoreReference.id,
             id: newId(),
             variableName: variableName,
             comment: comment,
             name: reference.reference.name,
             assetType: reference.reference.type,
             encryptionKey: reference.reference.encryptionKey,
+            isAudio: isAudio,
           ),
         );
       } else if (directory.existsSync()) {
@@ -188,12 +191,14 @@ class AddAssetState extends State<AddAsset> {
         );
         widget.assetStoreReference.assets.add(
           PretendAssetReference(
+            assetStoreId: widget.assetStoreReference.id,
             id: newId(),
             variableName: variableName,
             comment: comment,
             name: reference.reference.name,
             assetType: reference.reference.type,
             encryptionKey: reference.reference.encryptionKey,
+            isAudio: isAudio,
           ),
         );
       } else {
