@@ -5,6 +5,8 @@
     "chrisnorman",
     "Colors",
     "dialog",
+    "dpad",
+    "dx",
     "dylib",
     "formals",
     "libsndfile",
@@ -12,6 +14,8 @@
     "sdl",
     "synthizer",
     "todos",
+    "triggerleft",
+    "triggerright",
     "unawaited",
     "writeln",
     "Za"
