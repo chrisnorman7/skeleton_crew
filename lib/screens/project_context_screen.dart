@@ -10,6 +10,7 @@ import '../widgets/project_context_state.dart';
 import '../widgets/tabbed_scaffold.dart';
 import '../widgets/tabs/asset_stores_tab.dart';
 import '../widgets/tabs/command_triggers_tab.dart';
+import '../widgets/tabs/levels_tab.dart';
 import '../widgets/tabs/project_settings_tab.dart';
 import 'command_triggers/edit_command_trigger.dart';
 
@@ -80,6 +81,13 @@ class ProjectContextScreenState
             child: const Icon(Icons.build),
             onPressed: () => buildProject(context),
             tooltip: 'Build Project',
+          ),
+        ),
+        TabbedScaffoldTab(
+          title: 'Levels',
+          icon: const Icon(Icons.workspace_premium),
+          builder: (final context) => LevelsTab(
+            projectContext: projectContext,
           ),
         ),
         TabbedScaffoldTab(
