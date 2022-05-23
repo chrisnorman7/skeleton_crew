@@ -48,7 +48,7 @@ class SoundListTile extends StatelessWidget {
         assetStore?.getAssetReference(sound!.assetReferenceId);
     return PlaySoundSemantics(
       soundChannel: projectContext.game.interfaceSounds,
-      assetReference: assetReference!.assetReferenceReference.reference,
+      assetReference: assetReference?.assetReferenceReference.reference,
       gain: sound?.gain ?? 1.0,
       child: CallbackShortcuts(
         bindings: {deleteShortcut: () => onChanged(null)},
@@ -56,7 +56,7 @@ class SoundListTile extends StatelessWidget {
           autofocus: autofocus,
           title: Text(title),
           subtitle: Text(
-            assetStore == null
+            assetStore == null || assetReference == null
                 ? 'Not Set '
                 : '${assetStore.name}/${assetReference.variableName}',
           ),

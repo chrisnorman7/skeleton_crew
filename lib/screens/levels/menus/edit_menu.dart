@@ -311,7 +311,9 @@ class EditMenuState extends ProjectContextState<EditMenu> {
             },
             moveDownShortcut: () {
               reorderMenuItems(index, index + 1);
-            }
+            },
+            moveToStartShortcut: () => reorderMenuItems(index, 0),
+            moveToEndShortcut: () => reorderMenuItems(index, menuItems.length)
           },
           child: PlaySoundSemantics(
             soundChannel: projectContext.game.interfaceSounds,

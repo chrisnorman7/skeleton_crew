@@ -77,3 +77,17 @@ final moveDownShortcut = SingleActivator(
   control: !macOs,
   meta: macOs,
 );
+
+/// A shortcut to move something to the top.
+final moveToStartShortcut = SingleActivator(
+  LogicalKeyboardKey.home,
+  control: !macOs,
+  meta: macOs,
+);
+
+/// A shortcut to move something to the end.
+final moveToEndShortcut = SingleActivator(
+  LogicalKeyboardKey.end,
+  control: !macOs,
+  meta: macOs,
+);
