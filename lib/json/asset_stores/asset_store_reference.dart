@@ -37,6 +37,10 @@ class AssetStoreReference {
   /// The assets this reference holds.
   final List<PretendAssetReference> assets;
 
+  /// Get the asset with the given [id].
+  PretendAssetReference getAssetReference(final String id) =>
+      assets.firstWhere((final element) => element.id == id);
+
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$AssetStoreReferenceToJson(this);
 

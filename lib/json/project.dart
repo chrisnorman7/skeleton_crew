@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'asset_stores/asset_store_reference.dart';
+import 'asset_stores/pretend_asset_reference.dart';
 import 'command_trigger_reference.dart';
 import 'levels/menus/menu_reference.dart';
+import 'levels/sounds/sound_reference.dart';
 
 part 'project.g.dart';
 
@@ -70,6 +72,17 @@ class Project {
 
   /// The asset stores that have been defined.
   final AssetStores assetStores;
+
+  /// Get the first asset store with the given [id].
+  AssetStoreReference getAssetStore(final String id) =>
+      assetStores.firstWhere((final element) => element.id == id);
+
+  /// Get an asset reference from the given [soundReference].
+  PretendAssetReference getPretendAssetReference(
+    final SoundReference soundReference,
+  ) =>
+      getAssetStore(soundReference.assetStoreId)
+          .getAssetReference(soundReference.assetReferenceId);
 
   /// The menus that have been defined.
   final Menus menus;

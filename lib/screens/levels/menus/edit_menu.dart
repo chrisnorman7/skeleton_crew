@@ -11,6 +11,7 @@ import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/double_list_tile.dart';
 import '../../../widgets/int_list_tile.dart';
+import '../../../widgets/play_sound_semantics.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
@@ -89,6 +90,7 @@ class EditMenuState extends ProjectContextState<EditMenu> {
       context: context,
       builder: (final context) => EditMenuItem(
         projectContext: projectContext,
+        menuReference: widget.menuReference,
         value: menuItem,
       ),
     );
@@ -287,13 +289,46 @@ class EditMenuState extends ProjectContextState<EditMenu> {
     return ListView.builder(
       itemBuilder: (final context, final index) {
         final menuItem = menuItems[index];
-        return PushWidgetListTile(
-          title: menuItem.title ?? 'Untitled Menu Item',
-          builder: (final context) => EditMenuItem(
-            projectContext: projectContext,
-            value: menuItem,
+        final sound = menuItem.soundReference;
+        return CallbackShortcuts(
+          bindings: {
+            deleteShortcut: () => confirm(
+                  context: context,
+                  message: 'Are you sure you want to delete this menu item?',
+                  title: 'Delete Menu Item',
+                  yesCallback: () {
+                    Navigator.pop(context);
+                    menu.menuItems.removeWhere(
+                      (final element) => element.id == menuItem.id,
+                    );
+                    save();
+                  },
+                )
+          },
+          child: PlaySoundSemantics(
+            soundChannel: projectContext.game.interfaceSounds,
+            assetReference: sound == null
+                ? null
+                : projectContext.project
+                    .getPretendAssetReference(sound)
+                    .assetReferenceReference
+                    .reference,
+            gain: sound?.gain ?? 0.0,
+            child: Builder(
+              builder: (final builderContext) => PushWidgetListTile(
+                title: menuItem.title ?? 'Untitled Menu Item',
+                builder: (final context) {
+                  PlaySoundSemantics.of(builderContext)?.stop();
+                  return EditMenuItem(
+                    projectContext: projectContext,
+                    menuReference: menu,
+                    value: menuItem,
+                  );
+                },
+                autofocus: index == 0,
+              ),
+            ),
           ),
-          autofocus: index == 0,
         );
       },
       itemCount: menuItems.length,

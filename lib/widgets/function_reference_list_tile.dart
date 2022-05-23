@@ -5,7 +5,7 @@ import '../screens/levels/edit_function_reference.dart';
 import 'push_widget_list_tile.dart';
 
 /// A list tile that shows a function reference [value].
-class FunctionReferenceListTile extends StatefulWidget {
+class FunctionReferenceListTile extends StatelessWidget {
   /// Create an instance.
   const FunctionReferenceListTile({
     required this.value,
@@ -27,33 +27,27 @@ class FunctionReferenceListTile extends StatefulWidget {
   /// Whether or not the resulting [ListTile] should be autofocused.
   final bool autofocus;
 
-  @override
-  State<FunctionReferenceListTile> createState() =>
-      _FunctionReferenceListTileState();
-}
-
-class _FunctionReferenceListTileState extends State<FunctionReferenceListTile> {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
-    final functionReference = widget.value;
+    final functionReference = value;
     return PushWidgetListTile(
-      title: widget.title,
+      title: title,
       builder: (final context) {
         if (functionReference == null) {
           final reference = FunctionReference(name: 'newFunction');
           return EditFunctionReference(
             value: reference,
-            onChanged: widget.onChanged,
+            onChanged: onChanged,
           );
         } else {
           return EditFunctionReference(
             value: functionReference,
-            onChanged: widget.onChanged,
+            onChanged: onChanged,
           );
         }
       },
-      autofocus: widget.autofocus,
+      autofocus: autofocus,
       subtitle: functionReference == null
           ? 'Not Set'
           : '${functionReference.name}: ${functionReference.comment}',
