@@ -89,6 +89,7 @@ class ProjectContext {
         ..writeln('const ${asset.variableName} = AssetReference(')
         ..writeln("  '${asset.name}',")
         ..writeln('  ${asset.assetType},')
+        ..writeln("  encryptionKey: '${asset.encryptionKey}',")
         ..writeln(');');
     }
     final code = dartFormatter.format(stringBuffer.toString());
