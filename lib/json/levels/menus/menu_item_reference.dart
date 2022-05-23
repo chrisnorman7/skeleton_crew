@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/menus.dart';
 
-import '../../sound_reference.dart';
 import '../function_reference.dart';
+import '../sounds/sound_reference.dart';
 
 part 'menu_item_reference.g.dart';
 

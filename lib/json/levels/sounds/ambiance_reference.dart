@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/sound.dart';
 
-import '../sound_reference.dart';
+import 'sound_reference.dart';
 
 part 'ambiance_reference.g.dart';
 
