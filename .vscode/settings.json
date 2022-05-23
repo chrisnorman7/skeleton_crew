@@ -11,6 +11,7 @@
     "formals",
     "libsndfile",
     "pubspec",
+    "Reorderable",
     "sdl",
     "synthizer",
     "todos",

@@ -303,7 +303,15 @@ class EditMenuState extends ProjectContextState<EditMenu> {
                     );
                     save();
                   },
-                )
+                ),
+            moveUpShortcut: () {
+              if (index > 0) {
+                reorderMenuItems(index, index - 1);
+              }
+            },
+            moveDownShortcut: () {
+              reorderMenuItems(index, index + 1);
+            }
           },
           child: PlaySoundSemantics(
             soundChannel: projectContext.game.interfaceSounds,
@@ -329,9 +337,23 @@ class EditMenuState extends ProjectContextState<EditMenu> {
               ),
             ),
           ),
+          key: ValueKey(menuItem.id),
         );
       },
       itemCount: menuItems.length,
     );
+  }
+
+  /// Reorder menu items.
+  void reorderMenuItems(final int oldIndex, final int newIndex) {
+    final menuItems = widget.menuReference.menuItems;
+    final menuItem = menuItems[oldIndex];
+    menuItems.removeWhere((final element) => element.id == menuItem.id);
+    if (newIndex >= menuItems.length) {
+      menuItems.add(menuItem);
+    } else {
+      menuItems.insert(newIndex, menuItem);
+    }
+    save();
   }
 }
