@@ -2,6 +2,7 @@ import 'package:dart_sdl/dart_sdl.dart';
 import 'package:flutter/material.dart';
 
 import 'lists/select_item.dart';
+import 'select_enum.dart';
 
 /// A widget for selecting a new [value].
 class SelectScanCode extends StatelessWidget {
@@ -13,7 +14,7 @@ class SelectScanCode extends StatelessWidget {
     super.key,
   });
 
-  /// The function to call with the new value.
+  /// The function to call when [value] has changed.
   final ValueChanged<ScanCode> onDone;
 
   /// The current scan code.
@@ -24,16 +25,10 @@ class SelectScanCode extends StatelessWidget {
 
   /// Build the widget.
   @override
-  Widget build(final BuildContext context) => SelectItem<ScanCode>(
-        onDone: (final value) {
-          Navigator.pop(context);
-          onDone(value);
-        },
+  Widget build(final BuildContext context) => SelectEnum<ScanCode>(
+        onDone: onDone,
         values: ScanCode.values,
         actions: actions,
-        getSearchString: (final value) => value.name,
-        getWidget: (final value) => Text(value.name),
-        title: 'Select Scan Code',
         value: value,
       );
 }
