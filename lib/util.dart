@@ -6,10 +6,14 @@ import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import 'constants.dart';
+import 'json/asset_stores/asset_store_reference.dart';
+import 'json/asset_stores/pretend_asset_reference.dart';
 import 'json/command_trigger_reference.dart';
 import 'screens/asset_stores/create_asset_store.dart';
 import 'screens/command_triggers/edit_command_trigger.dart';
+import 'screens/lists/select_item.dart';
 import 'src/project_context.dart';
+import 'widgets/play_sound_semantics.dart';
 
 /// Round the given [value] to the given number of decimal [places].
 ///
@@ -146,3 +150,37 @@ Future<void> createCommandTrigger({
     ),
   );
 }
+
+/// Select an asset.
+Future<void> selectAsset({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final ValueChanged<PretendAssetReference?> onDone,
+  final AssetStoreReference? assetStoreReference,
+  final PretendAssetReference? pretendAssetReference,
+}) =>
+    pushWidget(
+      context: context,
+      builder: (final context) => SelectItem<AssetStoreReference>(
+        onDone: (final assetStore) => pushWidget(
+          context: context,
+          builder: (final context) => SelectItem<PretendAssetReference>(
+            onDone: onDone,
+            values: assetStore.assets,
+            getSearchString: (final value) => value.variableName,
+            getWidget: (final value) => PlaySoundSemantics(
+              child: Text('${value.variableName}: ${value.comment}'),
+              soundChannel: projectContext.game.interfaceSounds,
+              assetReference: value.assetReferenceReference.reference,
+            ),
+            title: 'Select Asset',
+            value: pretendAssetReference,
+          ),
+        ),
+        values: projectContext.project.assetStores,
+        getSearchString: (final value) => value.name,
+        getWidget: (final value) => Text('${value.name}: ${value.comment}'),
+        title: 'Select Asset Store',
+        value: assetStoreReference,
+      ),
+    );
