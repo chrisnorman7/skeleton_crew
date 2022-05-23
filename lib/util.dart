@@ -2,9 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import 'constants.dart';
+import 'json/command_trigger_reference.dart';
+import 'screens/asset_stores/create_asset_store.dart';
+import 'screens/command_triggers/edit_command_trigger.dart';
+import 'src/project_context.dart';
 
 /// Round the given [value] to the given number of decimal [places].
 ///
@@ -95,4 +100,49 @@ String assetString(final AssetReferenceReference assetReferenceReference) =>
 void setClipboardText(final String text) {
   final data = ClipboardData(text: text);
   Clipboard.setData(data);
+}
+
+/// Create a new asset store.
+Future<void> createAssetStore({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+}) async {
+  final project = projectContext.project;
+  return pushWidget(
+    context: context,
+    builder: (final context) => CreateAssetStore(
+      project: project,
+      onDone: (final value) {
+        project.assetStores.add(value);
+        projectContext.save();
+      },
+    ),
+  );
+}
+
+/// Create a new command trigger.
+Future<void> createCommandTrigger({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+}) async {
+  final project = projectContext.project;
+  final commandTriggerNumber = project.commandTriggers.length + 1;
+  final commandTrigger = CommandTrigger(
+    name: 'command_trigger_$commandTriggerNumber',
+    description: 'Do something fun',
+  );
+  final commandTriggerReference = CommandTriggerReference(
+    id: newId(),
+    variableName: 'commandTrigger$commandTriggerNumber',
+    commandTrigger: commandTrigger,
+  );
+  project.commandTriggers.add(commandTriggerReference);
+  projectContext.save();
+  return pushWidget(
+    context: context,
+    builder: (final context) => EditCommandTrigger(
+      projectContext: projectContext,
+      commandTriggerReference: commandTriggerReference,
+    ),
+  );
 }
