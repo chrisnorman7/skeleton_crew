@@ -8,12 +8,12 @@ part of 'project.dart';
 
 Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
       title: json['title'] as String,
-      commandTriggers: (json['commandTriggers'] as List<dynamic>)
-          .map((e) =>
+      commandTriggers: (json['commandTriggers'] as List<dynamic>?)
+          ?.map((e) =>
               CommandTriggerReference.fromJson(e as Map<String, dynamic>))
           .toList(),
-      assetStores: (json['assetStores'] as List<dynamic>)
-          .map((e) => AssetStoreReference.fromJson(e as Map<String, dynamic>))
+      assetStores: (json['assetStores'] as List<dynamic>?)
+          ?.map((e) => AssetStoreReference.fromJson(e as Map<String, dynamic>))
           .toList(),
       orgName: json['orgName'] as String? ?? 'com.example',
       appName: json['appName'] as String? ?? 'untitled_game',

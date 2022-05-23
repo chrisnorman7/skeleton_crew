@@ -5,21 +5,28 @@ import 'command_trigger_reference.dart';
 
 part 'project.g.dart';
 
+/// The type definition for  a list of commands.
+typedef CommandTriggers = List<CommandTriggerReference>;
+
+/// The type definition for a list of asset stores.
+typedef AssetStores = List<AssetStoreReference>;
+
 /// The top-level project class.
 @JsonSerializable()
 class Project {
   /// Create an instance.
   Project({
     required this.title,
-    required this.commandTriggers,
-    required this.assetStores,
+    final CommandTriggers? commandTriggers,
+    final AssetStores? assetStores,
     this.orgName = 'com.example',
     this.appName = 'untitled_game',
     this.version = '0.0.0',
     this.outputDirectory = 'lib/generated',
     this.commandTriggersFilename = 'command_triggers.dart',
     this.assetStoreDartFilesDirectory = 'assets',
-  });
+  })  : commandTriggers = commandTriggers ?? [],
+        assetStores = assetStores ?? [];
 
   /// Create an instance from a JSON object.
   factory Project.fromJson(final Map<String, dynamic> json) =>
@@ -53,10 +60,10 @@ class Project {
   String assetStoreDartFilesDirectory;
 
   /// The command triggers to use.
-  final List<CommandTriggerReference> commandTriggers;
+  final CommandTriggers commandTriggers;
 
   /// The asset stores that have been defined.
-  final List<AssetStoreReference> assetStores;
+  final AssetStores assetStores;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
