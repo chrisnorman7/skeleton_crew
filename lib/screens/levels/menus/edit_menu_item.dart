@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../json/levels/menus/menu_item_reference.dart';
 import '../../../src/project_context.dart';
+import '../../../widgets/cancel.dart';
+import '../../../widgets/function_reference_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/simple_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
@@ -38,19 +40,29 @@ class EditMenuItemState extends ProjectContextState<EditMenuItem> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
-    final menu = widget.value;
-    return SimpleScaffold(
-      title: 'Edit Menu Item',
-      body: ListView(
-        children: [
-          TextListTile(
-            value: menu.title ?? '<Untitled>',
-            onChanged: (final value) {
-              menu.title = value.isEmpty ? null : value;
-            },
-            header: 'Title',
-          )
-        ],
+    final menuItem = widget.value;
+    return Cancel(
+      child: SimpleScaffold(
+        title: 'Edit Menu Item',
+        body: ListView(
+          children: [
+            TextListTile(
+              value: menuItem.title ?? '<Untitled>',
+              onChanged: (final value) {
+                menuItem.title = value.isEmpty ? null : value;
+              },
+              header: 'Title',
+              autofocus: true,
+            ),
+            FunctionReferenceListTile(
+              value: menuItem.functionReference,
+              onChanged: (final value) {
+                menuItem.functionReference = value;
+                save();
+              },
+            )
+          ],
+        ),
       ),
     );
   }

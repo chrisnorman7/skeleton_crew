@@ -289,8 +289,11 @@ class EditMenuState extends ProjectContextState<EditMenu> {
         final menuItem = menuItems[index];
         return PushWidgetListTile(
           title: menuItem.title ?? 'Untitled Menu Item',
-          builder: (final context) =>
-              EditMenuItem(projectContext: projectContext, value: menuItem),
+          builder: (final context) => EditMenuItem(
+            projectContext: projectContext,
+            value: menuItem,
+          ),
+          autofocus: index == 0,
         );
       },
       itemCount: menuItems.length,
