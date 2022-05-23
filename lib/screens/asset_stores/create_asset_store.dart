@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import '../../json/asset_store_reference.dart';
+import '../../json/asset_stores/asset_store_reference.dart';
 import '../../json/project.dart';
 import '../../util.dart';
 import '../../validators.dart';

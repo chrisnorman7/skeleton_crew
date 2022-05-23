@@ -1,7 +1,7 @@
 /// Provides validators.
 import 'dart:io';
 
-import 'json/asset_store_reference.dart';
+import 'json/asset_stores/asset_store_reference.dart';
 import 'json/project.dart';
 
 const _emptyMessage = 'You must supply a value';

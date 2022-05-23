@@ -5,8 +5,8 @@ import 'package:path/path.dart' as path;
 import 'package:ziggurat/ziggurat.dart';
 
 import '../constants.dart';
-import '../json/asset_store_reference.dart';
-import '../json/pretend_asset_reference.dart';
+import '../json/asset_stores/asset_store_reference.dart';
+import '../json/asset_stores/pretend_asset_reference.dart';
 import '../json/project.dart';
 
 const _jsonEncoder = JsonEncoder.withIndent('  ');

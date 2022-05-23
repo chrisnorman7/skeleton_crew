@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 
 import '../../constants.dart';
-import '../../json/asset_store_reference.dart';
-import '../../json/pretend_asset_reference.dart';
+import '../../json/asset_stores/asset_store_reference.dart';
+import '../../json/asset_stores/pretend_asset_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';

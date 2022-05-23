@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 import 'pretend_asset_reference.dart';
 
 part 'asset_store_reference.g.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../json/asset_store_reference.dart';
-import '../../json/pretend_asset_reference.dart';
+import '../../json/asset_stores/asset_store_reference.dart';
+import '../../json/asset_stores/pretend_asset_reference.dart';
 import '../../src/project_context.dart';
 import '../../validators.dart';
 import '../../widgets/cancel.dart';

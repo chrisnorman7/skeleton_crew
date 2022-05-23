@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'asset_store_reference.dart';
+import 'asset_stores/asset_store_reference.dart';
 import 'command_trigger_reference.dart';
 
 part 'project.g.dart';
