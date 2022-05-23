@@ -9,7 +9,7 @@ class SelectGameControllerButton extends StatelessWidget {
   /// Create an instance.
   const SelectGameControllerButton({
     required this.onDone,
-    this.value,
+    required this.value,
     this.actions = const [],
     super.key,
   });
