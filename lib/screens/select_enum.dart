@@ -28,10 +28,7 @@ class SelectEnum<T extends Enum> extends StatelessWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) => SelectItem<T>(
-        onDone: (final value) {
-          Navigator.pop(context);
-          onDone(value);
-        },
+        onDone: onDone,
         values: values,
         actions: actions,
         getSearchString: (final value) => value.name,
