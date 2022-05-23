@@ -17,6 +17,7 @@ class MenuReference {
     required this.title,
     required this.menuItems,
     this.className = 'Menu',
+    this.comment = 'A menu which must be extended.',
     this.upScanCode = ScanCode.up,
     this.upButton = GameControllerButton.dpadUp,
     this.downScanCode = ScanCode.down,
@@ -51,6 +52,9 @@ class MenuReference {
 
   /// The class name for this menu.
   String className;
+
+  /// The comment for this menu.
+  String comment;
 
   /// [Menu.upScanCode].
   ScanCode upScanCode;

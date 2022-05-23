@@ -117,6 +117,15 @@ class EditMenuState extends ProjectContextState<EditMenu> {
           ),
         ),
         TextListTile(
+          value: menu.comment,
+          onChanged: (final value) {
+            menu.comment = value;
+            save();
+          },
+          header: 'Comment',
+          validator: (final value) => validateNonEmptyValue(value: value),
+        ),
+        TextListTile(
           autofocus: true,
           value: menu.title,
           onChanged: (final value) {

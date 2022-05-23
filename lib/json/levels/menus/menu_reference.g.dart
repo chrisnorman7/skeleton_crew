@@ -14,6 +14,7 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
           .map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
           .toList(),
       className: json['className'] as String? ?? 'Menu',
+      comment: json['comment'] as String? ?? 'A menu which must be extended.',
       upScanCode: $enumDecodeNullable(_$ScanCodeEnumMap, json['upScanCode']) ??
           ScanCode.up,
       upButton: $enumDecodeNullable(
@@ -65,6 +66,7 @@ Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
       'title': instance.title,
       'menuItems': instance.menuItems,
       'className': instance.className,
+      'comment': instance.comment,
       'upScanCode': _$ScanCodeEnumMap[instance.upScanCode],
       'upButton': _$GameControllerButtonEnumMap[instance.upButton],
       'downScanCode': _$ScanCodeEnumMap[instance.downScanCode],
