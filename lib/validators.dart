@@ -72,15 +72,23 @@ String? validateVariableName({
 }
 
 /// Validate a class name.
+///
+/// If [classNames] is not `null`, and [value] is found in it,
+/// [duplicateMessage] will be returned.
 String? validateClassName({
   required final String? value,
   final String emptyMessage = _emptyMessage,
   final String invalidMessage = 'Invalid class name',
+  final Iterable<String>? classNames,
+  final String duplicateMessage = 'That class name is already in use',
 }) {
   if (value == null || value.isEmpty) {
     return emptyMessage;
   } else if (_classNameRegExp.firstMatch(value) == null) {
     return invalidMessage;
+  }
+  if (classNames != null && classNames.contains(value)) {
+    return duplicateMessage;
   }
   return null;
 }

@@ -103,6 +103,20 @@ class EditMenuState extends ProjectContextState<EditMenu> {
     return ListView(
       children: [
         TextListTile(
+          value: menu.className,
+          onChanged: (final value) {
+            menu.className = value;
+            save();
+          },
+          header: 'Class Name',
+          validator: (final value) => validateClassName(
+            value: value,
+            classNames: projectContext.project.menus
+                .where((final element) => element.id != menu.id)
+                .map((final e) => e.className),
+          ),
+        ),
+        TextListTile(
           autofocus: true,
           value: menu.title,
           onChanged: (final value) {

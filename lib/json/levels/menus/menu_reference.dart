@@ -16,6 +16,7 @@ class MenuReference {
     required this.id,
     required this.title,
     required this.menuItems,
+    this.className = 'Menu',
     this.upScanCode = ScanCode.up,
     this.upButton = GameControllerButton.dpadUp,
     this.downScanCode = ScanCode.down,
@@ -47,6 +48,9 @@ class MenuReference {
 
   /// A list of menu items to render.
   final List<MenuItemReference> menuItems;
+
+  /// The class name for this menu.
+  String className;
 
   /// [Menu.upScanCode].
   ScanCode upScanCode;

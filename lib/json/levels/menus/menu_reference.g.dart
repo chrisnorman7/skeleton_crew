@@ -13,6 +13,7 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
       menuItems: (json['menuItems'] as List<dynamic>)
           .map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      className: json['className'] as String? ?? 'Menu',
       upScanCode: $enumDecodeNullable(_$ScanCodeEnumMap, json['upScanCode']) ??
           ScanCode.up,
       upButton: $enumDecodeNullable(
@@ -63,6 +64,7 @@ Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
       'id': instance.id,
       'title': instance.title,
       'menuItems': instance.menuItems,
+      'className': instance.className,
       'upScanCode': _$ScanCodeEnumMap[instance.upScanCode],
       'upButton': _$GameControllerButtonEnumMap[instance.upButton],
       'downScanCode': _$ScanCodeEnumMap[instance.downScanCode],
