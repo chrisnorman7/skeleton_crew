@@ -11,6 +11,7 @@ part 'menu_item_reference.g.dart';
 class MenuItemReference {
   /// Create an instance.
   MenuItemReference({
+    required this.id,
     this.title,
     this.soundReference,
     this.functionReference,
@@ -19,6 +20,9 @@ class MenuItemReference {
   /// Create an instance from a JSON object.
   factory MenuItemReference.fromJson(final Map<String, dynamic> json) =>
       _$MenuItemReferenceFromJson(json);
+
+  /// The ID of this menu.
+  final String id;
 
   /// The title of this menu item.
   String? title;

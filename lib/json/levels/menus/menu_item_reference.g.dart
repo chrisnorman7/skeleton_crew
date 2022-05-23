@@ -8,6 +8,7 @@ part of 'menu_item_reference.dart';
 
 MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
     MenuItemReference(
+      id: json['id'] as String,
       title: json['title'] as String?,
       soundReference: json['soundReference'] == null
           ? null
@@ -21,6 +22,7 @@ MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MenuItemReferenceToJson(MenuItemReference instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'soundReference': instance.soundReference,
       'functionReference': instance.functionReference,

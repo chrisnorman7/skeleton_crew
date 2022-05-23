@@ -13,6 +13,7 @@ part 'menu_reference.g.dart';
 class MenuReference {
   /// Create an instance.
   MenuReference({
+    required this.id,
     required this.title,
     required this.menuItems,
     this.upScanCode = ScanCode.up,
@@ -22,7 +23,7 @@ class MenuReference {
     this.activateScanCode = ScanCode.space,
     this.activateButton = GameControllerButton.dpadRight,
     this.cancelScanCode = ScanCode.escape,
-    this.cancelButton = GameControllerButton.dpadRight,
+    this.cancelButton = GameControllerButton.dpadLeft,
     this.movementAxis = GameControllerAxis.lefty,
     this.activateAxis = GameControllerAxis.triggerright,
     this.cancelAxis = GameControllerAxis.triggerleft,
@@ -37,6 +38,9 @@ class MenuReference {
   /// Create an instance from a JSON object.
   factory MenuReference.fromJson(final Map<String, dynamic> json) =>
       _$MenuReferenceFromJson(json);
+
+  /// The ID of this menu.
+  final String id;
 
   /// The title of this menu.
   String title;

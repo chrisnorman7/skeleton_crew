@@ -8,6 +8,7 @@ part of 'menu_reference.dart';
 
 MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
     MenuReference(
+      id: json['id'] as String,
       title: json['title'] as String,
       menuItems: (json['menuItems'] as List<dynamic>)
           .map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
@@ -34,7 +35,7 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
               ScanCode.escape,
       cancelButton: $enumDecodeNullable(
               _$GameControllerButtonEnumMap, json['cancelButton']) ??
-          GameControllerButton.dpadRight,
+          GameControllerButton.dpadLeft,
       movementAxis: $enumDecodeNullable(
               _$GameControllerAxisEnumMap, json['movementAxis']) ??
           GameControllerAxis.lefty,
@@ -59,6 +60,7 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'menuItems': instance.menuItems,
       'upScanCode': _$ScanCodeEnumMap[instance.upScanCode],
