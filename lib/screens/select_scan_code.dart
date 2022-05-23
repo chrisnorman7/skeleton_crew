@@ -9,7 +9,7 @@ class SelectScanCode extends StatelessWidget {
   /// Create an instance.
   const SelectScanCode({
     required this.onDone,
-    this.value,
+    required this.value,
     this.actions = const [],
     super.key,
   });
