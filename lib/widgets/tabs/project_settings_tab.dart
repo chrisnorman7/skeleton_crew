@@ -82,26 +82,6 @@ class ProjectSettingsTabState extends ProjectContextState<ProjectSettingsTab> {
           },
           header: 'Output Directory',
         ),
-        TextListTile(
-          value: project.commandTriggersFilename,
-          onChanged: (final value) {
-            project.commandTriggersFilename = value;
-            save();
-          },
-          header: 'Command Triggers Filename',
-          labelText: 'Filename',
-        ),
-        TextListTile(
-          value: project.assetStoreDartFilesDirectory,
-          onChanged: (final value) {
-            project.assetStoreDartFilesDirectory = value;
-            save();
-          },
-          header: 'Asset Stores Code Directory',
-          validator: (final value) => validateNonEmptyValue(
-            value: value,
-          ),
-        )
       ],
     );
   }

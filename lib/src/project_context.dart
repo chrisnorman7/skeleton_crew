@@ -159,7 +159,7 @@ class ProjectContext {
       path.join(
         file.parent.path,
         project.outputDirectory,
-        project.commandTriggersFilename,
+        commandTriggersFilename,
       ),
     ).writeAsStringSync(code);
   }

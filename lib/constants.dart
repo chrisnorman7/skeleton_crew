@@ -45,3 +45,12 @@ const assetsDirectory = 'assets';
 ///
 /// This directory will be located beneath `Project.outputDirectory`.
 const assetStoresDirectory = 'asset_stores';
+
+/// The filename where command triggers will be written.
+///
+/// This file will be located inside the output directory.
+const commandTriggersFilename = 'command_triggers.dart';
+
+/// The filename where menus will be stored.
+/// This file will be located under the output directory.
+const menuFilename = 'menus.dart';

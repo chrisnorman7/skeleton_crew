@@ -29,8 +29,6 @@ class Project {
     this.appName = 'untitled_game',
     this.version = '0.0.0',
     this.outputDirectory = 'lib/generated',
-    this.commandTriggersFilename = 'command_triggers.dart',
-    this.assetStoreDartFilesDirectory = 'assets',
     final Menus? menus,
   })  : commandTriggers = commandTriggers ?? [],
         assetStores = assetStores ?? [],
@@ -56,16 +54,6 @@ class Project {
 
   /// The output directory for files.
   String outputDirectory;
-
-  /// The file where command triggers will be stored.
-  ///
-  /// This value will be joined to the [outputDirectory] to get the full path.
-  String commandTriggersFilename;
-
-  /// The directory where asset store dart files will be stored.
-  ///
-  /// This directory will be located under [outputDirectory].
-  String assetStoreDartFilesDirectory;
 
   /// The command triggers to use.
   final CommandTriggers commandTriggers;
