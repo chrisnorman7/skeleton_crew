@@ -23,6 +23,9 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
           json['commandTriggersFilename'] as String? ?? 'command_triggers.dart',
       assetStoreDartFilesDirectory:
           json['assetStoreDartFilesDirectory'] as String? ?? 'assets',
+      menus: (json['menus'] as List<dynamic>?)
+          ?.map((e) => MenuReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -35,4 +38,5 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'assetStoreDartFilesDirectory': instance.assetStoreDartFilesDirectory,
       'commandTriggers': instance.commandTriggers,
       'assetStores': instance.assetStores,
+      'menus': instance.menus,
     };
