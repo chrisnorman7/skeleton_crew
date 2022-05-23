@@ -57,7 +57,7 @@ class _SearchableListViewState extends State<SearchableListView> {
     } else {
       results = widget.children
           .where(
-            (final element) => element.searchString.toLowerCase().startsWith(
+            (final element) => element.searchString.toLowerCase().contains(
                   searchString.toLowerCase(),
                 ),
           )
