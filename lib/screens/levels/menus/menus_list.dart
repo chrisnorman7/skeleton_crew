@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants.dart';
+import '../../../json/levels/menus/menu_reference.dart';
+import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
+import '../../../util.dart';
+import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/searchable_list_view.dart';
@@ -55,9 +60,39 @@ class MenusListState extends State<MenusList> {
       }
       child = SearchableListView(children: children);
     }
-    return SimpleScaffold(
-      title: 'Menus',
-      body: child,
+    return Cancel(
+      child: CallbackShortcuts(
+        bindings: {newShortcut: () => addMenu(context)},
+        child: SimpleScaffold(
+          title: 'Menus',
+          body: child,
+          floatingActionButton: FloatingActionButton(
+            autofocus: menus.isEmpty,
+            child: addIcon,
+            onPressed: () => addMenu(context),
+            tooltip: 'Add Menu',
+          ),
+        ),
+      ),
     );
+  }
+
+  /// Add a new menu.
+  Future<void> addMenu(final BuildContext context) async {
+    final menu = MenuReference(
+      id: newId(),
+      title: 'Untitled Menu',
+      menuItems: [],
+    );
+    widget.projectContext.project.menus.add(menu);
+    widget.projectContext.save();
+    await pushWidget(
+      context: context,
+      builder: (final context) => EditMenu(
+        projectContext: widget.projectContext,
+        menuReference: menu,
+      ),
+    );
+    setState(() {});
   }
 }
