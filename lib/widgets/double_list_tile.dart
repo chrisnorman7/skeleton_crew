@@ -12,6 +12,7 @@ class DoubleListTile extends StatelessWidget {
     required this.onChanged,
     required this.title,
     this.subtitle,
+    this.autofocus = false,
     this.actions = const [],
     this.decimalPlaces = 2,
     this.min,
@@ -36,6 +37,9 @@ class DoubleListTile extends StatelessWidget {
 
   /// How many decimal places should [value] be shown to.
   final int decimalPlaces;
+
+  /// Whether or not the resulting [ListTile] should be autofocused.
+  final bool autofocus;
 
   /// The actions for the resulting [GetText].
   final List<Widget> actions;
@@ -71,6 +75,7 @@ class DoubleListTile extends StatelessWidget {
         }
       },
       child: PushWidgetListTile(
+        autofocus: autofocus,
         title: title,
         builder: (final context) => GetText(
           onDone: (final value) {
