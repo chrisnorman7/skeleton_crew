@@ -6,7 +6,7 @@ import '../../constants.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/push_widget_list_tile.dart';
 import '../../widgets/simple_scaffold.dart';
-import '../lists/select_item.dart';
+import '../select_scan_code.dart';
 
 /// A widget for editing the given [commandKeyboardKey].
 class EditCommandKeyboardKey extends StatefulWidget {
@@ -59,12 +59,8 @@ class EditCommandKeyboardKeyState extends State<EditCommandKeyboardKey> {
               PushWidgetListTile(
                 autofocus: true,
                 title: 'Scan Code',
-                builder: (final context) => SelectItem<ScanCode>(
-                  values: ScanCode.values,
+                builder: (final context) => SelectScanCode(
                   onDone: (final value) => save(scanCode: value),
-                  getSearchString: (final value) => value.name,
-                  getWidget: (final value) => Text(value.name),
-                  title: 'Select Scan Code',
                   value: commandKeyboardKey.scanCode,
                 ),
                 subtitle: commandKeyboardKey.scanCode.name,
