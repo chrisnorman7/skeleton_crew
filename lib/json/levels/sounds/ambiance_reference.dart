@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/sound.dart';
 
+import '../../coordinates.dart';
 import 'sound_reference.dart';
 
 part 'ambiance_reference.g.dart';
@@ -14,8 +13,7 @@ class AmbianceReference {
   AmbianceReference({
     required this.id,
     required this.sound,
-    this.x,
-    this.y,
+    this.coordinates,
   });
 
   /// Create an instance from a JSON object.
@@ -28,21 +26,8 @@ class AmbianceReference {
   /// The sound to play.
   final SoundReference sound;
 
-  /// The x coordinate.
-  double? x;
-
-  /// The y coordinate.
-  double? y;
-
-  /// Get the coordinates for this instance.
-  Point<double>? get coordinates {
-    final dx = x;
-    final dy = y;
-    if (dx != null && dy != null) {
-      return Point(dx, dy);
-    }
-    return null;
-  }
+  /// The coordinates for this ambiance.
+  Coordinates? coordinates;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$AmbianceReferenceToJson(this);

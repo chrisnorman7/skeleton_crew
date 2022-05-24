@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../json/levels/menus/menu_item_reference.dart';
 import '../../../json/levels/menus/menu_reference.dart';
+import '../../../json/levels/sounds/ambiance_reference.dart';
+import '../../../json/levels/sounds/sound_reference.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
@@ -13,6 +15,7 @@ import '../../../widgets/double_list_tile.dart';
 import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
+import '../../../widgets/sounds/ambiances/ambiances_tab.dart';
 import '../../../widgets/sounds/play_sound_semantics.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
@@ -20,6 +23,7 @@ import '../../../widgets/text_list_tile.dart';
 import '../../select_game_controller_axis.dart';
 import '../../select_game_controller_button.dart';
 import '../../select_scan_code.dart';
+import '../../sounds/ambiances/edit_ambiance.dart';
 import 'edit_menu_item.dart';
 
 /// A widget for editing the given [menuReference].
@@ -55,29 +59,47 @@ class EditMenuState extends ProjectContextState<EditMenu> {
   @override
   Widget build(final BuildContext context) {
     final menu = widget.menuReference;
+    final ambiances = menu.ambiances;
     return Cancel(
-      child: CallbackShortcuts(
-        bindings: {newShortcut: () => addMenuItem(context)},
-        child: TabbedScaffold(
-          tabs: [
-            TabbedScaffoldTab(
-              title: 'Settings',
-              icon: const Icon(Icons.settings),
-              builder: getSettingsListView,
+      child: TabbedScaffold(
+        tabs: [
+          TabbedScaffoldTab(
+            title: 'Settings',
+            icon: const Icon(Icons.settings),
+            builder: (final context) => CallbackShortcuts(
+              bindings: {newShortcut: () => addMenuItem(context)},
+              child: getSettingsListView(context),
             ),
-            TabbedScaffoldTab(
-              title: 'Menu Items',
-              icon: const Icon(Icons.menu_book),
-              builder: getMenuItemsListView,
-              floatingActionButton: FloatingActionButton(
-                autofocus: menu.menuItems.isEmpty,
-                child: addIcon,
-                onPressed: () => addMenuItem(context),
-                tooltip: 'Add Menu Item',
-              ),
-            )
-          ],
-        ),
+          ),
+          TabbedScaffoldTab(
+            title: 'Menu Items',
+            icon: const Icon(Icons.menu_book),
+            builder: (final context) => CallbackShortcuts(
+              bindings: {newShortcut: () => addMenuItem(context)},
+              child: getMenuItemsListView(context),
+            ),
+            floatingActionButton: FloatingActionButton(
+              autofocus: menu.menuItems.isEmpty,
+              child: addIcon,
+              onPressed: () => addMenuItem(context),
+              tooltip: 'Add Menu Item',
+            ),
+          ),
+          TabbedScaffoldTab(
+            title: 'Ambiances',
+            icon: ambiancesIcon,
+            builder: (final context) => CallbackShortcuts(
+              bindings: {newShortcut: () => addAmbiance(context)},
+              child: getAmbiancesListView(context),
+            ),
+            floatingActionButton: FloatingActionButton(
+              autofocus: ambiances.isEmpty,
+              child: addIcon,
+              onPressed: () => addAmbiance(context),
+              tooltip: 'Add Ambiance',
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -392,4 +414,38 @@ class EditMenuState extends ProjectContextState<EditMenu> {
     }
     save();
   }
+
+  /// Get the ambiances list view.
+  Widget getAmbiancesListView(final BuildContext context) => AmbiancesTab(
+        projectContext: projectContext,
+        ambiances: widget.menuReference.ambiances,
+      );
+
+  /// Add a new ambiance.
+  Future<void> addAmbiance(final BuildContext context) => selectAsset(
+        context: context,
+        projectContext: projectContext,
+        onDone: (final value) async {
+          if (value == null) {
+            return;
+          }
+          final ambiance = AmbianceReference(
+            id: newId(),
+            sound: SoundReference(
+              assetStoreId: value.assetStoreId,
+              assetReferenceId: value.id,
+            ),
+          );
+          widget.menuReference.ambiances.add(ambiance);
+          await pushWidget(
+            context: context,
+            builder: (final context) => EditAmbiance(
+              projectContext: projectContext,
+              ambiances: widget.menuReference.ambiances,
+              value: ambiance,
+            ),
+          );
+          setState(() {});
+        },
+      );
 }

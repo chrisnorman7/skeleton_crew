@@ -35,6 +35,9 @@ const deleteIcon = Icon(
 /// The icon to use to denote a series of files.
 const filesIcon = Icon(Icons.storage);
 
+/// The icon to use for ambiances.
+const ambiancesIcon = Icon(Icons.architecture);
+
 /// The string to use when a value is not set.
 const notSet = 'Not Set';
 
