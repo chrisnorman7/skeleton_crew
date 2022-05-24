@@ -184,3 +184,9 @@ Future<void> selectAsset({
         value: assetStoreReference,
       ),
     );
+
+/// Return a quoted version of [string].
+String getQuotedString(final String string) {
+  final result = string.replaceAll("'", r"\'");
+  return "'$result'";
+}
