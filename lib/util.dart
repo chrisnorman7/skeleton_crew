@@ -233,6 +233,9 @@ Future<void> deleteAssetReference({
       project.getAssetStore(assetReference.assetStoreId).assets.removeWhere(
             (final element) => element.id == assetReference.id,
           );
+      if (onYes != null) {
+        onYes();
+      }
       projectContext.save();
     },
     title: 'Delete Asset',
