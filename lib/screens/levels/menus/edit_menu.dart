@@ -14,7 +14,7 @@ import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/play_sound_semantics.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
-import '../../../widgets/sound_list_tile.dart';
+import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
 import '../../select_game_controller_axis.dart';
@@ -369,6 +369,7 @@ class EditMenuState extends ProjectContextState<EditMenu> {
                   );
                 },
                 autofocus: index == 0,
+                onSetState: () => setState(() {}),
               ),
             ),
           ),

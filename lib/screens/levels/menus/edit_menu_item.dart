@@ -8,7 +8,7 @@ import '../../../widgets/cancel.dart';
 import '../../../widgets/function_reference_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/simple_scaffold.dart';
-import '../../../widgets/sound_list_tile.dart';
+import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/text_list_tile.dart';
 
 /// A widget for editing a menu item [value].

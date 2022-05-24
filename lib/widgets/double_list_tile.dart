@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import '../shortcuts.dart';
 import 'get_text.dart';
 import 'push_widget_list_tile.dart';
 
@@ -59,15 +59,13 @@ class DoubleListTile extends StatelessWidget {
     final text = value.toStringAsFixed(decimalPlaces);
     return CallbackShortcuts(
       bindings: {
-        const SingleActivator(LogicalKeyboardKey.minus): () {
+        moveDownShortcut: () {
           final i = value - modifier;
           if (i >= (min ?? i)) {
             onChanged(i);
           }
         },
-        const SingleActivator(
-          LogicalKeyboardKey.equal,
-        ): () {
+        moveUpShortcut: () {
           final i = value + modifier;
           if (i <= (max ?? i)) {
             onChanged(i);

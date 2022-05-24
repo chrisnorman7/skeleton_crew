@@ -100,10 +100,13 @@ class ProjectContextScreenState
           floatingActionButton: FloatingActionButton(
             autofocus: assetStores.isEmpty,
             child: addIcon,
-            onPressed: () => createAssetStore(
-              context: context,
-              projectContext: projectContext,
-            ),
+            onPressed: () async {
+              await createAssetStore(
+                context: context,
+                projectContext: projectContext,
+              );
+              setState(() {});
+            },
           ),
         ),
         TabbedScaffoldTab(
