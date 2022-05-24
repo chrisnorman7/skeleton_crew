@@ -136,6 +136,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                                   context: context,
                                   projectContext: projectContext,
                                   assetReference: pretendAssetReference,
+                                  onYes: () => setState(() {}),
                                 )
                           },
                           child: PlaySoundSemantics(
