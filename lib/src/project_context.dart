@@ -85,13 +85,17 @@ class ProjectContext {
     final stringBuffer = StringBuffer()
       ..writeln(generatedHeader)
       ..writeln('/// Provides the [$className] class.')
+      ..writeln("import 'dart:io';")
+      ..writeln("import 'package:dart_sdl/dart_sdl.dart';")
       ..writeln("import 'package:ziggurat/ziggurat.dart';")
       ..writeln("import '$commandTriggersFilename';")
       ..writeln('/// ${project.gameClassComment}')
       ..writeln('abstract class $className extends Game {')
       ..writeln('/// Create an instance.')
-      ..writeln('$className(): super(')
-      ..writeln('${getQuotedString(project.title)},')
+      ..writeln('$className({required this.sdl,}):')
+      ..writeln(' orgName = ${getQuotedString(project.orgName)},')
+      ..writeln('appName = ${getQuotedString(project.appName)},')
+      ..writeln('super(${getQuotedString(project.title)},')
       ..writeln('triggerMap: const TriggerMap([');
     for (final commandTriggerReference in project.commandTriggers) {
       final comment = commandTriggerReference.comment;
@@ -102,6 +106,15 @@ class ProjectContext {
     }
     stringBuffer
       ..writeln('],),);')
+      ..writeln('/// Organisation name.')
+      ..writeln('final String orgName;')
+      ..writeln('/// Application name.')
+      ..writeln('final String appName;')
+      ..writeln('/// The SDL instance to use.')
+      ..writeln('final Sdl sdl;')
+      ..writeln('/// Get the preferences directory for this game.')
+      ..writeln('Directory get preferencesDirectory => Directory(')
+      ..writeln('sdl.getPrefPath(orgName, appName));')
       ..writeln('}');
     final code = dartFormatter.format(stringBuffer.toString());
     File(path.join(project.outputDirectory, gameFilename))
