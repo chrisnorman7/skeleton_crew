@@ -9,6 +9,7 @@ import '../../validators.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/center_text.dart';
 import '../../widgets/project_context_state.dart';
+import '../../widgets/push_widget_list_tile.dart';
 import '../../widgets/searchable_list_view.dart';
 import '../../widgets/sounds/play_sound_semantics.dart';
 import '../../widgets/tabbed_scaffold.dart';
@@ -110,6 +111,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                     final children = <SearchableListTile>[];
                     for (var i = 0; i < assets.length; i++) {
                       final pretendAssetReference = assets[i];
+                      final isAudio = pretendAssetReference.isAudio;
                       final assetReference = pretendAssetReference
                           .assetReferenceReference.reference;
                       children.add(
@@ -125,27 +127,26 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                             },
                             child: PlaySoundSemantics(
                               soundChannel: projectContext.game.interfaceSounds,
-                              assetReference: pretendAssetReference.isAudio
-                                  ? assetReference
-                                  : null,
-                              child: ListTile(
-                                autofocus: i == 0,
-                                title: Text(pretendAssetReference.comment),
-                                subtitle:
-                                    Text(pretendAssetReference.variableName),
-                                onTap: () async {
-                                  await pushWidget(
-                                    context: context,
-                                    builder: (final context) => EditAsset(
+                              assetReference: isAudio ? assetReference : null,
+                              child: Builder(
+                                builder: (final builderContext) =>
+                                    PushWidgetListTile(
+                                  autofocus: i == 0,
+                                  title: pretendAssetReference.comment,
+                                  subtitle: pretendAssetReference.variableName,
+                                  builder: (final context) {
+                                    PlaySoundSemantics.of(builderContext)
+                                        ?.stop();
+                                    return EditAsset(
                                       projectContext: projectContext,
                                       assetStoreReference:
                                           widget.assetStoreReference,
                                       pretendAssetReference:
                                           pretendAssetReference,
-                                    ),
-                                  );
-                                  setState(() {});
-                                },
+                                    );
+                                  },
+                                  onSetState: () => setState(() {}),
+                                ),
                               ),
                             ),
                           ),
