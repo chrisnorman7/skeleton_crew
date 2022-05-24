@@ -65,29 +65,25 @@ final importDirectoryShortcut = SingleActivator(
 const deleteShortcut = SingleActivator(LogicalKeyboardKey.delete);
 
 /// A shortcut to move items up.
-final moveUpShortcut = SingleActivator(
+const moveUpShortcut = SingleActivator(
   LogicalKeyboardKey.arrowUp,
-  control: !macOs,
-  meta: macOs,
+  alt: true,
 );
 
 /// A shortcut to move items down.
-final moveDownShortcut = SingleActivator(
+const moveDownShortcut = SingleActivator(
   LogicalKeyboardKey.arrowDown,
-  control: !macOs,
-  meta: macOs,
+  alt: true,
 );
 
 /// A shortcut to move something to the top.
-final moveToStartShortcut = SingleActivator(
+const moveToStartShortcut = SingleActivator(
   LogicalKeyboardKey.home,
-  control: !macOs,
-  meta: macOs,
+  alt: true,
 );
 
 /// A shortcut to move something to the end.
-final moveToEndShortcut = SingleActivator(
+const moveToEndShortcut = SingleActivator(
   LogicalKeyboardKey.end,
-  control: !macOs,
-  meta: macOs,
+  alt: true,
 );
