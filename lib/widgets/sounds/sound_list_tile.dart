@@ -5,7 +5,7 @@ import '../../screens/sounds/edit_sound.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
-import '../play_sound_semantics.dart';
+import 'play_sound_semantics.dart';
 
 /// A list tile that shows a pretend asset reference [value].
 class SoundListTile extends StatelessWidget {

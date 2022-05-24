@@ -13,7 +13,7 @@ import 'screens/asset_stores/create_asset_store.dart';
 import 'screens/command_triggers/edit_command_trigger.dart';
 import 'screens/lists/select_item.dart';
 import 'src/project_context.dart';
-import 'widgets/play_sound_semantics.dart';
+import 'widgets/sounds/play_sound_semantics.dart';
 
 /// Round the given [value] to the given number of decimal [places].
 ///
