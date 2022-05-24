@@ -15,7 +15,6 @@ class SelectItem<T> extends StatelessWidget {
     this.title = 'Select Item',
     this.getSearchString,
     this.getWidget,
-    // ignore: prefer_final_parameters
     super.key,
   });
 

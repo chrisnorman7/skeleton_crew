@@ -21,7 +21,6 @@ class EditCommandTrigger extends StatefulWidget {
   const EditCommandTrigger({
     required this.projectContext,
     required this.commandTriggerReference,
-    // ignore: prefer_final_parameters
     super.key,
   });
 

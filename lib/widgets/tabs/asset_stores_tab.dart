@@ -41,15 +41,24 @@ class AssetStoresTabState extends State<AssetStoresTab> {
         children.add(
           SearchableListTile(
             searchString: assetStoreReference.name,
-            child: PushWidgetListTile(
-              builder: (final context) => EditAssetStore(
-                projectContext: widget.projectContext,
-                assetStoreReference: assetStoreReference,
+            child: CallbackShortcuts(
+              bindings: {
+                deleteShortcut: () => deleteAssetStore(
+                      context: context,
+                      projectContext: widget.projectContext,
+                      assetStore: assetStoreReference,
+                    ),
+              },
+              child: PushWidgetListTile(
+                builder: (final context) => EditAssetStore(
+                  projectContext: widget.projectContext,
+                  assetStoreReference: assetStoreReference,
+                ),
+                onSetState: () => setState(() {}),
+                autofocus: i == 0,
+                title: '${assetStoreReference.name} ($numberOfAssets)',
+                subtitle: assetStoreReference.comment,
               ),
-              onSetState: () => setState(() {}),
-              autofocus: i == 0,
-              title: '${assetStoreReference.name} ($numberOfAssets)',
-              subtitle: assetStoreReference.comment,
             ),
           ),
         );

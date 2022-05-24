@@ -24,7 +24,6 @@ const _loading = 'Loading';
 /// The home page for the application.
 class HomePage extends StatefulWidget {
   /// Create an instance.
-  // ignore: prefer_final_parameters
   const HomePage({super.key});
 
   @override

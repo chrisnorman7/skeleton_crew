@@ -20,7 +20,6 @@ class ProjectContextScreen extends StatefulWidget {
   const ProjectContextScreen({
     required this.projectContext,
     this.onClose,
-    // ignore: prefer_final_parameters
     super.key,
   });
 

@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_final_parameters
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -118,7 +117,8 @@ class AddAssetState extends State<AddAsset> {
                             'The name of the dart variable that will represent '
                             'this asset in code',
                       ),
-                      validator: (value) => validateAssetStoreVariableName(
+                      validator: (final value) =>
+                          validateAssetStoreVariableName(
                         value: value,
                         assetStoreReference: widget.assetStoreReference,
                       ),

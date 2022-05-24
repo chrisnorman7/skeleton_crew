@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
 import '../../json/asset_stores/asset_store_reference.dart';
 import '../../json/asset_stores/pretend_asset_reference.dart';
 import '../../src/project_context.dart';
+import '../../util.dart';
 import '../../validators.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/project_context_state.dart';
@@ -48,6 +50,17 @@ class EditAssetState extends ProjectContextState<EditAsset> {
     final pretendAssetReference = widget.pretendAssetReference;
     return Cancel(
       child: SimpleScaffold(
+        actions: [
+          ElevatedButton(
+            onPressed: () => deleteAssetReference(
+              context: context,
+              projectContext: projectContext,
+              assetReference: widget.pretendAssetReference,
+              onYes: () => Navigator.pop(context),
+            ),
+            child: deleteIcon,
+          )
+        ],
         title: 'Edit Asset',
         body: ListView(
           children: [

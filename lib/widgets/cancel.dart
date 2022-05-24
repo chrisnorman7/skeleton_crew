@@ -6,7 +6,6 @@ class Cancel extends StatelessWidget {
   /// Create an instance.
   const Cancel({
     required this.child,
-    // ignore: prefer_final_parameters
     super.key,
   });
 

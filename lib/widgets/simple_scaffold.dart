@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_final_parameters
-
 import 'package:flutter/material.dart';
 
 /// A quicker way to create scaffolds.

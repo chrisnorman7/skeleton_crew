@@ -196,6 +196,7 @@ Future<void> deleteAssetReference({
   required final BuildContext context,
   required final ProjectContext projectContext,
   required final PretendAssetReference assetReference,
+  final VoidCallback? onYes,
 }) {
   final project = projectContext.project;
   const prefix = 'You cannot delete the';
@@ -234,5 +235,38 @@ Future<void> deleteAssetReference({
           );
       projectContext.save();
     },
+    title: 'Delete Asset',
   );
+}
+
+/// Delete the given [assetStore].
+Future<void> deleteAssetStore({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final AssetStoreReference assetStore,
+  final VoidCallback? onYes,
+}) {
+  final project = projectContext.project;
+  if (assetStore.assets.isNotEmpty) {
+    return showMessage(
+      context: context,
+      message: 'You cannot delete an asset store which still contains assets.',
+    );
+  } else {
+    return confirm(
+      context: context,
+      message: 'Are you sure you want to delete this asset store?',
+      yesCallback: () {
+        Navigator.pop(context);
+        project.assetStores.removeWhere(
+          (final element) => element.id == assetStore.id,
+        );
+        projectContext.save();
+        if (onYes != null) {
+          onYes();
+        }
+      },
+      title: 'Delete Asset Store',
+    );
+  }
 }

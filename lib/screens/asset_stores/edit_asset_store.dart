@@ -48,129 +48,142 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
 
   /// Build a widget.
   @override
-  Widget build(final BuildContext context) => Cancel(
-        child: CallbackShortcuts(
-          bindings: {newShortcut: () => newAsset(context)},
-          child: TabbedScaffold(
-            tabs: [
-              TabbedScaffoldTab(
-                title: 'Store Settings',
-                icon: const Icon(Icons.settings),
-                builder: (final context) => ListView(
-                  children: [
-                    TextListTile(
-                      autofocus: true,
-                      value: widget.assetStoreReference.name,
-                      onChanged: (final value) {
-                        widget.assetStoreReference.name = value;
-                        save();
-                      },
-                      header: 'Name',
-                      validator: (final value) => validateNonEmptyValue(
-                        value: value,
-                      ),
+  Widget build(final BuildContext context) {
+    final actions = [
+      ElevatedButton(
+        onPressed: () => deleteAssetStore(
+          context: context,
+          projectContext: projectContext,
+          assetStore: widget.assetStoreReference,
+          onYes: () => Navigator.pop(context),
+        ),
+        child: deleteIcon,
+      )
+    ];
+    return Cancel(
+      child: CallbackShortcuts(
+        bindings: {newShortcut: () => newAsset(context)},
+        child: TabbedScaffold(
+          tabs: [
+            TabbedScaffoldTab(
+              actions: actions,
+              title: 'Store Settings',
+              icon: const Icon(Icons.settings),
+              builder: (final context) => ListView(
+                children: [
+                  TextListTile(
+                    autofocus: true,
+                    value: widget.assetStoreReference.name,
+                    onChanged: (final value) {
+                      widget.assetStoreReference.name = value;
+                      save();
+                    },
+                    header: 'Name',
+                    validator: (final value) => validateNonEmptyValue(
+                      value: value,
                     ),
-                    TextListTile(
-                      value: widget.assetStoreReference.comment,
-                      onChanged: (final value) {
-                        widget.assetStoreReference.comment = value;
-                        save();
-                      },
-                      header: 'Comment',
-                      validator: (final value) => validateNonEmptyValue(
-                        value: value,
-                      ),
+                  ),
+                  TextListTile(
+                    value: widget.assetStoreReference.comment,
+                    onChanged: (final value) {
+                      widget.assetStoreReference.comment = value;
+                      save();
+                    },
+                    header: 'Comment',
+                    validator: (final value) => validateNonEmptyValue(
+                      value: value,
                     ),
-                    TextListTile(
-                      value: widget.assetStoreReference.dartFilename,
-                      onChanged: (final value) {
-                        widget.assetStoreReference.dartFilename = value;
-                        save();
-                      },
-                      header: 'Dart Filename',
-                      validator: (final value) =>
-                          validateAssetStoreDartFilename(
-                        value: value,
-                        project: projectContext.project,
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  TextListTile(
+                    value: widget.assetStoreReference.dartFilename,
+                    onChanged: (final value) {
+                      widget.assetStoreReference.dartFilename = value;
+                      save();
+                    },
+                    header: 'Dart Filename',
+                    validator: (final value) => validateAssetStoreDartFilename(
+                      value: value,
+                      project: projectContext.project,
+                    ),
+                  )
+                ],
               ),
-              TabbedScaffoldTab(
-                title: 'Assets',
-                icon: filesIcon,
-                builder: (final context) {
-                  final Widget child;
-                  final assets = widget.assetStoreReference.assets;
-                  if (assets.isEmpty) {
-                    child = const CenterText(
-                      text: 'There are no assets to show.',
-                    );
-                  } else {
-                    final children = <SearchableListTile>[];
-                    for (var i = 0; i < assets.length; i++) {
-                      final pretendAssetReference = assets[i];
-                      final isAudio = pretendAssetReference.isAudio;
-                      final assetReference = pretendAssetReference
-                          .assetReferenceReference.reference;
-                      children.add(
-                        SearchableListTile(
-                          searchString: pretendAssetReference.comment,
-                          child: CallbackShortcuts(
-                            bindings: {
-                              deleteShortcut: () => deleteAssetReference(
-                                    context: context,
+            ),
+            TabbedScaffoldTab(
+              actions: actions,
+              title: 'Assets',
+              icon: filesIcon,
+              builder: (final context) {
+                final Widget child;
+                final assets = widget.assetStoreReference.assets;
+                if (assets.isEmpty) {
+                  child = const CenterText(
+                    text: 'There are no assets to show.',
+                  );
+                } else {
+                  final children = <SearchableListTile>[];
+                  for (var i = 0; i < assets.length; i++) {
+                    final pretendAssetReference = assets[i];
+                    final isAudio = pretendAssetReference.isAudio;
+                    final assetReference =
+                        pretendAssetReference.assetReferenceReference.reference;
+                    children.add(
+                      SearchableListTile(
+                        searchString: pretendAssetReference.comment,
+                        child: CallbackShortcuts(
+                          bindings: {
+                            deleteShortcut: () => deleteAssetReference(
+                                  context: context,
+                                  projectContext: projectContext,
+                                  assetReference: pretendAssetReference,
+                                )
+                          },
+                          child: PlaySoundSemantics(
+                            soundChannel: projectContext.game.interfaceSounds,
+                            assetReference: isAudio ? assetReference : null,
+                            child: Builder(
+                              builder: (final builderContext) =>
+                                  PushWidgetListTile(
+                                autofocus: i == 0,
+                                title: pretendAssetReference.comment,
+                                subtitle: pretendAssetReference.variableName,
+                                builder: (final context) {
+                                  PlaySoundSemantics.of(builderContext)?.stop();
+                                  return EditAsset(
                                     projectContext: projectContext,
-                                    assetReference: pretendAssetReference,
-                                  )
-                            },
-                            child: PlaySoundSemantics(
-                              soundChannel: projectContext.game.interfaceSounds,
-                              assetReference: isAudio ? assetReference : null,
-                              child: Builder(
-                                builder: (final builderContext) =>
-                                    PushWidgetListTile(
-                                  autofocus: i == 0,
-                                  title: pretendAssetReference.comment,
-                                  subtitle: pretendAssetReference.variableName,
-                                  builder: (final context) {
-                                    PlaySoundSemantics.of(builderContext)
-                                        ?.stop();
-                                    return EditAsset(
-                                      projectContext: projectContext,
-                                      assetStoreReference:
-                                          widget.assetStoreReference,
-                                      pretendAssetReference:
-                                          pretendAssetReference,
-                                    );
-                                  },
-                                  onSetState: () => setState(() {}),
-                                ),
+                                    assetStoreReference:
+                                        widget.assetStoreReference,
+                                    pretendAssetReference:
+                                        pretendAssetReference,
+                                  );
+                                },
+                                onSetState: () => setState(() {}),
                               ),
                             ),
                           ),
                         ),
-                      );
-                    }
-                    child = SearchableListView(children: children);
+                      ),
+                    );
                   }
-                  return CallbackShortcuts(
-                    bindings: {newShortcut: () => addAsset(context)},
-                    child: child,
-                  );
-                },
-                floatingActionButton: FloatingActionButton(
-                  autofocus: widget.assetStoreReference.assets.isEmpty,
-                  child: addIcon,
-                  onPressed: () => newAsset(context),
-                  tooltip: 'Add New Asset',
-                ),
-              )
-            ],
-          ),
+                  child = SearchableListView(children: children);
+                }
+                return CallbackShortcuts(
+                  bindings: {newShortcut: () => addAsset(context)},
+                  child: child,
+                );
+              },
+              floatingActionButton: FloatingActionButton(
+                autofocus: widget.assetStoreReference.assets.isEmpty,
+                child: addIcon,
+                onPressed: () => newAsset(context),
+                tooltip: 'Add New Asset',
+              ),
+            )
+          ],
         ),
-      );
+      ),
+    );
+  }
 
   /// Import a new asset.
   Future<void> newAsset(final BuildContext context) async {

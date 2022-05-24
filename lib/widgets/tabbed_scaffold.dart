@@ -109,7 +109,6 @@ class TabbedScaffold extends StatefulWidget {
   /// Create an instance.
   const TabbedScaffold({
     required this.tabs,
-    // ignore: prefer_final_parameters
     super.key,
   });
 

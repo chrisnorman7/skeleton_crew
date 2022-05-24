@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_final_parameters
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -74,15 +73,15 @@ class IntListTile extends StatelessWidget {
           subtitle: Text('${subtitle ?? value}'),
           onTap: () => pushWidget(
             context: context,
-            builder: (context) => GetText(
-              onDone: (value) {
+            builder: (final context) => GetText(
+              onDone: (final value) {
                 Navigator.pop(context);
                 onChanged(int.parse(value));
               },
               labelText: labelText,
               text: value.toString(),
               title: title,
-              validator: (value) {
+              validator: (final value) {
                 if (value == null || value.isEmpty) {
                   return 'You must provide a value';
                 }
