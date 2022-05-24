@@ -46,3 +46,4 @@ pubspec.lock
 lib/generated
 project.json
 assets
+example.dart
