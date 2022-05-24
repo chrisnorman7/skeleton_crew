@@ -14,6 +14,7 @@ import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/play_sound_semantics.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
+import '../../../widgets/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
 import '../../select_game_controller_axis.dart';
@@ -134,6 +135,15 @@ class EditMenuState extends ProjectContextState<EditMenu> {
           },
           header: 'Title',
           validator: (final value) => validateNonEmptyValue(value: value),
+        ),
+        SoundListTile(
+          projectContext: projectContext,
+          value: menu.music,
+          onChanged: (final value) {
+            menu.music = value;
+            save();
+          },
+          title: 'Music',
         ),
         PushWidgetListTile(
           title: 'Move Up Scan Code',
