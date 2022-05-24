@@ -207,14 +207,14 @@ class _HomePageState extends State<HomePage> {
     }
     final path = result.paths.first;
     if (path == null) {
-      return showError(
+      return showMessage(
         context: context,
         message: 'Path is `null`.',
       );
     }
     final file = File(path);
     if (!file.existsSync()) {
-      return showError(
+      return showMessage(
         context: context,
         message: 'File does not exist: $path.',
       );

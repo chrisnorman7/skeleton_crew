@@ -66,8 +66,8 @@ Future<void> confirm({
       ),
     );
 
-/// Show a snackbar, with an optional action.
-void showError({
+/// Show a message with an OK button.
+Future<void> showMessage({
   required final BuildContext context,
   required final String message,
   final String title = 'Error',
@@ -189,4 +189,50 @@ Future<void> selectAsset({
 String getQuotedString(final String string) {
   final result = string.replaceAll("'", r"\'");
   return "'$result'";
+}
+
+/// Delete the given [assetReference].
+Future<void> deleteAssetReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final PretendAssetReference assetReference,
+}) {
+  final project = projectContext.project;
+  const prefix = 'You cannot delete the';
+  for (final menu in project.menus) {
+    if (menu.music?.assetReferenceId == assetReference.id) {
+      return showMessage(
+        context: context,
+        message: '$prefix music for the ${menu.title} menu.',
+      );
+    }
+    for (final menuItem in menu.menuItems) {
+      if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
+        return showMessage(
+          context: context,
+          message: '$prefix sound for the "${menuItem.title}" item of the '
+              '${menu.title} menu.',
+        );
+      }
+    }
+    for (final ambiance in menu.ambiances) {
+      if (ambiance.sound.assetReferenceId == assetReference.id) {
+        return showMessage(
+          context: context,
+          message: '$prefix ${menu.title} ambiance.',
+        );
+      }
+    }
+  }
+  return confirm(
+    context: context,
+    message: 'Are you sure you want to delete this asset?',
+    yesCallback: () {
+      Navigator.pop(context);
+      project.getAssetStore(assetReference.assetStoreId).assets.removeWhere(
+            (final element) => element.id == assetReference.id,
+          );
+      projectContext.save();
+    },
+  );
 }

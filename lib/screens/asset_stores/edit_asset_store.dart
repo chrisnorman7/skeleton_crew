@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../json/asset_stores/asset_store_reference.dart';
-import '../../json/asset_stores/pretend_asset_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
@@ -118,10 +117,10 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                           searchString: pretendAssetReference.comment,
                           child: CallbackShortcuts(
                             bindings: {
-                              deleteShortcut: () => deleteAsset(
+                              deleteShortcut: () => deleteAssetReference(
                                     context: context,
-                                    pretendAssetReference:
-                                        pretendAssetReference,
+                                    projectContext: projectContext,
+                                    assetReference: pretendAssetReference,
                                   )
                             },
                             child: PlaySoundSemantics(
@@ -195,22 +194,4 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
     );
     setState(() {});
   }
-
-  /// Delete the given [pretendAssetReference] from the current asset store.
-  void deleteAsset({
-    required final BuildContext context,
-    required final PretendAssetReference pretendAssetReference,
-  }) =>
-      confirm(
-        context: context,
-        message: 'Are you sure you want to delete this asset?',
-        yesCallback: () {
-          projectContext.deleteAssetReferenceReference(
-            assetStoreReference: widget.assetStoreReference,
-            asset: pretendAssetReference,
-          );
-          Navigator.pop(context);
-          setState(() {});
-        },
-      );
 }

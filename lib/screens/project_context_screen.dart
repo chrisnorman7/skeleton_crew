@@ -164,13 +164,13 @@ class ProjectContextScreenState
     try {
       projectContext.build();
       final duration = DateTime.now().millisecondsSinceEpoch - started;
-      showError(
+      showMessage(
         context: context,
         message: 'Build completed in $duration milliseconds.',
         title: 'Complete',
       );
     } on FormatterException catch (e, s) {
-      showError(context: context, message: '$e\n$s');
+      showMessage(context: context, message: '$e\n$s');
     }
   }
 }
