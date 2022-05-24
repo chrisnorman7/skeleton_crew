@@ -215,7 +215,8 @@ class ProjectContext {
       ..writeln("import 'package:ziggurat/menus.dart';")
       ..writeln("import 'package:ziggurat/sound.dart';")
       ..writeln("import 'package:ziggurat/ziggurat.dart';");
-    for (final importName in imports) {
+    final importStrings = List<String>.from(imports)..sort();
+    for (final importName in importStrings) {
       codeBuffer.writeln("import '$assetStoresDirectory/$importName';");
     }
     codeBuffer.write(stringBuffer);
