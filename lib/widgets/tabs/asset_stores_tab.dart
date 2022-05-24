@@ -47,6 +47,7 @@ class AssetStoresTabState extends State<AssetStoresTab> {
                       context: context,
                       projectContext: widget.projectContext,
                       assetStore: assetStoreReference,
+                      onYes: () => setState(() {}),
                     ),
               },
               child: PushWidgetListTile(
