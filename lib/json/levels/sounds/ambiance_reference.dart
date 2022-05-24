@@ -12,6 +12,7 @@ part 'ambiance_reference.g.dart';
 class AmbianceReference {
   /// Create an instance.
   AmbianceReference({
+    required this.id,
     required this.sound,
     this.x,
     this.y,
@@ -20,6 +21,9 @@ class AmbianceReference {
   /// Create an instance from a JSON object.
   factory AmbianceReference.fromJson(final Map<String, dynamic> json) =>
       _$AmbianceReferenceFromJson(json);
+
+  /// The ID for this ambiance.
+  final String id;
 
   /// The sound to play.
   final SoundReference sound;

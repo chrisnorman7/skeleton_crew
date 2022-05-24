@@ -80,6 +80,12 @@ class Project {
       getAssetStore(soundReference.assetStoreId)
           .getAssetReference(soundReference.assetReferenceId);
 
+  /// Get a string that describes the given [pretendAssetReference].
+  String getAssetString(final PretendAssetReference pretendAssetReference) {
+    final assetStore = getAssetStore(pretendAssetReference.assetStoreId);
+    return '${assetStore.name}/${pretendAssetReference.variableName}';
+  }
+
   /// The menus that have been defined.
   final Menus menus;
 
