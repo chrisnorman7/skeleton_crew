@@ -116,10 +116,11 @@ class ProjectContext {
       if (music != null) {
         final assetStore = project.getAssetStore(music.assetStoreId);
         imports.add(assetStore.dartFilename);
-        final assetReference =
-            assetStore.getAssetReference(music.assetReferenceId);
+        final assetReference = assetStore.getAssetReference(
+          music.assetReferenceId,
+        );
         stringBuffer
-          ..writeln('music: Music(')
+          ..writeln('music: const Music(')
           ..writeln('sound: ${assetReference.variableName},')
           ..writeln('gain: ${music.gain},')
           ..writeln('),');
@@ -171,6 +172,7 @@ class ProjectContext {
       ..writeln('// ignore_for_file: avoid_redundant_argument_values')
       ..writeln("import 'package:dart_sdl/dart_sdl.dart';")
       ..writeln("import 'package:ziggurat/menus.dart';")
+      ..writeln("import 'package:ziggurat/sound.dart';")
       ..writeln("import 'package:ziggurat/ziggurat.dart';");
     for (final importName in imports) {
       codeBuffer.writeln("import '$assetStoresDirectory/$importName';");
