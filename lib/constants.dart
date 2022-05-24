@@ -54,3 +54,8 @@ const commandTriggersFilename = 'command_triggers.dart';
 /// The filename where menus will be stored.
 /// This file will be located under the output directory.
 const menuFilename = 'menus.dart';
+
+/// The file where the game code will be written.
+///
+/// This file will be located under the output directory.
+const gameFilename = 'game.dart';

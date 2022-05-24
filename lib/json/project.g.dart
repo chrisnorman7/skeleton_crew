@@ -8,6 +8,8 @@ part of 'project.dart';
 
 Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
       title: json['title'] as String,
+      gameClassName: json['gameClassName'] as String? ?? 'CustomGame',
+      gameClassComment: json['gameClassComment'] as String? ?? 'A custom game.',
       commandTriggers: (json['commandTriggers'] as List<dynamic>?)
           ?.map((e) =>
               CommandTriggerReference.fromJson(e as Map<String, dynamic>))
@@ -30,6 +32,8 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'appName': instance.appName,
       'version': instance.version,
       'outputDirectory': instance.outputDirectory,
+      'gameClassName': instance.gameClassName,
+      'gameClassComment': instance.gameClassComment,
       'commandTriggers': instance.commandTriggers,
       'assetStores': instance.assetStores,
       'menus': instance.menus,

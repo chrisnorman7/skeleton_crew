@@ -82,6 +82,26 @@ class ProjectSettingsTabState extends ProjectContextState<ProjectSettingsTab> {
           },
           header: 'Output Directory',
         ),
+        TextListTile(
+          value: project.gameClassName,
+          onChanged: (final value) {
+            project.gameClassName = value;
+            save();
+          },
+          header: 'Game Class Name',
+          labelText: 'Class Name',
+          validator: (final value) => validateClassName(value: value),
+        ),
+        TextListTile(
+          value: project.gameClassComment,
+          onChanged: (final value) {
+            project.gameClassComment = value;
+            save();
+          },
+          header: 'Game Class Comment',
+          labelText: 'Comment',
+          validator: (final value) => validateNonEmptyValue(value: value),
+        ),
       ],
     );
   }
