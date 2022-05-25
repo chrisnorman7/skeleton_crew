@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
 import '../../json/levels/sounds/sound_reference.dart';
 import '../../screens/sounds/edit_sound.dart';
 import '../../shortcuts.dart';
@@ -64,7 +65,7 @@ class SoundListTile extends StatelessWidget {
             title: Text(title),
             subtitle: Text(
               assetStore == null || assetReference == null
-                  ? 'Not Set '
+                  ? notSet
                   : '${assetStore.name}/${assetReference.variableName} (${sound?.gain.toStringAsFixed(2)})',
             ),
             onTap: () {

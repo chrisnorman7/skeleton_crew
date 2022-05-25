@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import '../json/levels/function_reference.dart';
 import '../screens/levels/edit_function_reference.dart';
 import 'push_widget_list_tile.dart';
@@ -49,7 +50,7 @@ class FunctionReferenceListTile extends StatelessWidget {
       },
       autofocus: autofocus,
       subtitle: functionReference == null
-          ? 'Not Set'
+          ? notSet
           : '${functionReference.name}: ${functionReference.comment}',
     );
   }
