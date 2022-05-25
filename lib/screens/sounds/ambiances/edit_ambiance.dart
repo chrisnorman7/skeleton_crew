@@ -47,6 +47,12 @@ class EditAmbianceState extends ProjectContextState<EditAmbiance> {
   @override
   Widget build(final BuildContext context) {
     final ambiance = widget.value;
+    final pretendAssetReference =
+        widget.projectContext.project.getPretendAssetReference(
+      ambiance.sound,
+    );
+    final assetReference =
+        pretendAssetReference.assetReferenceReference.reference;
     return Cancel(
       child: SimpleScaffold(
         actions: [
@@ -84,11 +90,13 @@ class EditAmbianceState extends ProjectContextState<EditAmbiance> {
               nullable: false,
             ),
             CoordinatesListTile(
+              projectContext: projectContext,
               value: ambiance.coordinates,
               onChanged: (final value) {
                 ambiance.coordinates = value;
                 save();
               },
+              assetReference: assetReference,
             )
           ],
         ),
