@@ -14,6 +14,7 @@ dependencies:
   dart_style: ^2.2.3
   dart_synthizer: ^0.10.0
   file_picker: ^4.5.1
+  filesize: ^2.0.1
   flutter:
     sdk: flutter
   json_annotation: ^4.5.0

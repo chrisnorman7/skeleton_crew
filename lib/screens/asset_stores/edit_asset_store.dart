@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:ziggurat/ziggurat.dart';
 
 import '../../constants.dart';
 import '../../json/asset_stores/asset_store_reference.dart';
@@ -127,9 +132,40 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                     final isAudio = pretendAssetReference.isAudio;
                     final assetReference =
                         pretendAssetReference.assetReferenceReference.reference;
+                    final variableName = pretendAssetReference.variableName;
+                    final comment = pretendAssetReference.comment;
+                    final title = '$variableName: $comment';
+                    final String assetSize;
+                    final assetType = pretendAssetReference.assetType;
+                    switch (assetType) {
+                      case AssetType.file:
+                        final file =
+                            assetReference.getFile(projectContext.game.random);
+                        assetSize = filesize(file.statSync().size);
+                        break;
+                      case AssetType.collection:
+                        final directory = Directory(
+                          path.join(
+                            projectContext.directory.path,
+                            assetsDirectory,
+                          ),
+                        );
+                        final size = directory
+                            .listSync()
+                            .whereType<File>()
+                            .map<int>(
+                              (final e) => e.statSync().size,
+                            )
+                            .reduce(
+                              (final value, final element) => value + element,
+                            );
+                        assetSize = filesize(size);
+                        break;
+                    }
+                    final subtitle = '${assetType.name} ($assetSize)';
                     children.add(
                       SearchableListTile(
-                        searchString: pretendAssetReference.comment,
+                        searchString: variableName,
                         child: CallbackShortcuts(
                           bindings: {
                             deleteShortcut: () => deleteAssetReference(
@@ -146,8 +182,8 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                               builder: (final builderContext) =>
                                   PushWidgetListTile(
                                 autofocus: i == 0,
-                                title: pretendAssetReference.comment,
-                                subtitle: pretendAssetReference.variableName,
+                                title: title,
+                                subtitle: subtitle,
                                 builder: (final context) {
                                   PlaySoundSemantics.of(builderContext)?.stop();
                                   return EditAsset(
