@@ -116,7 +116,6 @@ class MenuReference {
 
   /// Get code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
-    final project = projectContext.project;
     final imports = <String>{
       'package:ziggurat/ziggurat.dart',
       'package:ziggurat/sound.dart',
@@ -153,9 +152,7 @@ class MenuReference {
       ..writeln('searchInterval: $searchInterval,');
     final musicReference = music;
     if (musicReference != null) {
-      final pretendAssetReference =
-          project.getPretendAssetReference(musicReference);
-      final code = pretendAssetReference.getCode(projectContext);
+      final code = musicReference.getCode(projectContext);
       imports.addAll(code.imports);
       stringBuffer
         ..writeln('music: const Music(')

@@ -4,6 +4,7 @@ import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../src/generated_code.dart';
 import '../../src/project_context.dart';
+import '../../util.dart';
 
 part 'pretend_asset_reference.g.dart';
 
@@ -67,11 +68,19 @@ class PretendAssetReference {
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$PretendAssetReferenceToJson(this);
 
-  /// Get the code for this instance.
-  GeneratedCode getCode(final ProjectContext projectContext) => GeneratedCode(
-        code: variableName,
-        imports: {
-          projectContext.project.getAssetStore(assetStoreId).getDartFile()
-        },
-      );
+  /// Get code for this instance.
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final imports = {'package:ziggurat/ziggurat.dart'};
+    final stringBuffer = StringBuffer()
+      ..writeln('/// $comment')
+      ..writeln('const $variableName = AssetReference(')
+      ..writeln('  ${getQuotedString(name)},')
+      ..writeln('  $assetType,');
+    final key = encryptionKey;
+    if (key != null) {
+      stringBuffer.writeln('  encryptionKey: ${getQuotedString(key)},');
+    }
+    stringBuffer.writeln(')');
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
 }

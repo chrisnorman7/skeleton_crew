@@ -146,19 +146,11 @@ class ProjectContext {
 
   /// Write the given [assetStoreReference].
   void writeAssetStore(final AssetStoreReference assetStoreReference) {
+    final storeCode = assetStoreReference.getCode(this);
     final stringBuffer = StringBuffer()
       ..writeln(generatedHeader)
-      ..writeln('/// ${assetStoreReference.comment}')
-      ..writeln("import 'package:ziggurat/ziggurat.dart';");
-    for (final asset in assetStoreReference.assets) {
-      stringBuffer
-        ..writeln('/// ${asset.comment}')
-        ..writeln('const ${asset.variableName} = AssetReference(')
-        ..writeln("  '${asset.name}',")
-        ..writeln('  ${asset.assetType},')
-        ..writeln("  encryptionKey: '${asset.encryptionKey}',")
-        ..writeln(');');
-    }
+      ..writeln(storeCode.getImports())
+      ..writeln(storeCode.code);
     final code = dartFormatter.format(stringBuffer.toString());
     File(
       path.join(

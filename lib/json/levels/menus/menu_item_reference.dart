@@ -43,7 +43,6 @@ class MenuItemReference {
 
   /// Get the Dart code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
-    final project = projectContext.project;
     final imports = <String>{'package:ziggurat/menus.dart'};
     final sound = soundReference;
     final text = title;
@@ -56,8 +55,7 @@ class MenuItemReference {
     }
     stringBuffer.writeln('${constMenuItem ? "" : "const "}Message(');
     if (sound != null) {
-      final pretendAssetReference = project.getPretendAssetReference(sound);
-      final code = pretendAssetReference.getCode(projectContext);
+      final code = sound.getCode(projectContext);
       imports.addAll(code.imports);
       stringBuffer
         ..writeln('gain: ${sound.gain},')

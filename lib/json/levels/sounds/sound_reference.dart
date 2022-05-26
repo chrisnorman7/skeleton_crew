@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../src/generated_code.dart';
+import '../../../src/project_context.dart';
+
 part 'sound_reference.g.dart';
 
 /// A reference to a sound.
@@ -27,4 +30,16 @@ class SoundReference {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$SoundReferenceToJson(this);
+
+  /// Get the code for this instance.
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final project = projectContext.project;
+    final pretendAssetReference = project.getPretendAssetReference(this);
+    return GeneratedCode(
+      code: pretendAssetReference.variableName,
+      imports: {
+        projectContext.project.getAssetStore(assetStoreId).getDartFile()
+      },
+    );
+  }
 }

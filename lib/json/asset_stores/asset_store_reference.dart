@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../../constants.dart';
+import '../../src/generated_code.dart';
+import '../../src/project_context.dart';
 import 'pretend_asset_reference.dart';
 
 part 'asset_store_reference.g.dart';
@@ -58,4 +60,18 @@ class AssetStoreReference {
   /// Get the full path to the file where the code for this asset store will be
   /// written.
   String getDartFile() => '$assetStoresDirectory/$dartFilename';
+
+  /// Get the code for this store.
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final imports = {'package:ziggurat/ziggurat.dart'};
+    final stringBuffer = StringBuffer()
+      ..writeln('/// $comment')
+      ..writeln();
+    for (final pretendAssetReference in assets) {
+      final code = pretendAssetReference.getCode(projectContext);
+      imports.addAll(code.imports);
+      stringBuffer.writeln('${code.code};');
+    }
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
 }
