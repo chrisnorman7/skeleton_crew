@@ -7,9 +7,9 @@ import 'package:ziggurat/ziggurat.dart';
 import '../constants.dart';
 import '../json/asset_stores/asset_store_reference.dart';
 import '../json/asset_stores/pretend_asset_reference.dart';
-import '../json/levels/function_reference.dart';
 import '../json/project.dart';
 import '../util.dart';
+import 'generated_code.dart';
 
 const _jsonEncoder = JsonEncoder.withIndent('  ');
 
@@ -126,100 +126,19 @@ class ProjectContext {
     final imports = <String>{};
     final stringBuffer = StringBuffer();
     for (final menu in project.menus) {
-      stringBuffer
-        ..writeln('/// ${menu.comment}')
-        ..writeln('abstract class ${menu.className} extends Menu {')
-        ..writeln('/// Create an instance.')
-        ..writeln('${menu.className}({')
-        ..writeln('required super.game,')
-        ..writeln('}) : super(')
-        ..writeln('title: const Message(')
-        ..writeln('text: ${getQuotedString(menu.title)},')
-        ..writeln('),')
-        ..writeln('items: [],')
-        ..writeln('upScanCode: ${menu.upScanCode},')
-        ..writeln('upButton: ${menu.upButton},')
-        ..writeln('downScanCode : ${menu.downScanCode},')
-        ..writeln('downButton: ${menu.downButton},')
-        ..writeln('activateScanCode: ${menu.activateScanCode},')
-        ..writeln('activateButton: ${menu.activateButton},')
-        ..writeln('cancelScanCode: ${menu.cancelScanCode},')
-        ..writeln('cancelButton: ${menu.cancelButton},')
-        ..writeln('movementAxis: ${menu.movementAxis},')
-        ..writeln('activateAxis: ${menu.activateAxis},')
-        ..writeln('cancelAxis: ${menu.cancelAxis},')
-        ..writeln('controllerMovementSpeed: ${menu.controllerMovementSpeed},')
-        ..writeln(
-          'controllerAxisSensitivity: ${menu.controllerAxisSensitivity},',
-        )
-        ..writeln('searchEnabled: ${menu.searchEnabled},')
-        ..writeln('searchInterval: ${menu.searchInterval},');
-      final music = menu.music;
-      if (music != null) {
-        final assetStore = project.getAssetStore(music.assetStoreId);
-        imports.add(assetStore.dartFilename);
-        final assetReference = assetStore.getAssetReference(
-          music.assetReferenceId,
-        );
-        stringBuffer
-          ..writeln('music: const Music(')
-          ..writeln('sound: ${assetReference.variableName},')
-          ..writeln('gain: ${music.gain},')
-          ..writeln('),');
-      }
-      stringBuffer
-        ..writeln(') {')
-        ..writeln('menuItems.addAll([');
-      final functionReferences = <FunctionReference>{};
-      for (final item in menu.menuItems) {
-        final title = item.title;
-        stringBuffer
-          ..writeln('MenuItem(')
-          ..writeln('const Message(');
-        if (title != null) {
-          stringBuffer.writeln('text: ${getQuotedString(title)},');
-        }
-        final soundReference = item.soundReference;
-        if (soundReference != null) {
-          final assetStore = project.getAssetStore(soundReference.assetStoreId);
-          imports.add(assetStore.dartFilename);
-          final assetReference =
-              assetStore.getAssetReference(soundReference.assetReferenceId);
-          stringBuffer
-            ..writeln('gain: ${soundReference.gain},')
-            ..writeln('sound: ${assetReference.variableName},')
-            ..writeln('keepAlive: true,');
-        }
-        stringBuffer.writeln('),');
-        final function = item.functionReference;
-        if (function == null) {
-          stringBuffer.writeln('menuItemLabel,');
-        } else {
-          functionReferences.add(function);
-          stringBuffer.writeln('Button(${function.name}),');
-        }
-        stringBuffer.writeln('),');
-      }
-      stringBuffer.writeln('],);}');
-      for (final function in functionReferences) {
-        stringBuffer
-          ..writeln('/// ${function.comment}')
-          ..writeln('void ${function.name}();');
-      }
-      stringBuffer.writeln('}');
+      final code = menu.getCode(this);
+      imports.addAll(code.imports);
+      stringBuffer.writeln(code.code);
     }
+    final generatedCode = GeneratedCode(
+      code: stringBuffer.toString(),
+      imports: imports,
+    );
     final codeBuffer = StringBuffer()
       ..writeln(generatedHeader)
       ..writeln('// ignore_for_file: avoid_redundant_argument_values')
-      ..writeln("import 'package:dart_sdl/dart_sdl.dart';")
-      ..writeln("import 'package:ziggurat/menus.dart';")
-      ..writeln("import 'package:ziggurat/sound.dart';")
-      ..writeln("import 'package:ziggurat/ziggurat.dart';");
-    final importStrings = List<String>.from(imports)..sort();
-    for (final importName in importStrings) {
-      codeBuffer.writeln("import '$assetStoresDirectory/$importName';");
-    }
-    codeBuffer.write(stringBuffer);
+      ..writeln(generatedCode.getImports())
+      ..write(generatedCode.code);
     final code = dartFormatter.format(codeBuffer.toString());
     File(path.join(project.outputDirectory, menuFilename))
         .writeAsStringSync(code);

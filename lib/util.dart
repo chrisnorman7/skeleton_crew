@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -187,7 +188,10 @@ Future<void> selectAsset({
 
 /// Return a quoted version of [string].
 String getQuotedString(final String string) {
-  final result = string.replaceAll("'", r"\'");
+  if (string.contains("'")) {
+    return jsonEncode(string);
+  }
+  final result = string.replaceAll('"', '"');
   return "'$result'";
 }
 

@@ -2,6 +2,10 @@ import 'package:dart_sdl/dart_sdl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/menus.dart';
 
+import '../../../src/generated_code.dart';
+import '../../../src/project_context.dart';
+import '../../../util.dart';
+import '../function_reference.dart';
 import '../sounds/ambiance_reference.dart';
 import '../sounds/sound_reference.dart';
 import 'menu_item_reference.dart';
@@ -109,4 +113,76 @@ class MenuReference {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MenuReferenceToJson(this);
+
+  /// Get code for this instance.
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final project = projectContext.project;
+    final imports = <String>{
+      'package:ziggurat/ziggurat.dart',
+      'package:ziggurat/sound.dart',
+      'package:ziggurat/menus.dart',
+      'package:dart_sdl/dart_sdl.dart'
+    };
+    final stringBuffer = StringBuffer()
+      ..writeln('/// $comment')
+      ..writeln('abstract class $className extends Menu {')
+      ..writeln('/// Create an instance.')
+      ..writeln('$className({')
+      ..writeln('required super.game,')
+      ..writeln('}) : super(')
+      ..writeln('title: const Message(')
+      ..writeln('text: ${getQuotedString(title)},')
+      ..writeln('),')
+      ..writeln('items: [],')
+      ..writeln('upScanCode: $upScanCode,')
+      ..writeln('upButton: $upButton,')
+      ..writeln('downScanCode : $downScanCode,')
+      ..writeln('downButton: $downButton,')
+      ..writeln('activateScanCode: $activateScanCode,')
+      ..writeln('activateButton: $activateButton,')
+      ..writeln('cancelScanCode: $cancelScanCode,')
+      ..writeln('cancelButton: $cancelButton,')
+      ..writeln('movementAxis: $movementAxis,')
+      ..writeln('activateAxis: $activateAxis,')
+      ..writeln('cancelAxis: $cancelAxis,')
+      ..writeln('controllerMovementSpeed: $controllerMovementSpeed,')
+      ..writeln(
+        'controllerAxisSensitivity: $controllerAxisSensitivity,',
+      )
+      ..writeln('searchEnabled: $searchEnabled,')
+      ..writeln('searchInterval: $searchInterval,');
+    final musicReference = music;
+    if (musicReference != null) {
+      final pretendAssetReference =
+          project.getPretendAssetReference(musicReference);
+      final code = pretendAssetReference.getCode(projectContext);
+      imports.addAll(code.imports);
+      stringBuffer
+        ..writeln('music: const Music(')
+        ..writeln('sound: ${code.code},')
+        ..writeln('gain: ${musicReference.gain},')
+        ..writeln('),');
+    }
+    stringBuffer
+      ..writeln(') {')
+      ..writeln('menuItems.addAll([');
+    final functionReferences = <FunctionReference>{};
+    for (final item in menuItems) {
+      final code = item.getCode(projectContext);
+      imports.addAll(code.imports);
+      stringBuffer
+        ..write(code.code)
+        ..writeln(',');
+      final functionReference = item.functionReference;
+      if (functionReference != null) {
+        functionReferences.add(functionReference);
+      }
+    }
+    stringBuffer.writeln('],);}');
+    for (final function in functionReferences) {
+      stringBuffer.writeln(function.header);
+    }
+    stringBuffer.writeln('}');
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
 }

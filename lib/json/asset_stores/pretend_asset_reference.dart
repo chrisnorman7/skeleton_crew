@@ -2,6 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
+import '../../src/generated_code.dart';
+import '../../src/project_context.dart';
+
 part 'pretend_asset_reference.g.dart';
 
 /// A pretend [AssetReferenceReference].
@@ -63,4 +66,12 @@ class PretendAssetReference {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$PretendAssetReferenceToJson(this);
+
+  /// Get the code for this instance.
+  GeneratedCode getCode(final ProjectContext projectContext) => GeneratedCode(
+        code: variableName,
+        imports: {
+          projectContext.project.getAssetStore(assetStoreId).getDartFile()
+        },
+      );
 }

@@ -82,6 +82,7 @@ class EditMenuItemState extends ProjectContextState<EditMenuItem> {
               },
             ),
             FunctionReferenceListTile(
+              projectContext: widget.projectContext,
               value: menuItem.functionReference,
               onChanged: (final value) {
                 menuItem.functionReference = value;

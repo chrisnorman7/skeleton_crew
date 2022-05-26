@@ -54,4 +54,8 @@ class AssetStoreReference {
             )
             .toList(),
       );
+
+  /// Get the full path to the file where the code for this asset store will be
+  /// written.
+  String getDartFile() => '$assetStoresDirectory/$dartFilename';
 }
