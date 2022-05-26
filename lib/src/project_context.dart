@@ -174,43 +174,19 @@ class ProjectContext {
 
   /// Write command triggers.
   void writeCommandTriggers() {
-    final stringBuffer = StringBuffer()
-      ..writeln(generatedHeader)
-      ..writeln("import 'package:dart_sdl/dart_sdl.dart';")
-      ..writeln("import 'package:ziggurat/ziggurat.dart';");
+    final imports = <String>{};
+    final stringBuffer = StringBuffer();
     final commandTriggers = project.commandTriggers;
     for (final reference in commandTriggers) {
-      final commandTrigger = reference.commandTrigger;
-      final button = commandTrigger.button;
-      final keyboardKey = commandTrigger.keyboardKey;
-      stringBuffer
-        ..writeln('/// ${reference.comment ?? commandTrigger.description}')
-        ..writeln('const ${reference.variableName} = CommandTrigger(')
-        ..writeln('name: ${getQuotedString(commandTrigger.name)},')
-        ..writeln(
-          'description: ${getQuotedString(commandTrigger.description)},',
-        );
-      if (button != null) {
-        stringBuffer.writeln('button: $button,');
-      }
-      if (keyboardKey != null) {
-        stringBuffer.writeln(
-          'keyboardKey: CommandKeyboardKey(${keyboardKey.scanCode},',
-        );
-        if (keyboardKey.altKey) {
-          stringBuffer.writeln('altKey: ${keyboardKey.altKey},');
-        }
-        if (keyboardKey.controlKey) {
-          stringBuffer.writeln('controlKey: ${keyboardKey.controlKey},');
-        }
-        if (keyboardKey.shiftKey) {
-          stringBuffer.writeln('shiftKey: ${keyboardKey.shiftKey},');
-        }
-        stringBuffer.writeln('),');
-      }
-      stringBuffer.writeln(');');
+      final commandTriggerCode = reference.getCode(this);
+      imports.addAll(commandTriggerCode.imports);
+      stringBuffer.writeln(commandTriggerCode.code);
     }
-    final code = dartFormatter.format(stringBuffer.toString());
+    final generatedCode =
+        GeneratedCode(code: stringBuffer.toString(), imports: imports);
+    final code = dartFormatter.format(
+      '$generatedHeader\n/// Command triggers.\n${generatedCode.getImports()}\n${generatedCode.code}',
+    );
     File(
       path.join(
         file.parent.path,
