@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:ziggurat/ziggurat.dart';
 
@@ -121,6 +122,33 @@ class ProjectContext {
         .writeAsStringSync(code);
   }
 
+  /// Write all levels.
+  void writeLevels() {
+    final imports = <String>{};
+    final stringBuffer = StringBuffer();
+    for (final level in project.levels) {
+      final code = level.getCode(this);
+      imports.addAll(code.imports);
+      stringBuffer.writeln(code.code);
+    }
+    final generatedCode = GeneratedCode(
+      code: stringBuffer.toString(),
+      imports: imports,
+    );
+    final codeBuffer = StringBuffer()
+      ..writeln(generatedHeader)
+      ..writeln('/// Levels.')
+      ..writeln(generatedCode.getImports())
+      ..write(generatedCode.code);
+    final levelPath = path.join(project.outputDirectory, levelFilename);
+    Clipboard.setData(ClipboardData(text: codeBuffer.toString()));
+    final code = dartFormatter.format(
+      codeBuffer.toString(),
+      uri: levelPath,
+    );
+    File(levelPath).writeAsStringSync(code);
+  }
+
   /// Write all menus.
   void writeMenus() {
     final imports = <String>{};
@@ -137,6 +165,7 @@ class ProjectContext {
     final codeBuffer = StringBuffer()
       ..writeln(generatedHeader)
       ..writeln('// ignore_for_file: avoid_redundant_argument_values')
+      ..writeln('/// Menus.')
       ..writeln(generatedCode.getImports())
       ..write(generatedCode.code);
     final menuPath = path.join(project.outputDirectory, menuFilename);
@@ -215,6 +244,10 @@ class ProjectContext {
     final menus = project.menus;
     if (menus.isNotEmpty) {
       writeMenus();
+    }
+    final levels = project.levels;
+    if (levels.isNotEmpty) {
+      writeLevels();
     }
     writeGame();
   }

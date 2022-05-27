@@ -79,9 +79,8 @@ class LevelReference {
   /// Get code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = <String>{
-      'package:ziggurat/ziggurat.dart',
+      'package:ziggurat/levels.dart',
       'package:ziggurat/sound.dart',
-      'package:dart_sdl/dart_sdl.dart'
     };
     final stringBuffer = StringBuffer()
       ..writeln('/// $comment')
@@ -96,9 +95,11 @@ class LevelReference {
       stringBuffer
         ..writeln(': super(')
         ..writeln(musicAmbiancesCode.code)
-        ..writeln(')');
+        ..writeln(');');
+    } else {
+      stringBuffer.writeln(';');
     }
-    stringBuffer.writeln(';');
+    stringBuffer.writeln('}');
     return GeneratedCode(code: stringBuffer.toString(), imports: imports);
   }
 }

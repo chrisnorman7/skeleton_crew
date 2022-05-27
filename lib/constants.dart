@@ -55,8 +55,14 @@ const assetStoresDirectory = 'asset_stores';
 const commandTriggersFilename = 'command_triggers.dart';
 
 /// The filename where menus will be stored.
+///
 /// This file will be located under the output directory.
 const menuFilename = 'menus.dart';
+
+/// The file where levels will be stored.
+///
+/// This file will be located under the output directory.
+const levelFilename = 'levels.dart';
 
 /// The file where the game code will be written.
 ///
