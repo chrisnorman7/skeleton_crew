@@ -57,18 +57,12 @@ class EditAmbianceState extends ProjectContextState<EditAmbiance> {
       child: SimpleScaffold(
         actions: [
           ElevatedButton(
-            onPressed: () => confirm(
+            onPressed: () => deleteAmbiance(
               context: context,
-              message: 'Are you sure you want to delete this ambiance?',
-              yesCallback: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                widget.ambiances.removeWhere(
-                  (final element) => element.id == ambiance.id,
-                );
-                projectContext.save();
-              },
-              title: 'Delete Ambiance',
+              projectContext: projectContext,
+              ambiances: widget.ambiances,
+              ambianceReference: ambiance,
+              onYes: () => setState(() {}),
             ),
             child: deleteIcon,
           )

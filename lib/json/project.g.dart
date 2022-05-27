@@ -24,6 +24,9 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
       menus: (json['menus'] as List<dynamic>?)
           ?.map((e) => MenuReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      levels: (json['levels'] as List<dynamic>?)
+          ?.map((e) => LevelReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -37,4 +40,5 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'commandTriggers': instance.commandTriggers,
       'assetStores': instance.assetStores,
       'menus': instance.menus,
+      'levels': instance.levels,
     };

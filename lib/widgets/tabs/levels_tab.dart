@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screens/levels/levels/levels_list.dart';
 import '../../screens/levels/menus/menus_list.dart';
 import '../../src/project_context.dart';
 import '../push_widget_list_tile.dart';
@@ -27,14 +28,22 @@ class LevelsTabState extends State<LevelsTab> {
   Widget build(final BuildContext context) {
     final project = widget.projectContext.project;
     final menus = project.menus;
+    final levels = project.levels;
     return ListView(
       children: [
+        PushWidgetListTile(
+          title: 'Levels',
+          builder: (final context) =>
+              EditLevels(projectContext: widget.projectContext),
+          autofocus: true,
+          onSetState: () => setState(() {}),
+          subtitle: '${levels.length}',
+        ),
         PushWidgetListTile(
           title: 'Menus',
           builder: (final context) => MenusList(
             projectContext: widget.projectContext,
           ),
-          autofocus: true,
           onSetState: () => setState(() {}),
           subtitle: '${menus.length}',
         )

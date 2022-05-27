@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'asset_stores/asset_store_reference.dart';
 import 'asset_stores/pretend_asset_reference.dart';
 import 'command_trigger_reference.dart';
+import 'levels/level_reference.dart';
 import 'levels/menus/menu_reference.dart';
 import 'levels/sounds/sound_reference.dart';
 
@@ -16,6 +17,9 @@ typedef AssetStores = List<AssetStoreReference>;
 
 /// The type definition for a list of menus.
 typedef Menus = List<MenuReference>;
+
+/// The type definition for a list of levels.
+typedef Levels = List<LevelReference>;
 
 /// The top-level project class.
 @JsonSerializable()
@@ -32,9 +36,11 @@ class Project {
     this.version = '0.0.0',
     this.outputDirectory = 'lib/generated',
     final Menus? menus,
+    final Levels? levels,
   })  : commandTriggers = commandTriggers ?? [],
         assetStores = assetStores ?? [],
-        menus = menus ?? [];
+        menus = menus ?? [],
+        levels = levels ?? [];
 
   /// Create an instance from a JSON object.
   factory Project.fromJson(final Map<String, dynamic> json) =>
@@ -88,6 +94,9 @@ class Project {
 
   /// The menus that have been defined.
   final Menus menus;
+
+  /// The levels that have been defined.
+  final Levels levels;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$ProjectToJson(this);

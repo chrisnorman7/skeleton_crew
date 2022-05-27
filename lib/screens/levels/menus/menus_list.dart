@@ -53,7 +53,7 @@ class MenusListState extends State<MenusList> {
               ),
               autofocus: i == 0,
               onSetState: () => setState(() {}),
-              subtitle: '${menu.menuItems.length}',
+              subtitle: '${menu.className}: ${menu.comment}',
             ),
           ),
         );

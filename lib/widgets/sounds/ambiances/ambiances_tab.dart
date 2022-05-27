@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../json/levels/sounds/ambiance_reference.dart';
 import '../../../screens/sounds/ambiances/edit_ambiance.dart';
+import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
+import '../../../util.dart';
 import '../../center_text.dart';
 import '../../push_widget_list_tile.dart';
 
@@ -41,18 +43,29 @@ class AmbiancesTabState extends State<AmbiancesTab> {
         final ambiance = ambiances[index];
         final assetReference = project.getPretendAssetReference(ambiance.sound);
         final coordinates = ambiance.coordinates;
-        return PushWidgetListTile(
-          title: project.getAssetString(assetReference),
-          builder: (final context) => EditAmbiance(
-            projectContext: widget.projectContext,
-            ambiances: widget.ambiances,
-            value: ambiance,
+        return CallbackShortcuts(
+          bindings: {
+            deleteShortcut: () => deleteAmbiance(
+                  context: context,
+                  projectContext: widget.projectContext,
+                  ambiances: ambiances,
+                  ambianceReference: ambiance,
+                  onYes: () => setState(() {}),
+                )
+          },
+          child: PushWidgetListTile(
+            title: project.getAssetString(assetReference),
+            builder: (final context) => EditAmbiance(
+              projectContext: widget.projectContext,
+              ambiances: widget.ambiances,
+              value: ambiance,
+            ),
+            autofocus: index == 0,
+            onSetState: () => setState(() {}),
+            subtitle: coordinates == null
+                ? 'Centre'
+                : '${coordinates.x}, ${coordinates.y}',
           ),
-          autofocus: index == 0,
-          onSetState: () => setState(() {}),
-          subtitle: coordinates == null
-              ? 'Centre'
-              : '${coordinates.x}, ${coordinates.y}',
         );
       },
       itemCount: ambiances.length,
