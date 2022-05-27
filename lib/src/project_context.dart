@@ -182,8 +182,10 @@ class ProjectContext {
       imports.addAll(commandTriggerCode.imports);
       stringBuffer.writeln(commandTriggerCode.code);
     }
-    final generatedCode =
-        GeneratedCode(code: stringBuffer.toString(), imports: imports);
+    final generatedCode = GeneratedCode(
+      code: stringBuffer.toString(),
+      imports: imports,
+    );
     final code = dartFormatter.format(
       '$generatedHeader\n/// Command triggers.\n${generatedCode.getImports()}\n${generatedCode.code}',
     );
