@@ -35,23 +35,22 @@ class AmbianceReference {
   Map<String, dynamic> toJson() => _$AmbianceReferenceToJson(this);
 
   /// Output code for this instance.
-  GeneratedCode toCode(final ProjectContext projectContext) {
-    final imports = <String>{};
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final imports = <String>{'dart:math'};
     final project = projectContext.project;
     final assetStore = project.getAssetStore(sound.assetStoreId);
     imports.add(assetStore.getDartFile());
     final pretendAssetReference = project.getPretendAssetReference(
       sound,
     );
-
     final soundCoordinates = coordinates;
     final stringBuffer = StringBuffer()
-      ..writeln('Ambiance(')
-      ..writeln('${pretendAssetReference.variableName},')
+      ..writeln('const Ambiance(')
+      ..writeln('sound: ${pretendAssetReference.variableName},')
       ..writeln('gain: ${sound.gain},');
     if (soundCoordinates != null) {
       stringBuffer.writeln(
-        'coordinates: Point(${soundCoordinates.x}, ${soundCoordinates.y}),',
+        'position: Point(${soundCoordinates.x}, ${soundCoordinates.y}),',
       );
     }
     stringBuffer.writeln(')');

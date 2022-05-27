@@ -139,9 +139,12 @@ class ProjectContext {
       ..writeln('// ignore_for_file: avoid_redundant_argument_values')
       ..writeln(generatedCode.getImports())
       ..write(generatedCode.code);
-    final code = dartFormatter.format(codeBuffer.toString());
-    File(path.join(project.outputDirectory, menuFilename))
-        .writeAsStringSync(code);
+    final menuPath = path.join(project.outputDirectory, menuFilename);
+    final code = dartFormatter.format(
+      codeBuffer.toString(),
+      uri: menuPath,
+    );
+    File(menuPath).writeAsStringSync(code);
   }
 
   /// Write the given [assetStoreReference].

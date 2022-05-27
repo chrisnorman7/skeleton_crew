@@ -13,8 +13,14 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
       menuItems: (json['menuItems'] as List<dynamic>)
           .map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
           .toList(),
-      className: json['className'] as String? ?? 'Menu',
+      className: json['className'] as String? ?? 'CustomLevel',
       comment: json['comment'] as String? ?? 'A menu which must be extended.',
+      music: json['music'] == null
+          ? null
+          : SoundReference.fromJson(json['music'] as Map<String, dynamic>),
+      ambiances: (json['ambiances'] as List<dynamic>?)
+          ?.map((e) => AmbianceReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
       upScanCode: $enumDecodeNullable(_$ScanCodeEnumMap, json['upScanCode']) ??
           ScanCode.up,
       upButton: $enumDecodeNullable(
@@ -52,21 +58,17 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
           (json['controllerAxisSensitivity'] as num?)?.toDouble() ?? 0.5,
       searchEnabled: json['searchEnabled'] as bool? ?? true,
       searchInterval: json['searchInterval'] as int? ?? 500,
-      music: json['music'] == null
-          ? null
-          : SoundReference.fromJson(json['music'] as Map<String, dynamic>),
-      ambiances: (json['ambiances'] as List<dynamic>?)
-          ?.map((e) => AmbianceReference.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'menuItems': instance.menuItems,
       'className': instance.className,
       'comment': instance.comment,
+      'music': instance.music,
+      'ambiances': instance.ambiances,
+      'menuItems': instance.menuItems,
       'upScanCode': _$ScanCodeEnumMap[instance.upScanCode],
       'upButton': _$GameControllerButtonEnumMap[instance.upButton],
       'downScanCode': _$ScanCodeEnumMap[instance.downScanCode],
@@ -82,8 +84,6 @@ Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
       'controllerAxisSensitivity': instance.controllerAxisSensitivity,
       'searchEnabled': instance.searchEnabled,
       'searchInterval': instance.searchInterval,
-      'music': instance.music,
-      'ambiances': instance.ambiances,
     };
 
 const _$ScanCodeEnumMap = {

@@ -6,6 +6,7 @@ import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../function_reference.dart';
+import '../level_reference.dart';
 import '../sounds/ambiance_reference.dart';
 import '../sounds/sound_reference.dart';
 import 'menu_item_reference.dart';
@@ -14,14 +15,16 @@ part 'menu_reference.g.dart';
 
 /// The reference to a [Menu].
 @JsonSerializable()
-class MenuReference {
+class MenuReference extends LevelReference {
   /// Create an instance.
   MenuReference({
-    required this.id,
-    required this.title,
+    required super.id,
+    required super.title,
     required this.menuItems,
-    this.className = 'Menu',
-    this.comment = 'A menu which must be extended.',
+    super.className = 'CustomLevel',
+    super.comment = 'A menu which must be extended.',
+    super.music,
+    final List<AmbianceReference>? ambiances,
     this.upScanCode = ScanCode.up,
     this.upButton = GameControllerButton.dpadUp,
     this.downScanCode = ScanCode.down,
@@ -37,28 +40,14 @@ class MenuReference {
     this.controllerAxisSensitivity = 0.5,
     this.searchEnabled = true,
     this.searchInterval = 500,
-    this.music,
-    final List<AmbianceReference>? ambiances,
-  }) : ambiances = ambiances ?? [];
+  }) : super(ambiances: ambiances ?? []);
 
   /// Create an instance from a JSON object.
   factory MenuReference.fromJson(final Map<String, dynamic> json) =>
       _$MenuReferenceFromJson(json);
 
-  /// The ID of this menu.
-  final String id;
-
-  /// The title of this menu.
-  String title;
-
   /// A list of menu items to render.
   final List<MenuItemReference> menuItems;
-
-  /// The class name for this menu.
-  String className;
-
-  /// The comment for this menu.
-  String comment;
 
   /// [Menu.upScanCode].
   ScanCode upScanCode;
@@ -105,16 +94,12 @@ class MenuReference {
   /// [Menu.searchInterval].
   int searchInterval;
 
-  /// `Menu.music`.
-  SoundReference? music;
-
-  /// `Menu.ambiances`.
-  final List<AmbianceReference> ambiances;
-
   /// Convert an instance to JSON.
+  @override
   Map<String, dynamic> toJson() => _$MenuReferenceToJson(this);
 
   /// Get code for this instance.
+  @override
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = <String>{
       'package:ziggurat/ziggurat.dart',
@@ -150,15 +135,10 @@ class MenuReference {
       )
       ..writeln('searchEnabled: $searchEnabled,')
       ..writeln('searchInterval: $searchInterval,');
-    final musicReference = music;
-    if (musicReference != null) {
-      final code = musicReference.getCode(projectContext);
-      imports.addAll(code.imports);
-      stringBuffer
-        ..writeln('music: const Music(')
-        ..writeln('sound: ${code.code},')
-        ..writeln('gain: ${musicReference.gain},')
-        ..writeln('),');
+    final musicAmbiancesCode = getMusicAmbianceCode(projectContext);
+    if (musicAmbiancesCode != null) {
+      imports.addAll(musicAmbiancesCode.imports);
+      stringBuffer.writeln(musicAmbiancesCode.code);
     }
     stringBuffer
       ..writeln(') {')
