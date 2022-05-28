@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ziggurat/sound.dart';
 
 import '../../../json/levels/sounds/ambiance_reference.dart';
 import '../../../screens/sounds/ambiances/edit_ambiance.dart';
@@ -53,6 +54,7 @@ class AmbiancesTabState extends ProjectContextState<AmbiancesTab> {
         final assetReference = project.getPretendAssetReference(ambiance.sound);
         final coordinates = ambiance.coordinates;
         final sound = ambiance.sound;
+        final soundPosition = ambiance.coordinates;
         return CallbackShortcuts(
           bindings: {
             deleteShortcut: () => deleteAmbiance(
@@ -64,25 +66,37 @@ class AmbiancesTabState extends ProjectContextState<AmbiancesTab> {
                 )
           },
           child: PlaySoundSemantics(
-            soundChannel: projectContext.game.interfaceSounds,
+            game: projectContext.game,
             assetReference: project
                 .getPretendAssetReference(sound)
                 .assetReferenceReference
                 .reference,
             gain: sound.gain,
             looping: true,
-            child: PushWidgetListTile(
-              title: project.getAssetString(assetReference),
-              builder: (final context) => EditAmbiance(
-                projectContext: widget.projectContext,
-                ambiances: widget.ambiances,
-                value: ambiance,
+            position: soundPosition == null
+                ? unpanned
+                : SoundPosition3d(
+                    x: soundPosition.x,
+                    y: soundPosition.y,
+                    z: soundPosition.z,
+                  ),
+            child: Builder(
+              builder: (final builderContext) => PushWidgetListTile(
+                title: project.getAssetString(assetReference),
+                builder: (final context) {
+                  PlaySoundSemantics.of(builderContext)?.stop();
+                  return EditAmbiance(
+                    projectContext: widget.projectContext,
+                    ambiances: widget.ambiances,
+                    value: ambiance,
+                  );
+                },
+                autofocus: index == 0,
+                onSetState: () => setState(() {}),
+                subtitle: coordinates == null
+                    ? 'Centre'
+                    : '${coordinates.x}, ${coordinates.y}',
               ),
-              autofocus: index == 0,
-              onSetState: () => setState(() {}),
-              subtitle: coordinates == null
-                  ? 'Centre'
-                  : '${coordinates.x}, ${coordinates.y}',
             ),
           ),
         );

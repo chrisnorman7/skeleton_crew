@@ -174,8 +174,8 @@ Future<void> selectAsset({
             values: assetStore.assets,
             getSearchString: (final value) => value.variableName,
             getWidget: (final value) => PlaySoundSemantics(
+              game: projectContext.game,
               child: Text('${value.variableName}: ${value.comment}'),
-              soundChannel: projectContext.game.interfaceSounds,
               assetReference: value.assetReferenceReference.reference,
             ),
             title: 'Select Asset',

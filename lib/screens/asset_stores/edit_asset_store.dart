@@ -176,7 +176,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                                 )
                           },
                           child: PlaySoundSemantics(
-                            soundChannel: projectContext.game.interfaceSounds,
+                            game: projectContext.game,
                             assetReference: isAudio ? assetReference : null,
                             child: Builder(
                               builder: (final builderContext) =>

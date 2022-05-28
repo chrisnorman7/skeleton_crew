@@ -360,7 +360,7 @@ class EditMenuState extends ProjectContextState<EditMenu> {
             moveToEndShortcut: () => reorderMenuItems(index, menuItems.length)
           },
           child: PlaySoundSemantics(
-            soundChannel: projectContext.game.interfaceSounds,
+            game: projectContext.game,
             assetReference: sound == null
                 ? null
                 : projectContext.project

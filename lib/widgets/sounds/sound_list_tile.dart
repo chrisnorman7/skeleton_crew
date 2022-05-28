@@ -49,7 +49,7 @@ class SoundListTile extends StatelessWidget {
     final assetReference =
         assetStore?.getAssetReference(sound!.assetReferenceId);
     return PlaySoundSemantics(
-      soundChannel: projectContext.game.interfaceSounds,
+      game: projectContext.game,
       assetReference: assetReference?.assetReferenceReference.reference,
       gain: sound?.gain ?? 1.0,
       child: Builder(
