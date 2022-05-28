@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ziggurat/levels.dart';
 
@@ -82,6 +83,44 @@ class LevelReference {
     return null;
   }
 
+  /// Get code for the created [commands].
+  GeneratedCode? getCommandsCode(final ProjectContext projectContext) {
+    final commandReferences = commands;
+    if (commandReferences.isEmpty) {
+      return null;
+    }
+    final imports = <String>{};
+    final stringBuffer = StringBuffer();
+    for (final command in commandReferences) {
+      final code = command.getCode(projectContext);
+      imports.addAll(code.imports);
+      stringBuffer.writeln(code.code);
+    }
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
+
+  /// Get function headers for this instance.
+  @mustCallSuper
+  GeneratedCode getFunctionHeaders(final ProjectContext projectContext) {
+    final imports = <String>{};
+    final stringBuffer = StringBuffer();
+    for (final command in commands) {
+      for (final functionReference in [
+        command.startFunction,
+        command.stopFunction,
+        command.undoFunction
+      ]) {
+        if (functionReference == null) {
+          continue;
+        }
+        final code = functionReference.getCode(projectContext);
+        imports.addAll(code.imports);
+        stringBuffer.writeln(functionReference.header);
+      }
+    }
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
+
   /// Get code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = <String>{
@@ -101,11 +140,23 @@ class LevelReference {
       stringBuffer
         ..writeln(': super(')
         ..writeln(musicAmbiancesCode.code)
-        ..writeln(');');
-    } else {
-      stringBuffer.writeln(';');
+        ..writeln(')');
     }
-    stringBuffer.writeln('}');
+    final commandsCode = getCommandsCode(projectContext);
+    if (commandsCode == null) {
+      stringBuffer.write(';');
+    } else {
+      imports.addAll(commandsCode.imports);
+      stringBuffer
+        ..writeln('{')
+        ..writeln(commandsCode.code)
+        ..writeln('}');
+    }
+    final functionHeadersCode = getFunctionHeaders(projectContext);
+    imports.addAll(functionHeadersCode.imports);
+    stringBuffer
+      ..writeln(functionHeadersCode.code)
+      ..writeln('}');
     return GeneratedCode(code: stringBuffer.toString(), imports: imports);
   }
 }

@@ -100,6 +100,25 @@ class MenuReference extends LevelReference {
   @override
   Map<String, dynamic> toJson() => _$MenuReferenceToJson(this);
 
+  /// Get function headers for both [commands] and [menuItems].
+  @override
+  GeneratedCode getFunctionHeaders(final ProjectContext projectContext) {
+    final code = super.getFunctionHeaders(projectContext);
+    final imports = {...code.imports};
+    final stringBuffer = StringBuffer()..writeln(code.code);
+    for (final menuItem in menuItems) {
+      final functionReference = menuItem.functionReference;
+      if (functionReference == null) {
+        continue;
+      }
+      final functionCode = functionReference.getCode(projectContext);
+      imports.addAll(functionCode.imports);
+      final header = functionReference.header;
+      stringBuffer.writeln(header);
+    }
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
+
   /// Get code for this instance.
   @override
   GeneratedCode getCode(final ProjectContext projectContext) {
@@ -158,10 +177,11 @@ class MenuReference extends LevelReference {
       }
     }
     stringBuffer.writeln('],);}');
-    for (final function in functionReferences) {
-      stringBuffer.writeln(function.header);
-    }
-    stringBuffer.writeln('}');
+    final functionHeadersCode = getFunctionHeaders(projectContext);
+    imports.addAll(functionHeadersCode.imports);
+    stringBuffer
+      ..writeln(functionHeadersCode.code)
+      ..writeln('}');
     return GeneratedCode(code: stringBuffer.toString(), imports: imports);
   }
 }

@@ -49,7 +49,7 @@ class LevelCommandReference {
   /// Get the code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
     final project = projectContext.project;
-    final imports = <String>{};
+    final imports = <String>{'package:ziggurat/ziggurat.dart'};
     final commandTrigger = project.getCommandTrigger(commandTriggerId);
     final commandInterval = interval;
     final stringBuffer = StringBuffer()
