@@ -68,3 +68,9 @@ const levelFilename = 'levels.dart';
 ///
 /// This file will be located under the output directory.
 const gameFilename = 'game.dart';
+
+/// The icon to use for command triggers.
+const commandTriggersIcon = Icon(
+  Icons.mouse,
+  semanticLabel: 'Command Triggers',
+);

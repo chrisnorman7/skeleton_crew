@@ -111,7 +111,7 @@ class ProjectContextScreenState
         TabbedScaffoldTab(
           actions: actions,
           title: 'Command Triggers',
-          icon: const Icon(Icons.mouse),
+          icon: commandTriggersIcon,
           builder: (final context) => CommandTriggersTab(
             projectContext: projectContext,
           ),
