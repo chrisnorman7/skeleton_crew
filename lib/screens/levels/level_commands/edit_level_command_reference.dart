@@ -57,6 +57,7 @@ class EditLevelCommandReferenceState
         .commandTrigger;
     final index =
         widget.commands.indexWhere((final element) => element.id == command.id);
+    final commandInterval = command.interval;
     return Cancel(
       child: SimpleScaffold(
         title: 'Edit Command',
@@ -109,7 +110,7 @@ class EditLevelCommandReferenceState
               defaultComment: '${commandTrigger.description} undo.',
             ),
             IntListTile(
-              value: command.interval ?? 0,
+              value: commandInterval ?? 0,
               onChanged: (final value) {
                 command.interval = value == 0 ? null : value;
                 save();
@@ -117,6 +118,10 @@ class EditLevelCommandReferenceState
               title: 'Command Interval',
               labelText: 'Interval',
               min: 0,
+              modifier: 100,
+              subtitle: commandInterval == null
+                  ? 'Will Not Repeat'
+                  : '$commandInterval ms',
             )
           ],
         ),
