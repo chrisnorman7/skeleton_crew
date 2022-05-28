@@ -24,7 +24,8 @@ class MenuReference extends LevelReference {
     super.className = 'CustomLevel',
     super.comment = 'A menu which must be extended.',
     super.music,
-    final List<AmbianceReference>? ambiances,
+    super.ambiances,
+    super.commands,
     this.upScanCode = ScanCode.up,
     this.upButton = GameControllerButton.dpadUp,
     this.downScanCode = ScanCode.down,
@@ -40,7 +41,7 @@ class MenuReference extends LevelReference {
     this.controllerAxisSensitivity = 0.5,
     this.searchEnabled = true,
     this.searchInterval = 500,
-  }) : super(ambiances: ambiances ?? []);
+  });
 
   /// Create an instance from a JSON object.
   factory MenuReference.fromJson(final Map<String, dynamic> json) =>

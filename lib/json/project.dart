@@ -72,6 +72,10 @@ class Project {
   /// The command triggers to use.
   final CommandTriggers commandTriggers;
 
+  /// Get the command trigger with the given [id].
+  CommandTriggerReference getCommandTrigger(final String id) =>
+      commandTriggers.firstWhere((final element) => element.id == id);
+
   /// The asset stores that have been defined.
   final AssetStores assetStores;
 

@@ -18,6 +18,10 @@ LevelReference _$LevelReferenceFromJson(Map<String, dynamic> json) =>
       ambiances: (json['ambiances'] as List<dynamic>?)
           ?.map((e) => AmbianceReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      commands: (json['commands'] as List<dynamic>?)
+          ?.map(
+              (e) => LevelCommandReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$LevelReferenceToJson(LevelReference instance) =>
@@ -28,4 +32,5 @@ Map<String, dynamic> _$LevelReferenceToJson(LevelReference instance) =>
       'comment': instance.comment,
       'music': instance.music,
       'ambiances': instance.ambiances,
+      'commands': instance.commands,
     };

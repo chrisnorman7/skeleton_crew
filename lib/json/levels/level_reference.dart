@@ -3,10 +3,14 @@ import 'package:ziggurat/levels.dart';
 
 import '../../src/generated_code.dart';
 import '../../src/project_context.dart';
+import 'level_command_reference.dart';
 import 'sounds/ambiance_reference.dart';
 import 'sounds/sound_reference.dart';
 
 part 'level_reference.g.dart';
+
+/// A list of level command references.
+typedef LevelCommandReferences = List<LevelCommandReference>;
 
 /// A reference to a [Level].
 @JsonSerializable()
@@ -19,7 +23,9 @@ class LevelReference {
     this.comment = 'A level which must be extended.',
     this.music,
     final List<AmbianceReference>? ambiances,
-  }) : ambiances = ambiances ?? [];
+    final LevelCommandReferences? commands,
+  })  : ambiances = ambiances ?? [],
+        commands = commands ?? [];
 
   /// Create an instance from a JSON object.
   factory LevelReference.fromJson(final Map<String, dynamic> json) =>
@@ -42,6 +48,9 @@ class LevelReference {
 
   /// Ambiances for the level.
   final List<AmbianceReference> ambiances;
+
+  /// The commands that are registered for this instance.
+  final LevelCommandReferences commands;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$LevelReferenceToJson(this);
