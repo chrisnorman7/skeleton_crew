@@ -7,13 +7,13 @@ import '../../../util.dart';
 import '../../tabbed_scaffold.dart';
 import 'ambiances_tab.dart';
 
-/// A tab that allows the editing of [ambiances].
+/// A tab that allows the editing of ambiances.
 class AmbiancesTabbedScaffoldTab extends TabbedScaffoldTab {
   /// Create an instance.
   AmbiancesTabbedScaffoldTab({
     required final BuildContext context,
-    required this.projectContext,
-    required this.ambiances,
+    required final ProjectContext projectContext,
+    required final List<AmbianceReference> ambiances,
     required final VoidCallback onDone,
   }) : super(
           title: 'Ambiances',
@@ -34,10 +34,4 @@ class AmbiancesTabbedScaffoldTab extends TabbedScaffoldTab {
             tooltip: 'Add Ambiance',
           ),
         );
-
-  /// The project context to use.
-  final ProjectContext projectContext;
-
-  /// The ambiances to edit.
-  final List<AmbianceReference> ambiances;
 }
