@@ -6,6 +6,7 @@ import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../function_reference.dart';
+import '../level_command_reference.dart';
 import '../level_reference.dart';
 import '../sounds/ambiance_reference.dart';
 import '../sounds/sound_reference.dart';

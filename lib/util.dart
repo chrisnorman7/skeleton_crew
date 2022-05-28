@@ -10,6 +10,7 @@ import 'constants.dart';
 import 'json/asset_stores/asset_store_reference.dart';
 import 'json/asset_stores/pretend_asset_reference.dart';
 import 'json/command_trigger_reference.dart';
+import 'json/levels/level_command_reference.dart';
 import 'json/levels/menus/menu_reference.dart';
 import 'json/levels/sounds/ambiance_reference.dart';
 import 'json/levels/sounds/sound_reference.dart';
@@ -339,4 +340,26 @@ Future<void> deleteAmbiance({
         onYes();
       },
       title: 'Delete Ambiance',
+    );
+
+/// Delete the given [command] from the given [commands].
+Future<void> deleteLevelCommand({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final List<LevelCommandReference> commands,
+  required final LevelCommandReference command,
+  required final VoidCallback onYes,
+}) =>
+    confirm(
+      context: context,
+      message: 'Are you sure you want to delete this command?',
+      title: 'Delete Command',
+      yesCallback: () {
+        Navigator.pop(context);
+        commands.removeWhere(
+          (final element) => element.id == command.id,
+        );
+        projectContext.save();
+        onYes();
+      },
     );

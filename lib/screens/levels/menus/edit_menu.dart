@@ -11,6 +11,7 @@ import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/double_list_tile.dart';
 import '../../../widgets/int_list_tile.dart';
+import '../../../widgets/level_commands/level_commands_tabbed_scaffold_tab.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tab.dart';
@@ -81,6 +82,12 @@ class EditMenuState extends ProjectContextState<EditMenu> {
               onPressed: () => addMenuItem(context),
               tooltip: 'Add Menu Item',
             ),
+          ),
+          LevelCommandsTabbedScaffoldTab(
+            context: context,
+            projectContext: projectContext,
+            commands: menu.commands,
+            onDone: () => setState(() {}),
           ),
           AmbiancesTabbedScaffoldTab(
             context: context,

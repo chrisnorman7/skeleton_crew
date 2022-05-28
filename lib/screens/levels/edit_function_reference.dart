@@ -16,6 +16,7 @@ class EditFunctionReference extends StatefulWidget {
     required this.projectContext,
     required this.value,
     required this.onChanged,
+    this.nullable = true,
     super.key,
   });
 
@@ -27,6 +28,9 @@ class EditFunctionReference extends StatefulWidget {
 
   /// The function to call when [value] changes.
   final ValueChanged<FunctionReference?> onChanged;
+
+  /// Whether or not [value] is nullable.
+  final bool nullable;
 
   /// Create state for this widget.
   @override
@@ -42,13 +46,14 @@ class EditFunctionReferenceState extends State<EditFunctionReference> {
     return Cancel(
       child: SimpleScaffold(
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              widget.onChanged(null);
-            },
-            child: deleteIcon,
-          )
+          if (widget.nullable)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                widget.onChanged(null);
+              },
+              child: deleteIcon,
+            )
         ],
         title: 'Edit Function',
         body: ListView(

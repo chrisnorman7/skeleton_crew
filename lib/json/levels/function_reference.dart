@@ -13,7 +13,7 @@ class FunctionReference {
   /// Create an instance.
   FunctionReference({
     required this.name,
-    this.comment = 'TODO(Someone): Enter a sensible comment.',
+    required this.comment,
     this.text,
     this.soundReference,
   });

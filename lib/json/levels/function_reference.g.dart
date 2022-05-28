@@ -9,8 +9,7 @@ part of 'function_reference.dart';
 FunctionReference _$FunctionReferenceFromJson(Map<String, dynamic> json) =>
     FunctionReference(
       name: json['name'] as String,
-      comment: json['comment'] as String? ??
-          'TODO(Someone): Enter a sensible comment.',
+      comment: json['comment'] as String,
       text: json['text'] as String?,
       soundReference: json['soundReference'] == null
           ? null

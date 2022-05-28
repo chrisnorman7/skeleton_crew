@@ -9,9 +9,6 @@ import 'sounds/sound_reference.dart';
 
 part 'level_reference.g.dart';
 
-/// A list of level command references.
-typedef LevelCommandReferences = List<LevelCommandReference>;
-
 /// A reference to a [Level].
 @JsonSerializable()
 class LevelReference {
@@ -23,7 +20,7 @@ class LevelReference {
     this.comment = 'A level which must be extended.',
     this.music,
     final List<AmbianceReference>? ambiances,
-    final LevelCommandReferences? commands,
+    final List<LevelCommandReference>? commands,
   })  : ambiances = ambiances ?? [],
         commands = commands ?? [];
 
@@ -50,7 +47,7 @@ class LevelReference {
   final List<AmbianceReference> ambiances;
 
   /// The commands that are registered for this instance.
-  final LevelCommandReferences commands;
+  final List<LevelCommandReference> commands;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$LevelReferenceToJson(this);
