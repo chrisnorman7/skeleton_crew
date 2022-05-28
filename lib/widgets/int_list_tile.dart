@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import '../shortcuts.dart';
 import '../util.dart';
 import 'get_text.dart';
 
@@ -52,15 +52,13 @@ class IntListTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => CallbackShortcuts(
         bindings: {
-          const SingleActivator(LogicalKeyboardKey.minus): () {
+          moveDownShortcut: () {
             final i = value - modifier;
             if (i >= (min ?? i)) {
               onChanged(i);
             }
           },
-          const SingleActivator(
-            LogicalKeyboardKey.equal,
-          ): () {
+          moveUpShortcut: () {
             final i = value + modifier;
             if (i <= (max ?? i)) {
               onChanged(i);
