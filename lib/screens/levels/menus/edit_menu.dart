@@ -14,6 +14,7 @@ import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tab.dart';
+import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/play_sound_semantics.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
@@ -56,7 +57,6 @@ class EditMenuState extends ProjectContextState<EditMenu> {
   @override
   Widget build(final BuildContext context) {
     final menu = widget.menuReference;
-    final ambiances = menu.ambiances;
     return Cancel(
       child: TabbedScaffold(
         tabs: [
@@ -82,31 +82,11 @@ class EditMenuState extends ProjectContextState<EditMenu> {
               tooltip: 'Add Menu Item',
             ),
           ),
-          TabbedScaffoldTab(
-            title: 'Ambiances',
-            icon: ambiancesIcon,
-            builder: (final context) => CallbackShortcuts(
-              bindings: {
-                newShortcut: () => addAmbiance(
-                      context: context,
-                      projectContext: projectContext,
-                      ambiances: menu.ambiances,
-                      onDone: () => setState(() {}),
-                    )
-              },
-              child: getAmbiancesListView(context),
-            ),
-            floatingActionButton: FloatingActionButton(
-              autofocus: ambiances.isEmpty,
-              child: addIcon,
-              onPressed: () => addAmbiance(
-                context: context,
-                projectContext: projectContext,
-                ambiances: menu.ambiances,
-                onDone: () => setState(() {}),
-              ),
-              tooltip: 'Add Ambiance',
-            ),
+          AmbiancesTabbedScaffoldTab(
+            context: context,
+            projectContext: projectContext,
+            ambiances: menu.ambiances,
+            onDone: () => setState(() {}),
           ),
         ],
       ),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
 import '../../../json/levels/level_reference.dart';
 import '../../../src/project_context.dart';
-import '../../../util.dart';
 import '../../../validators.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/project_context_state.dart';
-import '../../../widgets/sounds/ambiances/ambiances_tab.dart';
+import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
@@ -100,25 +98,12 @@ class EditLevelState extends ProjectContextState<EditLevel> {
               ],
             ),
           ),
-          TabbedScaffoldTab(
-            title: 'Ambiances',
-            icon: ambiancesIcon,
-            builder: (final context) => AmbiancesTab(
-              projectContext: projectContext,
-              ambiances: level.ambiances,
-            ),
-            floatingActionButton: FloatingActionButton(
-              autofocus: level.ambiances.isEmpty,
-              child: addIcon,
-              onPressed: () => addAmbiance(
-                context: context,
-                projectContext: projectContext,
-                ambiances: level.ambiances,
-                onDone: () => setState(() {}),
-              ),
-              tooltip: 'Add Ambiance',
-            ),
-          )
+          AmbiancesTabbedScaffoldTab(
+            context: context,
+            projectContext: projectContext,
+            ambiances: level.ambiances,
+            onDone: () => setState(() {}),
+          ),
         ],
       ),
     );
