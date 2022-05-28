@@ -10,6 +10,7 @@ import 'constants.dart';
 import 'json/asset_stores/asset_store_reference.dart';
 import 'json/asset_stores/pretend_asset_reference.dart';
 import 'json/command_trigger_reference.dart';
+import 'json/levels/menus/menu_reference.dart';
 import 'json/levels/sounds/ambiance_reference.dart';
 import 'json/levels/sounds/sound_reference.dart';
 import 'screens/asset_stores/create_asset_store.dart';
@@ -207,27 +208,29 @@ Future<void> deleteAssetReference({
 }) {
   final project = projectContext.project;
   const prefix = 'You cannot delete the';
-  for (final menu in project.menus) {
-    if (menu.music?.assetReferenceId == assetReference.id) {
+  for (final level in [...project.menus, ...project.levels]) {
+    if (level.music?.assetReferenceId == assetReference.id) {
       return showMessage(
         context: context,
-        message: '$prefix music for the ${menu.title} menu.',
+        message: '$prefix music for ${level.title}.',
       );
     }
-    for (final menuItem in menu.menuItems) {
-      if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
-        return showMessage(
-          context: context,
-          message: '$prefix sound for the "${menuItem.title}" item of the '
-              '${menu.title} menu.',
-        );
+    if (level is MenuReference) {
+      for (final menuItem in level.menuItems) {
+        if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
+          return showMessage(
+            context: context,
+            message: '$prefix sound for the "${menuItem.title}" item of the '
+                '${level.title} menu.',
+          );
+        }
       }
     }
-    for (final ambiance in menu.ambiances) {
+    for (final ambiance in level.ambiances) {
       if (ambiance.sound.assetReferenceId == assetReference.id) {
         return showMessage(
           context: context,
-          message: '$prefix ${menu.title} ambiance.',
+          message: '$prefix ${level.title} ambiance.',
         );
       }
     }
