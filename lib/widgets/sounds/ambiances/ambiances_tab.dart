@@ -6,7 +6,9 @@ import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../../center_text.dart';
+import '../../project_context_state.dart';
 import '../../push_widget_list_tile.dart';
+import '../play_sound_semantics.dart';
 
 /// A widget that displays a list of [ambiances].
 class AmbiancesTab extends StatefulWidget {
@@ -29,7 +31,14 @@ class AmbiancesTab extends StatefulWidget {
 }
 
 /// State for [AmbiancesTab].
-class AmbiancesTabState extends State<AmbiancesTab> {
+class AmbiancesTabState extends ProjectContextState<AmbiancesTab> {
+  /// Initialise state.
+  @override
+  void initState() {
+    super.initState();
+    projectContext = widget.projectContext;
+  }
+
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
@@ -37,12 +46,13 @@ class AmbiancesTabState extends State<AmbiancesTab> {
     if (ambiances.isEmpty) {
       return const CenterText(text: 'There are no ambiances to show.');
     }
-    final project = widget.projectContext.project;
+    final project = projectContext.project;
     return ListView.builder(
       itemBuilder: (final context, final index) {
         final ambiance = ambiances[index];
         final assetReference = project.getPretendAssetReference(ambiance.sound);
         final coordinates = ambiance.coordinates;
+        final sound = ambiance.sound;
         return CallbackShortcuts(
           bindings: {
             deleteShortcut: () => deleteAmbiance(
@@ -53,18 +63,27 @@ class AmbiancesTabState extends State<AmbiancesTab> {
                   onYes: () => setState(() {}),
                 )
           },
-          child: PushWidgetListTile(
-            title: project.getAssetString(assetReference),
-            builder: (final context) => EditAmbiance(
-              projectContext: widget.projectContext,
-              ambiances: widget.ambiances,
-              value: ambiance,
+          child: PlaySoundSemantics(
+            soundChannel: projectContext.game.interfaceSounds,
+            assetReference: project
+                .getPretendAssetReference(sound)
+                .assetReferenceReference
+                .reference,
+            gain: sound.gain,
+            looping: true,
+            child: PushWidgetListTile(
+              title: project.getAssetString(assetReference),
+              builder: (final context) => EditAmbiance(
+                projectContext: widget.projectContext,
+                ambiances: widget.ambiances,
+                value: ambiance,
+              ),
+              autofocus: index == 0,
+              onSetState: () => setState(() {}),
+              subtitle: coordinates == null
+                  ? 'Centre'
+                  : '${coordinates.x}, ${coordinates.y}',
             ),
-            autofocus: index == 0,
-            onSetState: () => setState(() {}),
-            subtitle: coordinates == null
-                ? 'Centre'
-                : '${coordinates.x}, ${coordinates.y}',
           ),
         );
       },
