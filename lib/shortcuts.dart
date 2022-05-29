@@ -87,3 +87,10 @@ const moveToEndShortcut = SingleActivator(
   LogicalKeyboardKey.end,
   alt: true,
 );
+
+/// A shortcut to edit something.
+final editShortcut = SingleActivator(
+  LogicalKeyboardKey.keyE,
+  control: !macOs,
+  meta: macOs,
+);

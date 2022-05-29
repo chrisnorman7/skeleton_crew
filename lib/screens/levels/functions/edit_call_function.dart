@@ -4,7 +4,9 @@ import '../../../constants.dart';
 import '../../../json/levels/functions/call_function.dart';
 import '../../../json/levels/functions/function_reference.dart';
 import '../../../json/levels/level_reference.dart';
+import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
+import '../../../util.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
@@ -12,6 +14,7 @@ import '../../../widgets/simple_scaffold.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/text_list_tile.dart';
 import '../../lists/select_item.dart';
+import 'edit_function_reference.dart';
 
 /// A widget for editing a call function [value].
 class EditCallFunction extends StatefulWidget {
@@ -84,37 +87,55 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
                 save();
               },
             ),
-            PushWidgetListTile(
-              builder: (final context) => SelectItem<FunctionReference?>(
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      final functionReference = FunctionReference(
-                        name: 'function${functions.length}',
-                        comment: 'New function.',
-                      );
-                      functions.add(functionReference);
-                      callFunction.functionName = functionReference.name;
-                      save();
-                    },
-                    child: addIcon,
-                  )
-                ],
-                onDone: (final value) {
-                  callFunction.functionName = value?.name;
-                  save();
-                },
-                values: [null, ...functions],
-                getSearchString: (final value) =>
-                    value == null ? 'Clear' : value.name,
-                getWidget: (final value) => Text(
-                  value == null ? 'Unset' : '${value.name}: ${value.comment}',
+            CallbackShortcuts(
+              bindings: {
+                editShortcut: () async {
+                  if (function == null) {
+                    return;
+                  }
+                  await pushWidget(
+                    context: context,
+                    builder: (final context) => EditFunctionReference(
+                      projectContext: projectContext,
+                      levelReference: level,
+                      value: function,
+                    ),
+                  );
+                  setState(() {});
+                }
+              },
+              child: PushWidgetListTile(
+                builder: (final context) => SelectItem<FunctionReference?>(
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        final functionReference = FunctionReference(
+                          name: 'function${functions.length}',
+                          comment: 'New function.',
+                        );
+                        functions.add(functionReference);
+                        callFunction.functionName = functionReference.name;
+                        save();
+                      },
+                      child: addIcon,
+                    )
+                  ],
+                  onDone: (final value) {
+                    callFunction.functionName = value?.name;
+                    save();
+                  },
+                  values: [null, ...functions],
+                  getSearchString: (final value) =>
+                      value == null ? 'Clear' : value.name,
+                  getWidget: (final value) => Text(
+                    value == null ? 'Unset' : '${value.name}: ${value.comment}',
+                  ),
+                  title: 'Select Function',
+                  value: function,
                 ),
-                title: 'Select Function',
-                value: function,
+                title: 'Function',
+                subtitle: functionName ?? notSet,
               ),
-              title: 'Function',
-              subtitle: functionName ?? notSet,
             ),
           ],
         ),
