@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../json/asset_stores/asset_store_reference.dart';
 import '../../json/asset_stores/pretend_asset_reference.dart';
+import '../../json/levels/menus/menu_reference.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
 import '../../validators.dart';
@@ -100,4 +101,83 @@ class EditAssetState extends ProjectContextState<EditAsset> {
       ),
     );
   }
+}
+
+/// Delete the given [assetReference].
+Future<void> deleteAssetReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final PretendAssetReference assetReference,
+  final VoidCallback? onYes,
+}) {
+  final project = projectContext.project;
+  const prefix = 'You cannot delete the';
+  for (final level in [...project.menus, ...project.levels]) {
+    final type = level is MenuReference ? 'menu' : 'level';
+    if (level.music?.assetReferenceId == assetReference.id) {
+      return showMessage(
+        context: context,
+        message: '$prefix music for ${level.title}.',
+      );
+    }
+    if (level is MenuReference) {
+      for (final menuItem in level.menuItems) {
+        if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
+          return showMessage(
+            context: context,
+            message: '$prefix sound for the "${menuItem.title}" item of the '
+                '${level.title} menu.',
+          );
+        }
+      }
+    }
+    for (final ambiance in level.ambiances) {
+      final sound = ambiance.sound;
+      if (sound.assetStoreId == assetReference.assetStoreId &&
+          sound.assetReferenceId == assetReference.id) {
+        return showMessage(
+          context: context,
+          message: '$prefix ${level.title} ambiance.',
+        );
+      }
+    }
+    for (final commandReference in level.commands) {
+      for (final callFunction in [
+        commandReference.startFunction,
+        commandReference.stopFunction,
+        commandReference.undoFunction
+      ]) {
+        if (callFunction == null) {
+          continue;
+        }
+        final sound = callFunction.soundReference;
+        if (sound?.assetStoreId == assetReference.assetStoreId &&
+            sound?.assetReferenceId == assetReference.id) {
+          final trigger = project
+              .getCommandTrigger(commandReference.commandTriggerId)
+              .commandTrigger;
+          return showMessage(
+            context: context,
+            message: '$prefix sound for the ${trigger.name} command of the '
+                '${level.title} $type.',
+          );
+        }
+      }
+    }
+  }
+  return confirm(
+    context: context,
+    message: 'Are you sure you want to delete this asset?',
+    yesCallback: () {
+      Navigator.pop(context);
+      project.getAssetStore(assetReference.assetStoreId).assets.removeWhere(
+            (final element) => element.id == assetReference.id,
+          );
+      if (onYes != null) {
+        onYes();
+      }
+      projectContext.save();
+    },
+    title: 'Delete Asset',
+  );
 }
