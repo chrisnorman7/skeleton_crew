@@ -44,16 +44,42 @@ class CallFunctionListTile extends StatelessWidget {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
+    final project = projectContext.project;
     final callFunction = value;
     final sound = callFunction?.soundReference;
-    final assetReference = sound == null
-        ? null
-        : projectContext.project
-            .getPretendAssetReference(sound)
-            .assetReferenceReference
-            .reference;
+    final pretendAssetReference =
+        sound == null ? null : project.getPretendAssetReference(sound);
+    final assetReference =
+        pretendAssetReference?.assetReferenceReference.reference;
+    final String subtitle;
+    if (callFunction == null) {
+      subtitle = notSet;
+    } else {
+      final entries = <String>[];
+      final text = callFunction.text;
+      if (text != null) {
+        entries.add(getQuotedString(text));
+      }
+      if (pretendAssetReference != null) {
+        final assetStore = project.getAssetStore(
+          pretendAssetReference.assetStoreId,
+        );
+        entries.add(assetStore.getPrintableString(pretendAssetReference));
+      }
+      final functionName = callFunction.functionName;
+      if (functionName != null) {
+        entries.add(functionName);
+      }
+      if (entries.isEmpty) {
+        subtitle = 'Default';
+      } else {
+        subtitle = entries.join(', ');
+      }
+    }
     return CallbackShortcuts(
-      bindings: {deleteShortcut: () => onChanged(null)},
+      bindings: {
+        deleteShortcut: () => onChanged(null),
+      },
       child: PlaySoundSemantics(
         child: Builder(
           builder: (final builderContext) => PushWidgetListTile(
@@ -68,7 +94,7 @@ class CallFunctionListTile extends StatelessWidget {
                 onChanged: onChanged,
               );
             },
-            subtitle: callFunction == null ? notSet : 'Set',
+            subtitle: subtitle,
           ),
         ),
         game: projectContext.game,

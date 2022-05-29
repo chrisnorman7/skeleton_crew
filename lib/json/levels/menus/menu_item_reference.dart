@@ -47,7 +47,7 @@ class MenuItemReference {
     final sound = soundReference;
     final text = title;
     final stringBuffer = StringBuffer();
-    final constMenuItem = sound == null && text == null;
+    final constMenuItem = callFunction == null;
     if (constMenuItem) {
       stringBuffer.writeln('const ');
     }

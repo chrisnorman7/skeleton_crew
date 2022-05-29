@@ -61,6 +61,10 @@ class AssetStoreReference {
   /// written.
   String getDartFile() => '$assetStoresDirectory/$dartFilename';
 
+  /// Get a printable string for the given [assetReference].
+  String getPrintableString(final PretendAssetReference assetReference) =>
+      '$name/${assetReference.variableName}';
+
   /// Get the code for this store.
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = {'package:ziggurat/ziggurat.dart'};

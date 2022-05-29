@@ -121,4 +121,11 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
       ),
     );
   }
+
+  /// Save the value, and call `onChanged`.
+  @override
+  void save() {
+    super.save();
+    widget.onChanged(widget.value);
+  }
 }

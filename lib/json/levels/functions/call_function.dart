@@ -50,12 +50,12 @@ class CallFunction {
       return null;
     }
     final imports = <String>{'package:ziggurat/ziggurat.dart'};
-    final stringBuffer = StringBuffer()..write('() ');
+    final stringBuffer = StringBuffer();
     if (sound == null && message == null) {
-      stringBuffer.writeln('=> $name()');
+      stringBuffer.writeln('$name');
     } else {
       stringBuffer
-        ..writeln('{')
+        ..writeln('() {')
         ..writeln('game.outputMessage(')
         ..writeln('const Message(');
       if (sound != null) {
