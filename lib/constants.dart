@@ -74,3 +74,6 @@ const commandTriggersIcon = Icon(
   Icons.mouse,
   semanticLabel: 'Command Triggers',
 );
+
+/// The icon to use for functions.
+const functionsIcon = Icon(Icons.functions);

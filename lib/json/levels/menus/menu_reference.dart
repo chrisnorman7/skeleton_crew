@@ -5,7 +5,6 @@ import 'package:ziggurat/menus.dart';
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
-import '../function_reference.dart';
 import '../level_command_reference.dart';
 import '../level_reference.dart';
 import '../sounds/ambiance_reference.dart';
@@ -100,25 +99,6 @@ class MenuReference extends LevelReference {
   @override
   Map<String, dynamic> toJson() => _$MenuReferenceToJson(this);
 
-  /// Get function headers for both [commands] and [menuItems].
-  @override
-  GeneratedCode getFunctionHeaders(final ProjectContext projectContext) {
-    final code = super.getFunctionHeaders(projectContext);
-    final imports = {...code.imports};
-    final stringBuffer = StringBuffer()..writeln(code.code);
-    for (final menuItem in menuItems) {
-      final functionReference = menuItem.functionReference;
-      if (functionReference == null) {
-        continue;
-      }
-      final functionCode = functionReference.getCode(projectContext);
-      imports.addAll(functionCode.imports);
-      final header = functionReference.header;
-      stringBuffer.writeln(header);
-    }
-    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
-  }
-
   /// Get code for this instance.
   @override
   GeneratedCode getCode(final ProjectContext projectContext) {
@@ -164,17 +144,12 @@ class MenuReference extends LevelReference {
     stringBuffer
       ..writeln(') {')
       ..writeln('menuItems.addAll([');
-    final functionReferences = <FunctionReference>{};
     for (final item in menuItems) {
       final code = item.getCode(projectContext);
       imports.addAll(code.imports);
       stringBuffer
         ..write(code.code)
         ..writeln(',');
-      final functionReference = item.functionReference;
-      if (functionReference != null) {
-        functionReferences.add(functionReference);
-      }
     }
     stringBuffer.writeln('],);}');
     final functionHeadersCode = getFunctionHeaders(projectContext);

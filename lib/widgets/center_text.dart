@@ -5,7 +5,7 @@ class CenterText extends StatelessWidget {
   /// Create an instance.
   const CenterText({
     required this.text,
-    this.autofocus = true,
+    this.autofocus = false,
     super.key,
   });
 

@@ -10,14 +10,13 @@ import 'constants.dart';
 import 'json/asset_stores/asset_store_reference.dart';
 import 'json/asset_stores/pretend_asset_reference.dart';
 import 'json/command_trigger_reference.dart';
+import 'json/levels/functions/function_reference.dart';
 import 'json/levels/level_command_reference.dart';
+import 'json/levels/level_reference.dart';
 import 'json/levels/menus/menu_reference.dart';
-import 'json/levels/sounds/ambiance_reference.dart';
-import 'json/levels/sounds/sound_reference.dart';
 import 'screens/asset_stores/create_asset_store.dart';
 import 'screens/command_triggers/edit_command_trigger.dart';
 import 'screens/lists/select_item.dart';
-import 'screens/sounds/ambiances/edit_ambiance.dart';
 import 'src/project_context.dart';
 import 'widgets/sounds/play_sound_semantics.dart';
 
@@ -285,62 +284,52 @@ Future<void> deleteAssetStore({
   }
 }
 
-/// Add a new ambiance.
-Future<void> addAmbiance({
+/// Delete the given [functionReference] from the given [LevelReference].
+Future<void> deleteFunctionReference({
   required final BuildContext context,
   required final ProjectContext projectContext,
-  required final List<AmbianceReference> ambiances,
-  required final VoidCallback onDone,
-}) =>
-    selectAsset(
-      context: context,
-      projectContext: projectContext,
-      onDone: (final value) async {
-        if (value == null) {
-          return;
-        }
-        final ambiance = AmbianceReference(
-          id: newId(),
-          sound: SoundReference(
-            assetStoreId: value.assetStoreId,
-            assetReferenceId: value.id,
-          ),
-        );
-        ambiances.add(ambiance);
-        projectContext.save();
-        await pushWidget(
-          context: context,
-          builder: (final context) => EditAmbiance(
-            projectContext: projectContext,
-            ambiances: ambiances,
-            value: ambiance,
-          ),
-        );
-        onDone();
-      },
-    );
-
-/// Delete the given [AmbianceReference] from the list of [ambiances].
-Future<void> deleteAmbiance({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-  required final List<AmbianceReference> ambiances,
-  required final AmbianceReference ambianceReference,
+  required final LevelReference levelReference,
+  required final FunctionReference functionReference,
   required final VoidCallback onYes,
-}) =>
-    confirm(
-      context: context,
-      message: 'Are you sure you want to delete this ambiance?',
-      yesCallback: () {
-        Navigator.pop(context);
-        ambiances.removeWhere(
-          (final element) => element.id == ambianceReference.id,
+}) {
+  final functionName = functionReference.name;
+  for (final commandReference in levelReference.commands) {
+    for (final callFunction in [
+      commandReference.startFunction,
+      commandReference.stopFunction,
+      commandReference.undoFunction
+    ]) {
+      if (callFunction?.functionName == functionName) {
+        return showMessage(
+          context: context,
+          message: 'This function is used by 1 or more commands.',
         );
-        projectContext.save();
-        onYes();
-      },
-      title: 'Delete Ambiance',
-    );
+      }
+    }
+  }
+  if (levelReference is MenuReference) {
+    for (final menuItem in levelReference.menuItems) {
+      if (menuItem.callFunction?.functionName == functionName) {
+        return showMessage(
+          context: context,
+          message: 'This function is used by 1 or more menu items.',
+        );
+      }
+    }
+  }
+  return confirm(
+    context: context,
+    message: 'Are you sure you want to delete this function?',
+    title: 'Delete Function',
+    yesCallback: () {
+      Navigator.pop(context);
+      levelReference.functions.removeWhere(
+        (final element) => element.name == functionName,
+      );
+      onYes();
+    },
+  );
+}
 
 /// Delete the given [command] from the given [commands].
 Future<void> deleteLevelCommand({

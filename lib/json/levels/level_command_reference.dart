@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../src/generated_code.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
-import 'function_reference.dart';
+import 'functions/call_function.dart';
 import 'level_reference.dart';
 
 part 'level_command_reference.g.dart';
@@ -32,13 +32,13 @@ class LevelCommandReference {
   String commandTriggerId;
 
   /// The function to call when the command starts.
-  FunctionReference? startFunction;
+  CallFunction? startFunction;
 
   /// The function to call when the command stops.
-  FunctionReference? stopFunction;
+  CallFunction? stopFunction;
 
   /// The function to call to undo the affects of this command.
-  FunctionReference? undoFunction;
+  CallFunction? undoFunction;
 
   /// The interval for the resulting command.
   int? interval;
@@ -57,9 +57,9 @@ class LevelCommandReference {
       ..writeln('${getQuotedString(commandTrigger.commandTrigger.name)},')
       ..writeln('Command(');
 
-    void writeFunction(final FunctionReference? func, final String prefix) {
-      if (func != null) {
-        final code = func.getCode(projectContext);
+    void writeFunction(final CallFunction? func, final String prefix) {
+      final code = func?.getCode(projectContext);
+      if (code != null) {
         imports.addAll(code.imports);
         stringBuffer.writeln('$prefix: ${code.code},');
       }

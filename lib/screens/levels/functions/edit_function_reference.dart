@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-import '../../json/levels/function_reference.dart';
-import '../../src/project_context.dart';
-import '../../validators.dart';
-import '../../widgets/cancel.dart';
-import '../../widgets/simple_scaffold.dart';
-import '../../widgets/sounds/sound_list_tile.dart';
-import '../../widgets/text_list_tile.dart';
+import '../../../constants.dart';
+import '../../../json/levels/functions/function_reference.dart';
+import '../../../json/levels/level_reference.dart';
+import '../../../src/project_context.dart';
+import '../../../util.dart';
+import '../../../validators.dart';
+import '../../../widgets/cancel.dart';
+import '../../../widgets/project_context_state.dart';
+import '../../../widgets/simple_scaffold.dart';
+import '../../../widgets/text_list_tile.dart';
 
 /// A widget for editing a function reference [value].
 class EditFunctionReference extends StatefulWidget {
   /// Create an instance.
   const EditFunctionReference({
     required this.projectContext,
+    required this.levelReference,
     required this.value,
-    required this.onChanged,
-    this.nullable = true,
     super.key,
   });
 
   /// The project context to use.
   final ProjectContext projectContext;
 
+  /// The level that [value] is part of.
+  final LevelReference levelReference;
+
   /// The function reference to edit.
   final FunctionReference value;
-
-  /// The function to call when [value] changes.
-  final ValueChanged<FunctionReference?> onChanged;
-
-  /// Whether or not [value] is nullable.
-  final bool nullable;
 
   /// Create state for this widget.
   @override
@@ -38,7 +36,15 @@ class EditFunctionReference extends StatefulWidget {
 }
 
 /// State for [EditFunctionReference].
-class EditFunctionReferenceState extends State<EditFunctionReference> {
+class EditFunctionReferenceState
+    extends ProjectContextState<EditFunctionReference> {
+  /// Initialise state.
+  @override
+  void initState() {
+    super.initState();
+    projectContext = widget.projectContext;
+  }
+
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
@@ -46,19 +52,22 @@ class EditFunctionReferenceState extends State<EditFunctionReference> {
     return Cancel(
       child: SimpleScaffold(
         actions: [
-          if (widget.nullable)
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                widget.onChanged(null);
-              },
-              child: deleteIcon,
-            )
+          ElevatedButton(
+            onPressed: () => deleteFunctionReference(
+              context: context,
+              projectContext: projectContext,
+              levelReference: widget.levelReference,
+              functionReference: functionReference,
+              onYes: () => Navigator.pop(context),
+            ),
+            child: deleteIcon,
+          )
         ],
         title: 'Edit Function',
         body: ListView(
           children: [
             TextListTile(
+              autofocus: true,
               value: functionReference.name,
               onChanged: (final value) {
                 functionReference.name = value;
@@ -66,10 +75,14 @@ class EditFunctionReferenceState extends State<EditFunctionReference> {
               },
               header: 'Name',
               title: 'Function Name',
-              validator: (final value) => validateVariableName(value: value),
+              validator: (final value) => validateVariableName(
+                value: value,
+                variableNames: widget.levelReference.functions.map<String>(
+                  (final e) => e.name,
+                ),
+              ),
             ),
             TextListTile(
-              autofocus: true,
               value: functionReference.comment,
               onChanged: (final value) {
                 functionReference.comment = value;
@@ -79,22 +92,6 @@ class EditFunctionReferenceState extends State<EditFunctionReference> {
               title: 'Comment',
               validator: (final value) => validateNonEmptyValue(value: value),
             ),
-            TextListTile(
-              value: functionReference.text ?? '',
-              onChanged: (final value) {
-                functionReference.text = value.isEmpty ? null : value;
-                save();
-              },
-              header: 'Output Text',
-            ),
-            SoundListTile(
-              projectContext: widget.projectContext,
-              value: functionReference.soundReference,
-              onChanged: (final value) {
-                functionReference.soundReference = value;
-                save();
-              },
-            )
           ],
         ),
       ),
@@ -102,8 +99,9 @@ class EditFunctionReferenceState extends State<EditFunctionReference> {
   }
 
   /// Save a new value.
+  @override
   void save() {
-    widget.onChanged(widget.value);
+    projectContext.save();
     setState(() {});
   }
 }

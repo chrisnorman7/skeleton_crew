@@ -32,7 +32,9 @@ class AssetStoresTabState extends State<AssetStoresTab> {
     final assetStores = widget.projectContext.project.assetStores;
     final Widget child;
     if (assetStores.isEmpty) {
-      child = const CenterText(text: 'There are no asset stores yet.');
+      child = const CenterText(
+        text: 'There are no asset stores yet.',
+      );
     } else {
       final children = <SearchableListTile>[];
       for (var i = 0; i < assetStores.length; i++) {

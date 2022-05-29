@@ -90,7 +90,10 @@ class ProjectSettingsTabState extends ProjectContextState<ProjectSettingsTab> {
           },
           header: 'Game Class Name',
           labelText: 'Class Name',
-          validator: (final value) => validateClassName(value: value),
+          validator: (final value) => validateClassName(
+            value: value,
+            classNames: [],
+          ),
         ),
         TextListTile(
           value: project.gameClassComment,

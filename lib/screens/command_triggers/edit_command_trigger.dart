@@ -83,7 +83,12 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
                 save();
               },
               header: 'Variable Name',
-              validator: (final value) => validateVariableName(value: value),
+              validator: (final value) => validateVariableName(
+                value: value,
+                variableNames: project.commandTriggers.map<String>(
+                  (final e) => e.variableName,
+                ),
+              ),
             ),
             TextListTile(
               value: widget.commandTriggerReference.comment ??

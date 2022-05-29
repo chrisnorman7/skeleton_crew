@@ -10,11 +10,12 @@ import '../../../validators.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/double_list_tile.dart';
+import '../../../widgets/functions/functions_tabbed_scaffold_tab.dart';
 import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/level_commands/level_commands_tabbed_scaffold_tab.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
-import '../../../widgets/sounds/ambiances/ambiances_tab.dart';
+import '../../../widgets/sounds/ambiances/ambiances_list.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/play_sound_semantics.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
@@ -83,10 +84,16 @@ class EditMenuState extends ProjectContextState<EditMenu> {
               tooltip: 'Add Menu Item',
             ),
           ),
+          FunctionsTabbedScaffoldTab(
+            context: context,
+            projectContext: projectContext,
+            levelReference: menu,
+            onDone: () => setState(() {}),
+          ),
           LevelCommandsTabbedScaffoldTab(
             context: context,
             projectContext: projectContext,
-            commands: menu.commands,
+            levelReference: menu,
             onDone: () => setState(() {}),
           ),
           AmbiancesTabbedScaffoldTab(
@@ -412,7 +419,7 @@ class EditMenuState extends ProjectContextState<EditMenu> {
   }
 
   /// Get the ambiances list view.
-  Widget getAmbiancesListView(final BuildContext context) => AmbiancesTab(
+  Widget getAmbiancesListView(final BuildContext context) => AmbiancesList(
         projectContext: projectContext,
         ambiances: widget.menuReference.ambiances,
       );

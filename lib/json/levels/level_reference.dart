@@ -4,6 +4,7 @@ import 'package:ziggurat/levels.dart';
 
 import '../../src/generated_code.dart';
 import '../../src/project_context.dart';
+import 'functions/function_reference.dart';
 import 'level_command_reference.dart';
 import 'sounds/ambiance_reference.dart';
 import 'sounds/sound_reference.dart';
@@ -22,8 +23,10 @@ class LevelReference {
     this.music,
     final List<AmbianceReference>? ambiances,
     final List<LevelCommandReference>? commands,
+    final List<FunctionReference>? functions,
   })  : ambiances = ambiances ?? [],
-        commands = commands ?? [];
+        commands = commands ?? [],
+        functions = functions ?? [];
 
   /// Create an instance from a JSON object.
   factory LevelReference.fromJson(final Map<String, dynamic> json) =>
@@ -49,6 +52,9 @@ class LevelReference {
 
   /// The commands that are registered for this instance.
   final List<LevelCommandReference> commands;
+
+  /// The functions that are bound to this level.
+  final List<FunctionReference> functions;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$LevelReferenceToJson(this);
@@ -104,19 +110,8 @@ class LevelReference {
   GeneratedCode getFunctionHeaders(final ProjectContext projectContext) {
     final imports = <String>{};
     final stringBuffer = StringBuffer();
-    for (final command in commands) {
-      for (final functionReference in [
-        command.startFunction,
-        command.stopFunction,
-        command.undoFunction
-      ]) {
-        if (functionReference == null) {
-          continue;
-        }
-        final code = functionReference.getCode(projectContext);
-        imports.addAll(code.imports);
-        stringBuffer.writeln(functionReference.header);
-      }
+    for (final function in functions) {
+      stringBuffer.writeln(function.header);
     }
     return GeneratedCode(code: stringBuffer.toString(), imports: imports);
   }

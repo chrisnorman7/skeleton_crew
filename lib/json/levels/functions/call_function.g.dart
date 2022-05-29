@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'function_reference.dart';
+part of 'call_function.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-FunctionReference _$FunctionReferenceFromJson(Map<String, dynamic> json) =>
-    FunctionReference(
-      name: json['name'] as String,
-      comment: json['comment'] as String,
+CallFunction _$CallFunctionFromJson(Map<String, dynamic> json) => CallFunction(
+      id: json['id'] as String,
       text: json['text'] as String?,
       soundReference: json['soundReference'] == null
           ? null
           : SoundReference.fromJson(
               json['soundReference'] as Map<String, dynamic>),
+      functionName: json['functionName'] as String?,
     );
 
-Map<String, dynamic> _$FunctionReferenceToJson(FunctionReference instance) =>
+Map<String, dynamic> _$CallFunctionToJson(CallFunction instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'comment': instance.comment,
+      'id': instance.id,
       'text': instance.text,
       'soundReference': instance.soundReference,
+      'functionName': instance.functionName,
     };

@@ -4,7 +4,7 @@ import 'package:ziggurat/menus.dart';
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
-import '../function_reference.dart';
+import '../functions/call_function.dart';
 import '../sounds/sound_reference.dart';
 
 part 'menu_item_reference.g.dart';
@@ -17,7 +17,7 @@ class MenuItemReference {
     required this.id,
     this.title,
     this.soundReference,
-    this.functionReference,
+    this.callFunction,
   });
 
   /// Create an instance from a JSON object.
@@ -36,7 +36,7 @@ class MenuItemReference {
   /// The function to call when this menu item is is activated.
   ///
   /// If this value is `null`, then [menuItemLabel] will be used as the widget.
-  FunctionReference? functionReference;
+  CallFunction? callFunction;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$MenuItemReferenceToJson(this);
@@ -49,11 +49,13 @@ class MenuItemReference {
     final stringBuffer = StringBuffer();
     final constMenuItem = sound == null && text == null;
     if (constMenuItem) {
-      stringBuffer.writeln('const MenuItem(');
-    } else {
-      stringBuffer.writeln('MenuItem(');
+      stringBuffer.writeln('const ');
     }
-    stringBuffer.writeln('${constMenuItem ? "" : "const "}Message(');
+    stringBuffer.writeln('MenuItem(');
+    if (!constMenuItem) {
+      stringBuffer.write('const ');
+    }
+    stringBuffer.writeln('Message(');
     if (sound != null) {
       final code = sound.getCode(projectContext);
       imports.addAll(code.imports);
@@ -66,11 +68,10 @@ class MenuItemReference {
       stringBuffer.writeln('text: ${getQuotedString(text)},');
     }
     stringBuffer.writeln('),');
-    final function = functionReference;
-    if (function == null) {
+    final code = callFunction?.getCode(projectContext);
+    if (code == null) {
       stringBuffer.writeln('menuItemLabel,');
     } else {
-      final code = function.getCode(projectContext);
       imports.addAll(code.imports);
       stringBuffer
         ..writeln('Button(')

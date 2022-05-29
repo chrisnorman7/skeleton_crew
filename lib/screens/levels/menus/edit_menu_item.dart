@@ -5,7 +5,7 @@ import '../../../json/levels/menus/menu_item_reference.dart';
 import '../../../json/levels/menus/menu_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../widgets/cancel.dart';
-import '../../../widgets/function_reference_list_tile.dart';
+import '../../../widgets/level_commands/call_function_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/simple_scaffold.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
@@ -81,11 +81,12 @@ class EditMenuItemState extends ProjectContextState<EditMenuItem> {
                 save();
               },
             ),
-            FunctionReferenceListTile(
+            CallFunctionListTile(
               projectContext: widget.projectContext,
-              value: menuItem.functionReference,
+              levelReference: widget.menuReference,
+              value: menuItem.callFunction,
               onChanged: (final value) {
-                menuItem.functionReference = value;
+                menuItem.callFunction = value;
                 save();
               },
             )

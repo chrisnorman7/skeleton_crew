@@ -13,6 +13,8 @@ class SelectCommandTrigger extends StatelessWidget {
     required this.onChanged,
     this.value,
     this.nullable = true,
+    this.ignoredCommandTriggerNames = const [],
+    super.key,
   });
 
   /// The project context to get commands from.
@@ -27,15 +29,22 @@ class SelectCommandTrigger extends StatelessWidget {
   /// Whether or not [value] is nullable.
   final bool nullable;
 
+  /// A list of command names which should be ignored.
+  final List<String> ignoredCommandTriggerNames;
+
   /// Build The widget.
   @override
   Widget build(final BuildContext context) =>
       SelectItem<CommandTriggerReference>(
-        onDone: (final value) async {
-          // Navigator.pop(context);
-          onChanged(value);
-        },
-        values: projectContext.project.commandTriggers,
+        onDone: onChanged,
+        values: projectContext.project.commandTriggers
+            .where(
+              (final element) =>
+                  ignoredCommandTriggerNames
+                      .contains(element.commandTrigger.name) ==
+                  false,
+            )
+            .toList(),
         getSearchString: (final value) => value.commandTrigger.description,
         getWidget: (final value) {
           final trigger = value.commandTrigger;

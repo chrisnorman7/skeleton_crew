@@ -14,10 +14,9 @@ MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
           ? null
           : SoundReference.fromJson(
               json['soundReference'] as Map<String, dynamic>),
-      functionReference: json['functionReference'] == null
+      callFunction: json['callFunction'] == null
           ? null
-          : FunctionReference.fromJson(
-              json['functionReference'] as Map<String, dynamic>),
+          : CallFunction.fromJson(json['callFunction'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MenuItemReferenceToJson(MenuItemReference instance) =>
@@ -25,5 +24,5 @@ Map<String, dynamic> _$MenuItemReferenceToJson(MenuItemReference instance) =>
       'id': instance.id,
       'title': instance.title,
       'soundReference': instance.soundReference,
-      'functionReference': instance.functionReference,
+      'callFunction': instance.callFunction,
     };

@@ -2,35 +2,36 @@ import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 import '../../../json/levels/level_command_reference.dart';
+import '../../../json/levels/level_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../../../widgets/cancel.dart';
-import '../../../widgets/function_reference_list_tile.dart';
 import '../../../widgets/int_list_tile.dart';
+import '../../../widgets/level_commands/call_function_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/simple_scaffold.dart';
 
-/// A widget to edit the given [levelCommandReference].
+/// A widget to edit the given [value].
 class EditLevelCommandReference extends StatefulWidget {
   /// Create an instance.
   const EditLevelCommandReference({
     required this.projectContext,
-    required this.commands,
-    required this.levelCommandReference,
+    required this.levelReference,
+    required this.value,
     super.key,
   });
 
   /// The project context to use.
   final ProjectContext projectContext;
 
-  /// The commands that [levelCommandReference] originated from.
-  final List<LevelCommandReference> commands;
+  /// The level that [value] is part of.
+  final LevelReference levelReference;
 
   /// The command reference to edit.
-  final LevelCommandReference levelCommandReference;
+  final LevelCommandReference value;
 
   /// Create state for this widget.
-  /// The commands that [levelCommandReference] originated from.
+  /// The commands that [value] originated from.
 
   @override
   EditLevelCommandReferenceState createState() =>
@@ -49,14 +50,7 @@ class EditLevelCommandReferenceState
 
   @override
   Widget build(final BuildContext context) {
-    final command = widget.levelCommandReference;
-    final commandTrigger = projectContext.project
-        .getCommandTrigger(
-          command.commandTriggerId,
-        )
-        .commandTrigger;
-    final index =
-        widget.commands.indexWhere((final element) => element.id == command.id);
+    final command = widget.value;
     final commandInterval = command.interval;
     return Cancel(
       child: SimpleScaffold(
@@ -66,7 +60,7 @@ class EditLevelCommandReferenceState
             onPressed: () => deleteLevelCommand(
               context: context,
               projectContext: projectContext,
-              commands: widget.commands,
+              commands: widget.levelReference.commands,
               command: command,
               onYes: () => Navigator.pop(context),
             ),
@@ -75,8 +69,9 @@ class EditLevelCommandReferenceState
         ],
         body: ListView(
           children: [
-            FunctionReferenceListTile(
+            CallFunctionListTile(
               projectContext: projectContext,
+              levelReference: widget.levelReference,
               value: command.startFunction,
               onChanged: (final value) {
                 command.startFunction = value;
@@ -84,30 +79,26 @@ class EditLevelCommandReferenceState
               },
               autofocus: true,
               title: 'Start Function',
-              defaultName: 'command${index}onStart',
-              defaultComment: '${commandTrigger.description} start.',
             ),
-            FunctionReferenceListTile(
+            CallFunctionListTile(
               projectContext: projectContext,
+              levelReference: widget.levelReference,
               value: command.stopFunction,
               onChanged: (final value) {
                 command.stopFunction = value;
                 save();
               },
               title: 'Stop Function',
-              defaultName: 'command${index}onStop',
-              defaultComment: '${commandTrigger.description} stop.',
             ),
-            FunctionReferenceListTile(
+            CallFunctionListTile(
               projectContext: projectContext,
+              levelReference: widget.levelReference,
               value: command.undoFunction,
               onChanged: (final value) {
                 command.undoFunction = value;
                 save();
               },
               title: 'Undo Function',
-              defaultName: 'command${index}onUndo',
-              defaultComment: '${commandTrigger.description} undo.',
             ),
             IntListTile(
               value: commandInterval ?? 0,

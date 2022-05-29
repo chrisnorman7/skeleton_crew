@@ -4,6 +4,7 @@ import '../../../json/levels/level_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../validators.dart';
 import '../../../widgets/cancel.dart';
+import '../../../widgets/functions/functions_tabbed_scaffold_tab.dart';
 import '../../../widgets/level_commands/level_commands_tabbed_scaffold_tab.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
@@ -99,10 +100,16 @@ class EditLevelState extends ProjectContextState<EditLevel> {
               ],
             ),
           ),
+          FunctionsTabbedScaffoldTab(
+            context: context,
+            projectContext: projectContext,
+            levelReference: level,
+            onDone: () => setState(() {}),
+          ),
           LevelCommandsTabbedScaffoldTab(
             context: context,
             projectContext: projectContext,
-            commands: level.commands,
+            levelReference: level,
             onDone: () => setState(() {}),
           ),
           AmbiancesTabbedScaffoldTab(

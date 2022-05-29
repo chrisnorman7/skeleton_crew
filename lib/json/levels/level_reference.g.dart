@@ -22,6 +22,9 @@ LevelReference _$LevelReferenceFromJson(Map<String, dynamic> json) =>
           ?.map(
               (e) => LevelCommandReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      functions: (json['functions'] as List<dynamic>?)
+          ?.map((e) => FunctionReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$LevelReferenceToJson(LevelReference instance) =>
@@ -33,4 +36,5 @@ Map<String, dynamic> _$LevelReferenceToJson(LevelReference instance) =>
       'music': instance.music,
       'ambiances': instance.ambiances,
       'commands': instance.commands,
+      'functions': instance.functions,
     };

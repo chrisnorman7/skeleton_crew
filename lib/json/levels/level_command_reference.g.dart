@@ -13,16 +13,14 @@ LevelCommandReference _$LevelCommandReferenceFromJson(
       commandTriggerId: json['commandTriggerId'] as String,
       startFunction: json['startFunction'] == null
           ? null
-          : FunctionReference.fromJson(
+          : CallFunction.fromJson(
               json['startFunction'] as Map<String, dynamic>),
       stopFunction: json['stopFunction'] == null
           ? null
-          : FunctionReference.fromJson(
-              json['stopFunction'] as Map<String, dynamic>),
+          : CallFunction.fromJson(json['stopFunction'] as Map<String, dynamic>),
       undoFunction: json['undoFunction'] == null
           ? null
-          : FunctionReference.fromJson(
-              json['undoFunction'] as Map<String, dynamic>),
+          : CallFunction.fromJson(json['undoFunction'] as Map<String, dynamic>),
       interval: json['interval'] as int?,
     );
 
