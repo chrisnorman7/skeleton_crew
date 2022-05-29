@@ -10,6 +10,7 @@ import '../../../widgets/center_text.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/searchable_list_view.dart';
 import '../../../widgets/simple_scaffold.dart';
+import '../levels/levels_list.dart';
 import 'edit_menu.dart';
 
 /// A list of menus.
@@ -45,15 +46,25 @@ class MenusListState extends State<MenusList> {
         children.add(
           SearchableListTile(
             searchString: menu.title,
-            child: PushWidgetListTile(
-              title: menu.title,
-              builder: (final context) => EditMenu(
-                projectContext: widget.projectContext,
-                menuReference: menu,
+            child: CallbackShortcuts(
+              bindings: {
+                deleteShortcut: () => deleteLevelReference(
+                      context: context,
+                      projectContext: widget.projectContext,
+                      levelReference: menu,
+                      onYes: () => setState(() {}),
+                    )
+              },
+              child: PushWidgetListTile(
+                title: menu.title,
+                builder: (final context) => EditMenu(
+                  projectContext: widget.projectContext,
+                  menuReference: menu,
+                ),
+                autofocus: i == 0,
+                onSetState: () => setState(() {}),
+                subtitle: '${menu.className}: ${menu.comment}',
               ),
-              autofocus: i == 0,
-              onSetState: () => setState(() {}),
-              subtitle: '${menu.className}: ${menu.comment}',
             ),
           ),
         );

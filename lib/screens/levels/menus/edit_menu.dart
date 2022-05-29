@@ -24,6 +24,7 @@ import '../../../widgets/text_list_tile.dart';
 import '../../select_game_controller_axis.dart';
 import '../../select_game_controller_button.dart';
 import '../../select_scan_code.dart';
+import '../levels/levels_list.dart';
 import 'edit_menu_item.dart';
 
 /// A widget for editing the given [menuReference].
@@ -69,6 +70,17 @@ class EditMenuState extends ProjectContextState<EditMenu> {
               bindings: {newShortcut: () => addMenuItem(context)},
               child: getSettingsListView(context),
             ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => deleteLevelReference(
+                  context: context,
+                  projectContext: projectContext,
+                  levelReference: menu,
+                  onYes: () => Navigator.pop(context),
+                ),
+                child: deleteIcon,
+              )
+            ],
           ),
           TabbedScaffoldTab(
             title: 'Menu Items',

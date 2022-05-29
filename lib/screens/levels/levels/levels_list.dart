@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 import '../../../json/levels/level_reference.dart';
+import '../../../json/levels/menus/menu_reference.dart';
+import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../../../widgets/cancel.dart';
@@ -51,15 +53,25 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
         children.add(
           SearchableListTile(
             searchString: level.title,
-            child: PushWidgetListTile(
-              title: level.title,
-              builder: (final context) => EditLevel(
-                projectContext: projectContext,
-                levelReference: level,
+            child: CallbackShortcuts(
+              bindings: {
+                deleteShortcut: () => deleteLevelReference(
+                      context: context,
+                      projectContext: projectContext,
+                      levelReference: level,
+                      onYes: () => setState(() {}),
+                    )
+              },
+              child: PushWidgetListTile(
+                title: level.title,
+                builder: (final context) => EditLevel(
+                  projectContext: projectContext,
+                  levelReference: level,
+                ),
+                autofocus: i == 0,
+                onSetState: () => setState(() {}),
+                subtitle: '${level.className}: ${level.comment}',
               ),
-              autofocus: i == 0,
-              onSetState: () => setState(() {}),
-              subtitle: '${level.className}: ${level.comment}',
             ),
           ),
         );
@@ -67,14 +79,17 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
       child = SearchableListView(children: children);
     }
     return Cancel(
-      child: SimpleScaffold(
-        title: 'Levels',
-        body: child,
-        floatingActionButton: FloatingActionButton(
-          autofocus: levels.isEmpty,
-          child: addIcon,
-          onPressed: () => addLevel(context),
-          tooltip: 'Add Level',
+      child: CallbackShortcuts(
+        bindings: {newShortcut: () => addLevel(context)},
+        child: SimpleScaffold(
+          title: 'Levels',
+          body: child,
+          floatingActionButton: FloatingActionButton(
+            autofocus: levels.isEmpty,
+            child: addIcon,
+            onPressed: () => addLevel(context),
+            tooltip: 'Add Level',
+          ),
         ),
       ),
     );
@@ -96,3 +111,31 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
     setState(() {});
   }
 }
+
+/// Delete the given [levelReference].
+Future<void> deleteLevelReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final LevelReference levelReference,
+  required final VoidCallback onYes,
+}) =>
+    confirm(
+      context: context,
+      message: 'Are you sure you want to delete this level?',
+      title: 'Delete Level',
+      yesCallback: () {
+        Navigator.pop(context);
+        final project = projectContext.project;
+        final List<LevelReference> levels;
+        if (levelReference is MenuReference) {
+          levels = project.menus;
+        } else {
+          levels = project.levels;
+        }
+        levels.removeWhere(
+          (final element) => element.id == levelReference.id,
+        );
+        projectContext.save();
+        onYes();
+      },
+    );

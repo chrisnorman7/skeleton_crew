@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants.dart';
 import '../../../json/levels/level_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../validators.dart';
@@ -11,6 +12,7 @@ import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
+import 'levels_list.dart';
 
 /// A widget for editing the given [levelReference].
 class EditLevel extends StatefulWidget {
@@ -99,6 +101,17 @@ class EditLevelState extends ProjectContextState<EditLevel> {
                 )
               ],
             ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => deleteLevelReference(
+                  context: context,
+                  projectContext: projectContext,
+                  levelReference: level,
+                  onYes: () => Navigator.pop(context),
+                ),
+                child: deleteIcon,
+              )
+            ],
           ),
           FunctionsTabbedScaffoldTab(
             context: context,
