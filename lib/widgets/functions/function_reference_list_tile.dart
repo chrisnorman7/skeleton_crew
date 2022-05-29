@@ -5,8 +5,8 @@ import '../../json/levels/level_reference.dart';
 import '../../screens/levels/functions/edit_function_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
-import '../../util.dart';
 import '../push_widget_list_tile.dart';
+import 'functions_list.dart';
 
 /// A list tile that shows a function reference [value].
 class FunctionReferenceListTile extends StatefulWidget {

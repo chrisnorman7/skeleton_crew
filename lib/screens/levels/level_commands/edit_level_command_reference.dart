@@ -4,12 +4,12 @@ import '../../../constants.dart';
 import '../../../json/levels/level_command_reference.dart';
 import '../../../json/levels/level_reference.dart';
 import '../../../src/project_context.dart';
-import '../../../util.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/level_commands/call_function_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/simple_scaffold.dart';
+import 'level_commands_list.dart';
 
 /// A widget to edit the given [value].
 class EditLevelCommandReference extends StatefulWidget {

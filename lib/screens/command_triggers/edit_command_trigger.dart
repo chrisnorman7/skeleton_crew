@@ -5,12 +5,12 @@ import 'package:ziggurat/ziggurat.dart';
 import '../../constants.dart';
 import '../../json/command_trigger_reference.dart';
 import '../../src/project_context.dart';
-import '../../util.dart';
 import '../../validators.dart';
 import '../../widgets/cancel.dart';
 import '../../widgets/project_context_state.dart';
 import '../../widgets/push_widget_list_tile.dart';
 import '../../widgets/simple_scaffold.dart';
+import '../../widgets/tabs/command_triggers_list.dart';
 import '../../widgets/text_list_tile.dart';
 import '../lists/select_item.dart';
 import 'edit_command_keyboard_key.dart';
@@ -52,23 +52,18 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
   @override
   Widget build(final BuildContext context) {
     final project = projectContext.project;
+    final commandTriggerReference = widget.commandTriggerReference;
     final button = commandTrigger.button;
     final commandKeyboardKey = commandTrigger.keyboardKey;
     return Cancel(
       child: SimpleScaffold(
         actions: [
           ElevatedButton(
-            onPressed: () => confirm(
+            onPressed: () => deleteCommandTrigger(
               context: context,
-              message: 'Are you sure you want to delete this command trigger?',
-              yesCallback: () {
-                project.commandTriggers.removeWhere(
-                  (final element) =>
-                      element.id == widget.commandTriggerReference.id,
-                );
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
+              projectContext: projectContext,
+              commandTriggerReference: commandTriggerReference,
+              onDone: () => Navigator.pop(context),
             ),
             child: deleteIcon,
           )
@@ -77,9 +72,9 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
         body: ListView(
           children: [
             TextListTile(
-              value: widget.commandTriggerReference.variableName,
+              value: commandTriggerReference.variableName,
               onChanged: (final value) {
-                widget.commandTriggerReference.variableName = value;
+                commandTriggerReference.variableName = value;
                 save();
               },
               header: 'Variable Name',
@@ -91,14 +86,14 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
               ),
             ),
             TextListTile(
-              value: widget.commandTriggerReference.comment ??
-                  commandTrigger.description,
+              value:
+                  commandTriggerReference.comment ?? commandTrigger.description,
               onChanged: (final value) {
-                widget.commandTriggerReference.comment =
-                    value.isEmpty ? null : value;
+                commandTriggerReference.comment = value.isEmpty ? null : value;
                 save();
               },
               header: 'Comment',
+              validator: (final value) => validateNonEmptyValue(value: value),
             ),
             TextListTile(
               value: commandTrigger.name,
@@ -110,7 +105,19 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
               ),
               header: 'Name',
               autofocus: true,
-              validator: (final value) => validateNonEmptyValue(value: value),
+              validator: (final value) {
+                final result = validateNonEmptyValue(value: value);
+                if (result != null) {
+                  return result;
+                }
+                return validateNonDuplicateValue(
+                  value: value,
+                  values: project.commandTriggers.map<String>(
+                    (final e) => e.commandTrigger.name,
+                  ),
+                  message: 'There is already a command trigger with that name',
+                );
+              },
             ),
             TextListTile(
               value: commandTrigger.description,
@@ -124,7 +131,7 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
               validator: (final value) => validateNonEmptyValue(value: value),
             ),
             PushWidgetListTile(
-              title: 'Game Controller Button',
+              title: 'Controller Button',
               builder: (final context) => SelectItem<GameControllerButton?>(
                 values: const [null, ...GameControllerButton.values],
                 onDone: (final value) => editCommandTrigger(

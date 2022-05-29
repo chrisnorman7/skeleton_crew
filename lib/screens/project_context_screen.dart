@@ -9,9 +9,10 @@ import '../util.dart';
 import '../widgets/project_context_state.dart';
 import '../widgets/tabbed_scaffold.dart';
 import '../widgets/tabs/asset_stores_tab.dart';
-import '../widgets/tabs/command_triggers_tab.dart';
+import '../widgets/tabs/command_triggers_list.dart';
 import '../widgets/tabs/levels_tab.dart';
 import '../widgets/tabs/project_settings_tab.dart';
+import 'asset_stores/edit_asset_store.dart';
 import 'command_triggers/edit_command_trigger.dart';
 
 /// The main screen for a [projectContext].
@@ -112,19 +113,17 @@ class ProjectContextScreenState
           actions: actions,
           title: 'Command Triggers',
           icon: commandTriggersIcon,
-          builder: (final context) => CommandTriggersTab(
+          builder: (final context) => CommandTriggersList(
             projectContext: projectContext,
           ),
           floatingActionButton: FloatingActionButton(
             autofocus: commandTriggers.isEmpty,
             child: addIcon,
-            onPressed: () async {
-              await createCommandTrigger(
-                context: context,
-                projectContext: projectContext,
-              );
-              setState(() {});
-            },
+            onPressed: () => createCommandTrigger(
+              context: context,
+              projectContext: projectContext,
+              onDone: () => setState(() {}),
+            ),
             tooltip: 'Add Command Trigger',
           ),
         )

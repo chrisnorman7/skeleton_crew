@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../screens/asset_stores/edit_asset_store.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
-import '../../util.dart';
 import '../center_text.dart';
 import '../push_widget_list_tile.dart';
 import '../searchable_list_view.dart';

@@ -3,19 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ziggurat/ziggurat.dart';
 import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import 'constants.dart';
 import 'json/asset_stores/asset_store_reference.dart';
 import 'json/asset_stores/pretend_asset_reference.dart';
-import 'json/command_trigger_reference.dart';
-import 'json/levels/functions/function_reference.dart';
-import 'json/levels/level_command_reference.dart';
-import 'json/levels/level_reference.dart';
-import 'json/levels/menus/menu_reference.dart';
-import 'screens/asset_stores/create_asset_store.dart';
-import 'screens/command_triggers/edit_command_trigger.dart';
 import 'screens/lists/select_item.dart';
 import 'src/project_context.dart';
 import 'widgets/sounds/play_sound_semantics.dart';
@@ -111,51 +103,6 @@ void setClipboardText(final String text) {
   Clipboard.setData(data);
 }
 
-/// Create a new asset store.
-Future<void> createAssetStore({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-}) async {
-  final project = projectContext.project;
-  return pushWidget(
-    context: context,
-    builder: (final context) => CreateAssetStore(
-      project: project,
-      onDone: (final value) {
-        project.assetStores.add(value);
-        projectContext.save();
-      },
-    ),
-  );
-}
-
-/// Create a new command trigger.
-Future<void> createCommandTrigger({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-}) async {
-  final project = projectContext.project;
-  final commandTriggerNumber = project.commandTriggers.length + 1;
-  final commandTrigger = CommandTrigger(
-    name: 'command_trigger_$commandTriggerNumber',
-    description: 'Do something fun',
-  );
-  final commandTriggerReference = CommandTriggerReference(
-    id: newId(),
-    variableName: 'commandTrigger$commandTriggerNumber',
-    commandTrigger: commandTrigger,
-  );
-  project.commandTriggers.add(commandTriggerReference);
-  projectContext.save();
-  return pushWidget(
-    context: context,
-    builder: (final context) => EditCommandTrigger(
-      projectContext: projectContext,
-      commandTriggerReference: commandTriggerReference,
-    ),
-  );
-}
-
 /// Select an asset.
 Future<void> selectAsset({
   required final BuildContext context,
@@ -198,157 +145,3 @@ String getQuotedString(final String string) {
   final result = string.replaceAll('"', '"');
   return "'$result'";
 }
-
-/// Delete the given [assetReference].
-Future<void> deleteAssetReference({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-  required final PretendAssetReference assetReference,
-  final VoidCallback? onYes,
-}) {
-  final project = projectContext.project;
-  const prefix = 'You cannot delete the';
-  for (final level in [...project.menus, ...project.levels]) {
-    if (level.music?.assetReferenceId == assetReference.id) {
-      return showMessage(
-        context: context,
-        message: '$prefix music for ${level.title}.',
-      );
-    }
-    if (level is MenuReference) {
-      for (final menuItem in level.menuItems) {
-        if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
-          return showMessage(
-            context: context,
-            message: '$prefix sound for the "${menuItem.title}" item of the '
-                '${level.title} menu.',
-          );
-        }
-      }
-    }
-    for (final ambiance in level.ambiances) {
-      if (ambiance.sound.assetReferenceId == assetReference.id) {
-        return showMessage(
-          context: context,
-          message: '$prefix ${level.title} ambiance.',
-        );
-      }
-    }
-  }
-  return confirm(
-    context: context,
-    message: 'Are you sure you want to delete this asset?',
-    yesCallback: () {
-      Navigator.pop(context);
-      project.getAssetStore(assetReference.assetStoreId).assets.removeWhere(
-            (final element) => element.id == assetReference.id,
-          );
-      if (onYes != null) {
-        onYes();
-      }
-      projectContext.save();
-    },
-    title: 'Delete Asset',
-  );
-}
-
-/// Delete the given [assetStore].
-Future<void> deleteAssetStore({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-  required final AssetStoreReference assetStore,
-  final VoidCallback? onYes,
-}) {
-  final project = projectContext.project;
-  if (assetStore.assets.isNotEmpty) {
-    return showMessage(
-      context: context,
-      message: 'You cannot delete an asset store which still contains assets.',
-    );
-  } else {
-    return confirm(
-      context: context,
-      message: 'Are you sure you want to delete this asset store?',
-      yesCallback: () {
-        Navigator.pop(context);
-        project.assetStores.removeWhere(
-          (final element) => element.id == assetStore.id,
-        );
-        projectContext.save();
-        if (onYes != null) {
-          onYes();
-        }
-      },
-      title: 'Delete Asset Store',
-    );
-  }
-}
-
-/// Delete the given [functionReference] from the given [LevelReference].
-Future<void> deleteFunctionReference({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-  required final LevelReference levelReference,
-  required final FunctionReference functionReference,
-  required final VoidCallback onYes,
-}) {
-  final functionName = functionReference.name;
-  for (final commandReference in levelReference.commands) {
-    for (final callFunction in [
-      commandReference.startFunction,
-      commandReference.stopFunction,
-      commandReference.undoFunction
-    ]) {
-      if (callFunction?.functionName == functionName) {
-        return showMessage(
-          context: context,
-          message: 'This function is used by 1 or more commands.',
-        );
-      }
-    }
-  }
-  if (levelReference is MenuReference) {
-    for (final menuItem in levelReference.menuItems) {
-      if (menuItem.callFunction?.functionName == functionName) {
-        return showMessage(
-          context: context,
-          message: 'This function is used by 1 or more menu items.',
-        );
-      }
-    }
-  }
-  return confirm(
-    context: context,
-    message: 'Are you sure you want to delete this function?',
-    title: 'Delete Function',
-    yesCallback: () {
-      Navigator.pop(context);
-      levelReference.functions.removeWhere(
-        (final element) => element.name == functionName,
-      );
-      onYes();
-    },
-  );
-}
-
-/// Delete the given [command] from the given [commands].
-Future<void> deleteLevelCommand({
-  required final BuildContext context,
-  required final ProjectContext projectContext,
-  required final List<LevelCommandReference> commands,
-  required final LevelCommandReference command,
-  required final VoidCallback onYes,
-}) =>
-    confirm(
-      context: context,
-      message: 'Are you sure you want to delete this command?',
-      title: 'Delete Command',
-      yesCallback: () {
-        Navigator.pop(context);
-        commands.removeWhere(
-          (final element) => element.id == command.id,
-        );
-        projectContext.save();
-        onYes();
-      },
-    );

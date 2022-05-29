@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../json/levels/functions/function_reference.dart';
 import '../../json/levels/level_reference.dart';
+import '../../json/levels/menus/menu_reference.dart';
 import '../../screens/levels/functions/edit_function_reference.dart';
 import '../../shortcuts.dart';
 import '../../src/project_context.dart';
@@ -104,4 +105,51 @@ Future<void> createFunctionReference({
     ),
   );
   onDone();
+}
+
+/// Delete the given [functionReference] from the given [LevelReference].
+Future<void> deleteFunctionReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final LevelReference levelReference,
+  required final FunctionReference functionReference,
+  required final VoidCallback onYes,
+}) {
+  final functionName = functionReference.name;
+  for (final commandReference in levelReference.commands) {
+    for (final callFunction in [
+      commandReference.startFunction,
+      commandReference.stopFunction,
+      commandReference.undoFunction
+    ]) {
+      if (callFunction?.functionName == functionName) {
+        return showMessage(
+          context: context,
+          message: 'This function is used by 1 or more commands.',
+        );
+      }
+    }
+  }
+  if (levelReference is MenuReference) {
+    for (final menuItem in levelReference.menuItems) {
+      if (menuItem.callFunction?.functionName == functionName) {
+        return showMessage(
+          context: context,
+          message: 'This function is used by 1 or more menu items.',
+        );
+      }
+    }
+  }
+  return confirm(
+    context: context,
+    message: 'Are you sure you want to delete this function?',
+    title: 'Delete Function',
+    yesCallback: () {
+      Navigator.pop(context);
+      levelReference.functions.removeWhere(
+        (final element) => element.name == functionName,
+      );
+      onYes();
+    },
+  );
 }

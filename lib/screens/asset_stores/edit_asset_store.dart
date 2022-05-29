@@ -20,6 +20,7 @@ import '../../widgets/sounds/play_sound_semantics.dart';
 import '../../widgets/tabbed_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
 import 'add_asset.dart';
+import 'create_asset_store.dart';
 import 'edit_asset.dart';
 
 /// A widget to edit the given [assetStoreReference].
@@ -244,5 +245,55 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
       ),
     );
     setState(() {});
+  }
+}
+
+/// Create a new asset store.
+Future<void> createAssetStore({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+}) async {
+  final project = projectContext.project;
+  return pushWidget(
+    context: context,
+    builder: (final context) => CreateAssetStore(
+      project: project,
+      onDone: (final value) {
+        project.assetStores.add(value);
+        projectContext.save();
+      },
+    ),
+  );
+}
+
+/// Delete the given [assetStore].
+Future<void> deleteAssetStore({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final AssetStoreReference assetStore,
+  final VoidCallback? onYes,
+}) {
+  final project = projectContext.project;
+  if (assetStore.assets.isNotEmpty) {
+    return showMessage(
+      context: context,
+      message: 'You cannot delete an asset store which still contains assets.',
+    );
+  } else {
+    return confirm(
+      context: context,
+      message: 'Are you sure you want to delete this asset store?',
+      yesCallback: () {
+        Navigator.pop(context);
+        project.assetStores.removeWhere(
+          (final element) => element.id == assetStore.id,
+        );
+        projectContext.save();
+        if (onYes != null) {
+          onYes();
+        }
+      },
+      title: 'Delete Asset Store',
+    );
   }
 }

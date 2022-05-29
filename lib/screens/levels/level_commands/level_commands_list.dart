@@ -138,3 +138,25 @@ Future<void> createLevelCommand({
         ).toList(),
       ),
     );
+
+/// Delete the given [command] from the given [commands].
+Future<void> deleteLevelCommand({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final List<LevelCommandReference> commands,
+  required final LevelCommandReference command,
+  required final VoidCallback onYes,
+}) =>
+    confirm(
+      context: context,
+      message: 'Are you sure you want to delete this command?',
+      title: 'Delete Command',
+      yesCallback: () {
+        Navigator.pop(context);
+        commands.removeWhere(
+          (final element) => element.id == command.id,
+        );
+        projectContext.save();
+        onYes();
+      },
+    );
