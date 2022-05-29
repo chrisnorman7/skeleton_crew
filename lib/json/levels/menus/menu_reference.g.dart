@@ -10,8 +10,8 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
     MenuReference(
       id: json['id'] as String,
       title: json['title'] as String,
-      menuItems: (json['menuItems'] as List<dynamic>)
-          .map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
+      menuItems: (json['menuItems'] as List<dynamic>?)
+          ?.map((e) => MenuItemReference.fromJson(e as Map<String, dynamic>))
           .toList(),
       className: json['className'] as String? ?? 'CustomLevel',
       comment: json['comment'] as String? ?? 'A menu which must be extended.',
@@ -62,6 +62,9 @@ MenuReference _$MenuReferenceFromJson(Map<String, dynamic> json) =>
           (json['controllerAxisSensitivity'] as num?)?.toDouble() ?? 0.5,
       searchEnabled: json['searchEnabled'] as bool? ?? true,
       searchInterval: json['searchInterval'] as int? ?? 500,
+      functions: (json['functions'] as List<dynamic>?)
+          ?.map((e) => FunctionReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
@@ -73,6 +76,7 @@ Map<String, dynamic> _$MenuReferenceToJson(MenuReference instance) =>
       'music': instance.music,
       'ambiances': instance.ambiances,
       'commands': instance.commands,
+      'functions': instance.functions,
       'menuItems': instance.menuItems,
       'upScanCode': _$ScanCodeEnumMap[instance.upScanCode],
       'upButton': _$GameControllerButtonEnumMap[instance.upButton],

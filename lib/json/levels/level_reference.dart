@@ -56,6 +56,10 @@ class LevelReference {
   /// The functions that are bound to this level.
   final List<FunctionReference> functions;
 
+  /// Get the function with the given [id].
+  FunctionReference getFunctionReference(final String id) =>
+      functions.firstWhere((final element) => element.id == id);
+
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$LevelReferenceToJson(this);
 
@@ -98,7 +102,7 @@ class LevelReference {
     final imports = <String>{};
     final stringBuffer = StringBuffer();
     for (final command in commandReferences) {
-      final code = command.getCode(projectContext);
+      final code = command.getCode(projectContext, this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
     }

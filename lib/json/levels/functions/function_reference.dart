@@ -7,6 +7,7 @@ part 'function_reference.g.dart';
 class FunctionReference {
   /// Create an instance.
   FunctionReference({
+    required this.id,
     required this.name,
     required this.comment,
   });
@@ -14,6 +15,9 @@ class FunctionReference {
   /// Create an instance from a JSON object.
   factory FunctionReference.fromJson(final Map<String, dynamic> json) =>
       _$FunctionReferenceFromJson(json);
+
+  /// The ID of this function.
+  final String id;
 
   /// The name of the function.
   String name;

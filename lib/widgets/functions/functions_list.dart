@@ -91,6 +91,7 @@ Future<void> createFunctionReference({
   required final VoidCallback onDone,
 }) async {
   final functionReference = FunctionReference(
+    id: newId(),
     name: 'function${levelReference.functions.length + 1}',
     comment: 'A new function which must be commented.',
   );
@@ -115,14 +116,14 @@ Future<void> deleteFunctionReference({
   required final FunctionReference functionReference,
   required final VoidCallback onYes,
 }) {
-  final functionName = functionReference.name;
+  final functionId = functionReference.id;
   for (final commandReference in levelReference.commands) {
     for (final callFunction in [
       commandReference.startFunction,
       commandReference.stopFunction,
       commandReference.undoFunction
     ]) {
-      if (callFunction?.functionName == functionName) {
+      if (callFunction?.functionId == functionId) {
         return showMessage(
           context: context,
           message: 'This function is used by 1 or more commands.',
@@ -132,7 +133,7 @@ Future<void> deleteFunctionReference({
   }
   if (levelReference is MenuReference) {
     for (final menuItem in levelReference.menuItems) {
-      if (menuItem.callFunction?.functionName == functionName) {
+      if (menuItem.callFunction?.functionId == functionId) {
         return showMessage(
           context: context,
           message: 'This function is used by 1 or more menu items.',
@@ -147,7 +148,7 @@ Future<void> deleteFunctionReference({
     yesCallback: () {
       Navigator.pop(context);
       levelReference.functions.removeWhere(
-        (final element) => element.name == functionName,
+        (final element) => element.id == functionId,
       );
       onYes();
     },

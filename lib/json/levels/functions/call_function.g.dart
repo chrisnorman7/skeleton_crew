@@ -13,7 +13,7 @@ CallFunction _$CallFunctionFromJson(Map<String, dynamic> json) => CallFunction(
           ? null
           : SoundReference.fromJson(
               json['soundReference'] as Map<String, dynamic>),
-      functionName: json['functionName'] as String?,
+      functionId: json['functionId'] as String?,
     );
 
 Map<String, dynamic> _$CallFunctionToJson(CallFunction instance) =>
@@ -21,5 +21,5 @@ Map<String, dynamic> _$CallFunctionToJson(CallFunction instance) =>
       'id': instance.id,
       'text': instance.text,
       'soundReference': instance.soundReference,
-      'functionName': instance.functionName,
+      'functionId': instance.functionId,
     };

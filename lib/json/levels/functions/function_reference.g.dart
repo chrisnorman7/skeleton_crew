@@ -8,12 +8,14 @@ part of 'function_reference.dart';
 
 FunctionReference _$FunctionReferenceFromJson(Map<String, dynamic> json) =>
     FunctionReference(
+      id: json['id'] as String,
       name: json['name'] as String,
       comment: json['comment'] as String,
     );
 
 Map<String, dynamic> _$FunctionReferenceToJson(FunctionReference instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'comment': instance.comment,
     };

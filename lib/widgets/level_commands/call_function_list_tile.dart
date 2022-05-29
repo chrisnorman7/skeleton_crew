@@ -11,7 +11,7 @@ import '../push_widget_list_tile.dart';
 import '../sounds/play_sound_semantics.dart';
 
 /// A widget to show a call function [value].
-class CallFunctionListTile extends StatelessWidget {
+class CallFunctionListTile extends StatefulWidget {
   /// Create an instance.
   const CallFunctionListTile({
     required this.projectContext,
@@ -41,11 +41,16 @@ class CallFunctionListTile extends StatelessWidget {
   /// Whether the resulting [ListTile] should be autofocused.
   final bool autofocus;
 
+  @override
+  State<CallFunctionListTile> createState() => _CallFunctionListTileState();
+}
+
+class _CallFunctionListTileState extends State<CallFunctionListTile> {
   /// Build the widget.
   @override
   Widget build(final BuildContext context) {
-    final project = projectContext.project;
-    final callFunction = value;
+    final project = widget.projectContext.project;
+    final callFunction = widget.value;
     final sound = callFunction?.soundReference;
     final pretendAssetReference =
         sound == null ? null : project.getPretendAssetReference(sound);
@@ -66,9 +71,11 @@ class CallFunctionListTile extends StatelessWidget {
         );
         entries.add(assetStore.getPrintableString(pretendAssetReference));
       }
-      final functionName = callFunction.functionName;
-      if (functionName != null) {
-        entries.add(functionName);
+      final functionId = callFunction.functionId;
+      if (functionId != null) {
+        entries.add(
+          widget.levelReference.getFunctionReference(functionId).name,
+        );
       }
       if (entries.isEmpty) {
         subtitle = 'Default';
@@ -78,26 +85,27 @@ class CallFunctionListTile extends StatelessWidget {
     }
     return CallbackShortcuts(
       bindings: {
-        deleteShortcut: () => onChanged(null),
+        deleteShortcut: () => widget.onChanged(null),
       },
       child: PlaySoundSemantics(
         child: Builder(
           builder: (final builderContext) => PushWidgetListTile(
-            autofocus: autofocus,
-            title: title,
+            autofocus: widget.autofocus,
+            title: widget.title,
             builder: (final context) {
               PlaySoundSemantics.of(builderContext)?.stop();
               return EditCallFunction(
-                projectContext: projectContext,
-                levelReference: levelReference,
+                projectContext: widget.projectContext,
+                levelReference: widget.levelReference,
                 value: callFunction ?? CallFunction(id: newId()),
-                onChanged: onChanged,
+                onChanged: widget.onChanged,
               );
             },
             subtitle: subtitle,
+            onSetState: () => setState(() {}),
           ),
         ),
-        game: projectContext.game,
+        game: widget.projectContext.game,
         assetReference: assetReference,
         gain: sound?.gain ?? 1.0,
       ),

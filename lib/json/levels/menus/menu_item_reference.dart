@@ -5,6 +5,7 @@ import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../functions/call_function.dart';
+import '../level_reference.dart';
 import '../sounds/sound_reference.dart';
 
 part 'menu_item_reference.g.dart';
@@ -42,7 +43,10 @@ class MenuItemReference {
   Map<String, dynamic> toJson() => _$MenuItemReferenceToJson(this);
 
   /// Get the Dart code for this instance.
-  GeneratedCode getCode(final ProjectContext projectContext) {
+  GeneratedCode getCode(
+    final ProjectContext projectContext,
+    final LevelReference levelReference,
+  ) {
     final imports = <String>{'package:ziggurat/menus.dart'};
     final sound = soundReference;
     final text = title;
@@ -68,7 +72,7 @@ class MenuItemReference {
       stringBuffer.writeln('text: ${getQuotedString(text)},');
     }
     stringBuffer.writeln('),');
-    final code = callFunction?.getCode(projectContext);
+    final code = callFunction?.getCode(projectContext, levelReference);
     if (code == null) {
       stringBuffer.writeln('menuItemLabel,');
     } else {

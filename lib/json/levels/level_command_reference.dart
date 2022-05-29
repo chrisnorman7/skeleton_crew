@@ -47,27 +47,34 @@ class LevelCommandReference {
   Map<String, dynamic> toJson() => _$LevelCommandReferenceToJson(this);
 
   /// Get the code for this instance.
-  GeneratedCode getCode(final ProjectContext projectContext) {
+  GeneratedCode getCode(
+    final ProjectContext projectContext,
+    final LevelReference levelReference,
+  ) {
     final project = projectContext.project;
     final imports = <String>{'package:ziggurat/ziggurat.dart'};
     final commandTrigger = project.getCommandTrigger(commandTriggerId);
     final commandInterval = interval;
     final stringBuffer = StringBuffer()
       ..writeln('registerCommand(')
-      ..writeln('${getQuotedString(commandTrigger.commandTrigger.name)},')
-      ..writeln('Command(');
+      ..writeln('${getQuotedString(commandTrigger.commandTrigger.name)},');
 
     void writeFunction(final CallFunction? func, final String prefix) {
-      final code = func?.getCode(projectContext);
+      final code = func?.getCode(projectContext, levelReference);
       if (code != null) {
         imports.addAll(code.imports);
         stringBuffer.writeln('$prefix: ${code.code},');
       }
     }
 
-    writeFunction(startFunction, 'onStart');
-    writeFunction(stopFunction, 'onStop');
-    writeFunction(undoFunction, 'onUndo');
+    if (startFunction == null && stopFunction == null && undoFunction == null) {
+      stringBuffer.writeln('const Command(');
+    } else {
+      stringBuffer.writeln('Command(');
+      writeFunction(startFunction, 'onStart');
+      writeFunction(stopFunction, 'onStop');
+      writeFunction(undoFunction, 'onUndo');
+    }
     if (commandInterval != null) {
       stringBuffer.writeln('interval: $commandInterval,');
     }

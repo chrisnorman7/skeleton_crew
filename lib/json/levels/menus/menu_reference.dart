@@ -5,6 +5,7 @@ import 'package:ziggurat/menus.dart';
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
+import '../functions/function_reference.dart';
 import '../level_command_reference.dart';
 import '../level_reference.dart';
 import '../sounds/ambiance_reference.dart';
@@ -20,7 +21,7 @@ class MenuReference extends LevelReference {
   MenuReference({
     required super.id,
     required super.title,
-    required this.menuItems,
+    required final List<MenuItemReference>? menuItems,
     super.className = 'CustomLevel',
     super.comment = 'A menu which must be extended.',
     super.music,
@@ -41,7 +42,8 @@ class MenuReference extends LevelReference {
     this.controllerAxisSensitivity = 0.5,
     this.searchEnabled = true,
     this.searchInterval = 500,
-  });
+    super.functions,
+  }) : menuItems = menuItems ?? [];
 
   /// Create an instance from a JSON object.
   factory MenuReference.fromJson(final Map<String, dynamic> json) =>
@@ -145,7 +147,7 @@ class MenuReference extends LevelReference {
       ..writeln(') {')
       ..writeln('menuItems.addAll([');
     for (final item in menuItems) {
-      final code = item.getCode(projectContext);
+      final code = item.getCode(projectContext, this);
       imports.addAll(code.imports);
       stringBuffer
         ..write(code.code)

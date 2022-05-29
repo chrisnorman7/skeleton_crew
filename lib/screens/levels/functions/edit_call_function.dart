@@ -58,13 +58,10 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
   Widget build(final BuildContext context) {
     final level = widget.levelReference;
     final callFunction = widget.value;
-    final functionName = callFunction.functionName;
+    final functionId = callFunction.functionId;
     final functions = level.functions;
-    final function = functionName == null
-        ? null
-        : functions.firstWhere(
-            (final element) => element.name == functionName,
-          );
+    final function =
+        functionId == null ? null : level.getFunctionReference(functionId);
     return Cancel(
       child: SimpleScaffold(
         title: 'Edit Callback',
@@ -109,19 +106,21 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
                   actions: [
                     ElevatedButton(
                       onPressed: () {
+                        Navigator.pop(context);
                         final functionReference = FunctionReference(
+                          id: newId(),
                           name: 'function${functions.length}',
                           comment: 'New function.',
                         );
                         functions.add(functionReference);
-                        callFunction.functionName = functionReference.name;
+                        callFunction.functionId = functionReference.id;
                         save();
                       },
                       child: addIcon,
                     )
                   ],
                   onDone: (final value) {
-                    callFunction.functionName = value?.name;
+                    callFunction.functionId = value?.id;
                     save();
                   },
                   values: [null, ...functions],
@@ -134,7 +133,7 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
                   value: function,
                 ),
                 title: 'Function',
-                subtitle: functionName ?? notSet,
+                subtitle: function?.name ?? notSet,
               ),
             ),
           ],
