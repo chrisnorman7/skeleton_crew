@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import 'constants.dart';
 import 'json/asset_stores/asset_store_reference.dart';
@@ -92,11 +91,6 @@ Future<void> showMessage({
       ),
     );
 
-/// Make a printable string from the given [assetReferenceReference].
-String assetString(final AssetReferenceReference assetReferenceReference) =>
-    '${assetReferenceReference.comment} '
-    '(${assetReferenceReference.reference.type.name})';
-
 /// Copy the given [text] to the [Clipboard].
 void setClipboardText(final String text) {
   final data = ClipboardData(text: text);
@@ -123,7 +117,9 @@ Future<void> selectAsset({
             getWidget: (final value) => PlaySoundSemantics(
               game: projectContext.game,
               child: Text('${value.variableName}: ${value.comment}'),
-              assetReference: value.assetReferenceReference.reference,
+              assetReference: value.isAudio
+                  ? value.assetReferenceReference.reference
+                  : null,
             ),
             title: 'Select Asset',
             value: pretendAssetReference,
