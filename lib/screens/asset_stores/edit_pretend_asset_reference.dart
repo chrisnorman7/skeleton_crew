@@ -4,6 +4,7 @@ import '../../constants.dart';
 import '../../json/asset_stores/asset_store_reference.dart';
 import '../../json/asset_stores/pretend_asset_reference.dart';
 import '../../json/levels/menus/menu_reference.dart';
+import '../../json/levels/tile_maps/tile_map_level_reference.dart';
 import '../../src/project_context.dart';
 import '../../util.dart';
 import '../../validators.dart';
@@ -13,9 +14,9 @@ import '../../widgets/simple_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
 
 /// A widget for editing the given [pretendAssetReference].
-class EditAsset extends StatefulWidget {
+class EditPretendAssetReference extends StatefulWidget {
   /// Create an instance.
-  const EditAsset({
+  const EditPretendAssetReference({
     required this.projectContext,
     required this.assetStoreReference,
     required this.pretendAssetReference,
@@ -33,11 +34,13 @@ class EditAsset extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  EditAssetState createState() => EditAssetState();
+  EditPretendAssetReferenceState createState() =>
+      EditPretendAssetReferenceState();
 }
 
-/// State for [EditAsset].
-class EditAssetState extends ProjectContextState<EditAsset> {
+/// State for [EditPretendAssetReference].
+class EditPretendAssetReferenceState
+    extends ProjectContextState<EditPretendAssetReference> {
   /// Initialise state.
   @override
   void initState() {
@@ -112,8 +115,19 @@ Future<void> deleteAssetReference({
 }) {
   final project = projectContext.project;
   const prefix = 'You cannot delete the';
-  for (final level in [...project.menus, ...project.levels]) {
-    final type = level is MenuReference ? 'menu' : 'level';
+  for (final level in [
+    ...project.menus,
+    ...project.levels,
+    ...project.tileMapLevels
+  ]) {
+    final String type;
+    if (level is MenuReference) {
+      type = 'menu';
+    } else if (level is TileMapLevelReference) {
+      type = 'tile map level';
+    } else {
+      type = 'level';
+    }
     if (level.music?.assetReferenceId == assetReference.id) {
       return showMessage(
         context: context,

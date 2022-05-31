@@ -12,7 +12,7 @@ TileMapLevelReference _$TileMapLevelReferenceFromJson(
       id: json['id'] as String,
       tileMapId: json['tileMapId'] as String,
       title: json['title'] as String? ?? 'Untitled Map Level',
-      className: json['className'] as String? ?? 'CustomMapLevelBase',
+      className: json['className'] as String? ?? 'CustomMapLevel',
       comment: json['comment'] as String? ?? 'A new map level.',
       ambiances: (json['ambiances'] as List<dynamic>?)
           ?.map((e) => AmbianceReference.fromJson(e as Map<String, dynamic>))

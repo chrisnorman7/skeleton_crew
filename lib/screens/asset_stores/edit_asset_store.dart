@@ -21,7 +21,7 @@ import '../../widgets/tabbed_scaffold.dart';
 import '../../widgets/text_list_tile.dart';
 import 'add_asset.dart';
 import 'create_asset_store.dart';
-import 'edit_asset.dart';
+import 'edit_pretend_asset_reference.dart';
 
 /// A widget to edit the given [assetStoreReference].
 class EditAssetStore extends StatefulWidget {
@@ -187,7 +187,7 @@ class EditAssetStoreState extends ProjectContextState<EditAssetStore> {
                                 subtitle: subtitle,
                                 builder: (final context) {
                                   PlaySoundSemantics.of(builderContext)?.stop();
-                                  return EditAsset(
+                                  return EditPretendAssetReference(
                                     projectContext: projectContext,
                                     assetStoreReference:
                                         widget.assetStoreReference,

@@ -64,7 +64,7 @@ class TileMapReference {
       final flags = projectContext.project.getFlags(tileFlags);
       return flags
           .map(
-            (final e) => e.variableName,
+            (final e) => e.flagName,
           )
           .join(' | ');
     }

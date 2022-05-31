@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../constants.dart';
 import '../../../../json/levels/tile_maps/tile_map_level_reference.dart';
-import '../../../../json/levels/tile_maps/tile_map_reference.dart';
 import '../../../../shortcuts.dart';
 import '../../../../src/project_context.dart';
 import '../../../../util.dart';
@@ -11,7 +10,7 @@ import '../../../../widgets/center_text.dart';
 import '../../../../widgets/push_widget_list_tile.dart';
 import '../../../../widgets/searchable_list_view.dart';
 import '../../../../widgets/simple_scaffold.dart';
-import '../../../lists/select_item.dart';
+import '../select_tile_map_reference.dart';
 import 'edit_tile_map_level_reference.dart';
 
 /// A widget for editing the tile map level references for the given
@@ -57,7 +56,6 @@ class TileMapLevelReferencesListState
               ),
               autofocus: i == 0,
               onSetState: () => setState(() {}),
-              subtitle: '${tileMapLevels.length}',
             ),
           ),
         );
@@ -108,8 +106,9 @@ Future<void> createTileMapLevelReference({
   } else {
     return pushWidget(
       context: context,
-      builder: (final context) => SelectItem<TileMapReference>(
-        onDone: (final value) async {
+      builder: (final context) => SelectTileMapReference(
+        projectContext: projectContext,
+        onChanged: (final value) async {
           final level = TileMapLevelReference(
             id: newId(),
             tileMapId: value.id,
@@ -125,10 +124,6 @@ Future<void> createTileMapLevelReference({
           );
           onDone();
         },
-        values: tileMaps,
-        getSearchString: (final value) => value.name,
-        getWidget: (final value) => Text(value.name),
-        title: 'Select Tile Map',
       ),
     );
   }

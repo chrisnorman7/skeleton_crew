@@ -29,10 +29,15 @@ class TileMapFlag {
   /// The variable name to use.
   String variableName;
 
+  /// The flag name to use.
+  ///
+  /// This value is simply [variableName] with "Flag" appended.
+  String get flagName => '${variableName}Flag';
+
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$TileMapFlagToJson(this);
 
   /// Get the code for this instance.
   GeneratedCode getCode(final int value) =>
-      GeneratedCode(code: '/// $name\nconst $variableName = $value;');
+      GeneratedCode(code: '/// $name\nconst $flagName = $value;');
 }

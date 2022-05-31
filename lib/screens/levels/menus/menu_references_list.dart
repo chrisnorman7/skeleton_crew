@@ -11,7 +11,7 @@ import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/searchable_list_view.dart';
 import '../../../widgets/simple_scaffold.dart';
 import '../levels/level_references_list.dart';
-import 'edit_menu.dart';
+import 'edit_menu_reference.dart';
 
 /// A list of menus.
 class MenuReferencesList extends StatefulWidget {
@@ -57,7 +57,7 @@ class MenuReferencesListState extends State<MenuReferencesList> {
               },
               child: PushWidgetListTile(
                 title: menu.title,
-                builder: (final context) => EditMenu(
+                builder: (final context) => EditMenuReference(
                   projectContext: widget.projectContext,
                   menuReference: menu,
                 ),
@@ -99,7 +99,7 @@ class MenuReferencesListState extends State<MenuReferencesList> {
     widget.projectContext.save();
     await pushWidget(
       context: context,
-      builder: (final context) => EditMenu(
+      builder: (final context) => EditMenuReference(
         projectContext: widget.projectContext,
         menuReference: menu,
       ),

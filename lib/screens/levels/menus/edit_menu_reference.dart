@@ -26,9 +26,9 @@ import '../levels/level_references_list.dart';
 import 'edit_menu_item.dart';
 
 /// A widget for editing the given [menuReference].
-class EditMenu extends StatefulWidget {
+class EditMenuReference extends StatefulWidget {
   /// Create an instance.
-  const EditMenu({
+  const EditMenuReference({
     required this.projectContext,
     required this.menuReference,
     super.key,
@@ -42,11 +42,11 @@ class EditMenu extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  EditMenuState createState() => EditMenuState();
+  EditMenuReferenceState createState() => EditMenuReferenceState();
 }
 
-/// State for [EditMenu].
-class EditMenuState extends ProjectContextState<EditMenu> {
+/// State for [EditMenuReference].
+class EditMenuReferenceState extends ProjectContextState<EditMenuReference> {
   /// Initialise state.
   @override
   void initState() {
