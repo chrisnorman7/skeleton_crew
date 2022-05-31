@@ -15,9 +15,9 @@ import '../../../widgets/text_list_tile.dart';
 import 'levels_list.dart';
 
 /// A widget for editing the given [levelReference].
-class EditLevel extends StatefulWidget {
+class EditLevelReference extends StatefulWidget {
   /// Create an instance.
-  const EditLevel({
+  const EditLevelReference({
     required this.projectContext,
     required this.levelReference,
     super.key,
@@ -31,11 +31,11 @@ class EditLevel extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  EditLevelState createState() => EditLevelState();
+  EditLevelReferenceState createState() => EditLevelReferenceState();
 }
 
-/// State for [EditLevel].
-class EditLevelState extends ProjectContextState<EditLevel> {
+/// State for [EditLevelReference].
+class EditLevelReferenceState extends ProjectContextState<EditLevelReference> {
   /// Initialise state.
   @override
   void initState() {

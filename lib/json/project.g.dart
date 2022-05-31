@@ -33,6 +33,10 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
       tileMaps: (json['tileMaps'] as List<dynamic>?)
           ?.map((e) => TileMapReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      tileMapLevels: (json['tileMapLevels'] as List<dynamic>?)
+          ?.map(
+              (e) => TileMapLevelReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -49,4 +53,5 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'levels': instance.levels,
       'tileMapFlags': instance.tileMapFlags,
       'tileMaps': instance.tileMaps,
+      'tileMapLevels': instance.tileMapLevels,
     };

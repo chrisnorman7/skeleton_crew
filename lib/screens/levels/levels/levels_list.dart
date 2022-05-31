@@ -12,7 +12,7 @@ import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/searchable_list_view.dart';
 import '../../../widgets/simple_scaffold.dart';
-import 'edit_level.dart';
+import 'edit_level_reference.dart';
 
 /// A widget for editing levels.
 class EditLevels extends StatefulWidget {
@@ -64,7 +64,7 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
               },
               child: PushWidgetListTile(
                 title: level.title,
-                builder: (final context) => EditLevel(
+                builder: (final context) => EditLevelReference(
                   projectContext: projectContext,
                   levelReference: level,
                 ),
@@ -105,8 +105,8 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
     projectContext.save();
     await pushWidget(
       context: context,
-      builder: (final context) =>
-          EditLevel(projectContext: projectContext, levelReference: level),
+      builder: (final context) => EditLevelReference(
+          projectContext: projectContext, levelReference: level),
     );
     setState(() {});
   }

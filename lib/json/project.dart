@@ -7,6 +7,7 @@ import 'levels/level_reference.dart';
 import 'levels/menus/menu_reference.dart';
 import 'levels/sounds/sound_reference.dart';
 import 'levels/tile_maps/tile_map_flag.dart';
+import 'levels/tile_maps/tile_map_level_reference.dart';
 import 'levels/tile_maps/tile_map_reference.dart';
 
 part 'project.g.dart';
@@ -29,6 +30,9 @@ typedef TileMapFlags = List<TileMapFlag>;
 /// The type definition for a list of tile map references.
 typedef TileMaps = List<TileMapReference>;
 
+/// A type definition for a list of tile map level references.
+typedef TileMapLevels = List<TileMapLevelReference>;
+
 /// The top-level project class.
 @JsonSerializable()
 class Project {
@@ -47,12 +51,14 @@ class Project {
     final Levels? levels,
     final TileMapFlags? tileMapFlags,
     final TileMaps? tileMaps,
+    final TileMapLevels? tileMapLevels,
   })  : commandTriggers = commandTriggers ?? [],
         assetStores = assetStores ?? [],
         menus = menus ?? [],
         levels = levels ?? [],
         tileMapFlags = tileMapFlags ?? [],
-        tileMaps = tileMaps ?? [];
+        tileMaps = tileMaps ?? [],
+        tileMapLevels = tileMapLevels ?? [];
 
   /// Create an instance from a JSON object.
   factory Project.fromJson(final Map<String, dynamic> json) =>
@@ -131,6 +137,13 @@ class Project {
 
   /// The created tile maps.
   final TileMaps tileMaps;
+
+  /// Get the tile map with the given [id].
+  TileMapReference getTileMap(final String id) =>
+      tileMaps.firstWhere((final element) => element.id == id);
+
+  /// The tile map levels that have been created.
+  final TileMapLevels tileMapLevels;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
