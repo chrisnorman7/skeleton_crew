@@ -82,14 +82,25 @@ class ProjectContext {
 
   /// Write tile maps.
   void writeTileMaps() {
-    final stringBuffer = StringBuffer()
-      ..writeln(generatedHeader)
-      ..writeln('/// Tile maps.');
+    final stringBuffer = StringBuffer();
     final imports = {'package:ziggurat/ziggurat.dart'};
-    final generatedCode =
-        GeneratedCode(code: stringBuffer.toString(), imports: imports);
-    final code = dartFormatter
-        .format('${generatedCode.getImports()}\n${generatedCode.code}');
+    for (final tileMap in project.tileMaps) {
+      final code = tileMap.getCode(this);
+      imports.addAll(code.imports);
+      stringBuffer.writeln(code.code);
+    }
+    final generatedCode = GeneratedCode(
+      code: stringBuffer.toString(),
+      imports: imports,
+    );
+    final codeBuffer = StringBuffer()
+      ..writeln(generatedHeader)
+      ..writeln('/// Tile maps.')
+      ..writeln(generatedCode.getImports())
+      ..writeln(generatedCode.code);
+    final code = dartFormatter.format(
+      codeBuffer.toString(),
+    );
     File(
       path.join(directory.path, project.outputDirectory, tileMapsFile),
     ).writeAsString(code);
@@ -292,5 +303,6 @@ class ProjectContext {
     }
     writeGame();
     writeFlags();
+    writeTileMaps();
   }
 }

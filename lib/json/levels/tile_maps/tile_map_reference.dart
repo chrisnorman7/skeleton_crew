@@ -1,5 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../constants.dart';
+import '../../../src/generated_code.dart';
+import '../../../src/project_context.dart';
+
 part 'tile_map_reference.g.dart';
 
 /// A reference to a tile map.
@@ -47,4 +51,46 @@ class TileMapReference {
   Map<String, dynamic> toJson() => _$TileMapReferenceToJson(this);
 
   /// Get the code for this instance.
+  GeneratedCode getCode(final ProjectContext projectContext) {
+    final flags = projectContext.project.tileMapFlags;
+    final flagValues = <String, int>{};
+    var value = 1;
+    for (final flag in flags) {
+      flagValues[flag.id] = value;
+      value *= 2;
+    }
+
+    String getFlags(final Iterable<String> tileFlags) {
+      final flags = projectContext.project.getFlags(tileFlags);
+      return flags
+          .map(
+            (final e) => e.variableName,
+          )
+          .join(' | ');
+    }
+
+    final imports = {
+      'package:ziggurat/ziggurat.dart',
+      flagsFilename,
+    };
+    final stringBuffer = StringBuffer()
+      ..writeln('/// $name')
+      ..writeln('const $variableName = TileMap(')
+      ..writeln('width: $width,')
+      ..writeln('height: $height,')
+      ..writeln('defaultFlags: ${getFlags(defaultFlagIds)},')
+      ..writeln('tiles: {');
+    for (final xEntry in tiles.entries) {
+      stringBuffer.writeln('${xEntry.key}: {');
+      for (final yEntry in xEntry.value.entries) {
+        final value = getFlags(yEntry.value);
+        stringBuffer.writeln('${yEntry.key}: $value,');
+      }
+      stringBuffer.writeln('},');
+    }
+    stringBuffer
+      ..writeln('},')
+      ..writeln(');');
+    return GeneratedCode(code: stringBuffer.toString(), imports: imports);
+  }
 }
