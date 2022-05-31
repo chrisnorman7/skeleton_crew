@@ -78,25 +78,27 @@ class TileMapReference {
       ..writeln('const $variableName = TileMap(')
       ..writeln('width: $width,')
       ..writeln('height: $height,')
-      ..writeln('defaultFlags: ${getFlags(defaultFlagIds)},')
-      ..writeln('tiles: {');
-    for (final xEntry in tiles.entries) {
-      if (xEntry.key >= width) {
-        continue;
-      }
-      stringBuffer.writeln('${xEntry.key}: {');
-      for (final yEntry in xEntry.value.entries) {
-        if (yEntry.key >= height) {
-          continue;
-        }
+      ..writeln('defaultFlags: ${getFlags(defaultFlagIds)},');
+    final tilesStringBuffer = StringBuffer()..writeln('tiles: {');
+    var numberOfTiles = 0;
+    for (final xEntry in tiles.entries.where(
+      (final element) => element.key < width,
+    )) {
+      tilesStringBuffer.writeln('${xEntry.key}: {');
+      for (final yEntry in xEntry.value.entries.where(
+        (final element) => element.key < height,
+      )) {
+        numberOfTiles++;
         final value = getFlags(yEntry.value);
-        stringBuffer.writeln('${yEntry.key}: $value,');
+        tilesStringBuffer.writeln('${yEntry.key}: $value,');
       }
-      stringBuffer.writeln('},');
+      tilesStringBuffer.writeln('},');
     }
-    stringBuffer
-      ..writeln('},')
-      ..writeln(');');
+    tilesStringBuffer.writeln('},');
+    if (numberOfTiles > 0) {
+      stringBuffer.writeln(tilesStringBuffer);
+    }
+    stringBuffer.writeln(');');
     return GeneratedCode(code: stringBuffer.toString(), imports: imports);
   }
 }
