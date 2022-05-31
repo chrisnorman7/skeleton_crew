@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../json/levels/tile_maps/tile_flag.dart';
+import '../../../json/levels/tile_maps/tile_map_flag.dart';
 import '../../../json/levels/tile_maps/tile_map_reference.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';

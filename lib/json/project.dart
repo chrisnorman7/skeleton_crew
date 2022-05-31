@@ -6,7 +6,7 @@ import 'command_trigger_reference.dart';
 import 'levels/level_reference.dart';
 import 'levels/menus/menu_reference.dart';
 import 'levels/sounds/sound_reference.dart';
-import 'levels/tile_maps/tile_flag.dart';
+import 'levels/tile_maps/tile_map_flag.dart';
 import 'levels/tile_maps/tile_map_reference.dart';
 
 part 'project.g.dart';

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tile_flag.dart';
+part of 'tile_map_flag.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

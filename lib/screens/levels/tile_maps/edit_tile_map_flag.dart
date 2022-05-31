@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
-import '../../../json/levels/tile_maps/tile_flag.dart';
+import '../../../json/levels/tile_maps/tile_map_flag.dart';
 import '../../../src/project_context.dart';
 import '../../../validators.dart';
 import '../../../widgets/cancel.dart';

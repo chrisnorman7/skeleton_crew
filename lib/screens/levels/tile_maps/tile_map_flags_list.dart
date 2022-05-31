@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
-import '../../../json/levels/tile_maps/tile_flag.dart';
+import '../../../json/levels/tile_maps/tile_map_flag.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';

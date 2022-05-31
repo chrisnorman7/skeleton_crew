@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../src/generated_code.dart';
 
-part 'tile_flag.g.dart';
+part 'tile_map_flag.g.dart';
 
 /// A flag for use with tile maps.
 @JsonSerializable()
