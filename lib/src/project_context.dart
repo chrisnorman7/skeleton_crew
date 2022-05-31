@@ -206,6 +206,7 @@ class ProjectContext {
     final storeCode = assetStoreReference.getCode(this);
     final stringBuffer = StringBuffer()
       ..writeln(generatedHeader)
+      ..writeln('/// ${assetStoreReference.comment}')
       ..writeln(storeCode.getImports())
       ..writeln(storeCode.code);
     final code = dartFormatter.format(stringBuffer.toString());

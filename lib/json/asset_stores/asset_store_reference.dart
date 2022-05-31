@@ -68,9 +68,7 @@ class AssetStoreReference {
   /// Get the code for this store.
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = {'package:ziggurat/ziggurat.dart'};
-    final stringBuffer = StringBuffer()
-      ..writeln('/// $comment')
-      ..writeln();
+    final stringBuffer = StringBuffer();
     for (final pretendAssetReference in assets) {
       final code = pretendAssetReference.getCode(projectContext);
       imports.addAll(code.imports);
