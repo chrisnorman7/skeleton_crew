@@ -95,8 +95,9 @@ class ProjectContextScreenState
           actions: actions,
           title: 'Tile Maps',
           icon: const Icon(Icons.map),
-          builder: (final context) =>
-              TileMapTab(projectContext: projectContext),
+          builder: (final context) => TileMapTab(
+            projectContext: projectContext,
+          ),
         ),
         TabbedScaffoldTab(
           actions: actions,
