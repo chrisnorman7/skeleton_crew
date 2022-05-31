@@ -18,7 +18,7 @@ class LevelReference {
   LevelReference({
     required this.id,
     required this.title,
-    this.className = 'CustomLevel',
+    this.className = 'CustomLevelBase',
     this.comment = 'A level which must be extended.',
     this.music,
     final List<AmbianceReference>? ambiances,
