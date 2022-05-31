@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../screens/levels/levels/levels_list.dart';
-import '../../screens/levels/menus/menus_list.dart';
+import '../../screens/levels/levels/level_references_list.dart';
+import '../../screens/levels/menus/menu_references_list.dart';
+import '../../screens/levels/tile_maps/tile_map_levels/tile_map_level_references_list.dart';
 import '../../src/project_context.dart';
 import '../push_widget_list_tile.dart';
 
@@ -34,14 +35,22 @@ class LevelsTabState extends State<LevelsTab> {
         PushWidgetListTile(
           title: 'Levels',
           builder: (final context) =>
-              EditLevels(projectContext: widget.projectContext),
+              LevelReferencesList(projectContext: widget.projectContext),
           autofocus: true,
           onSetState: () => setState(() {}),
           subtitle: '${levels.length}',
         ),
         PushWidgetListTile(
+          title: 'Tile Map Levels',
+          builder: (final context) => TileMapLevelReferencesList(
+            projectContext: widget.projectContext,
+          ),
+          onSetState: () => setState(() {}),
+          subtitle: '${project.tileMapLevels.length}',
+        ),
+        PushWidgetListTile(
           title: 'Menus',
-          builder: (final context) => MenusList(
+          builder: (final context) => MenuReferencesList(
             projectContext: widget.projectContext,
           ),
           onSetState: () => setState(() {}),

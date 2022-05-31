@@ -12,7 +12,7 @@ import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
-import 'levels_list.dart';
+import 'level_references_list.dart';
 
 /// A widget for editing the given [levelReference].
 class EditLevelReference extends StatefulWidget {
@@ -54,52 +54,12 @@ class EditLevelReferenceState extends ProjectContextState<EditLevelReference> {
             title: 'Settings',
             icon: const Icon(Icons.settings),
             builder: (final context) => ListView(
-              children: [
-                TextListTile(
-                  value: level.className,
-                  onChanged: (final value) {
-                    level.className = value;
-                    save();
-                  },
-                  header: 'Class Name',
-                  validator: (final value) => validateClassName(
-                    value: value,
-                    classNames: projectContext.project.levels.map<String>(
-                      (final e) => e.className,
-                    ),
-                  ),
-                ),
-                TextListTile(
-                  value: level.comment,
-                  onChanged: (final value) {
-                    level.comment = value;
-                    save();
-                  },
-                  header: 'Comment',
-                  validator: (final value) =>
-                      validateNonEmptyValue(value: value),
-                ),
-                TextListTile(
-                  value: level.title,
-                  onChanged: (final value) {
-                    level.title = value;
-                    save();
-                  },
-                  header: 'Title',
-                  autofocus: true,
-                  validator: (final value) =>
-                      validateNonEmptyValue(value: value),
-                ),
-                SoundListTile(
-                  projectContext: projectContext,
-                  value: level.music,
-                  onChanged: (final value) {
-                    level.music = value;
-                    save();
-                  },
-                  title: 'Music',
-                )
-              ],
+              children: getLevelReferenceListTiles(
+                projectContext: projectContext,
+                levelReference: level,
+                levels: projectContext.project.levels,
+                onSave: () => setState(() {}),
+              ),
             ),
             actions: [
               ElevatedButton(
@@ -137,4 +97,62 @@ class EditLevelReferenceState extends ProjectContextState<EditLevelReference> {
   }
 
   /// Add a new ambiance.
+}
+
+/// Get list tiles for editing the given [levelReference].
+List<Widget> getLevelReferenceListTiles({
+  required final ProjectContext projectContext,
+  required final LevelReference levelReference,
+  required final Iterable<LevelReference> levels,
+  required final VoidCallback onSave,
+}) {
+  void save() {
+    projectContext.save();
+    onSave();
+  }
+
+  return [
+    TextListTile(
+      value: levelReference.className,
+      onChanged: (final value) {
+        levelReference.className = value;
+        save();
+      },
+      header: 'Class Name',
+      validator: (final value) => validateClassName(
+        value: value,
+        classNames: levels.map<String>(
+          (final e) => e.className,
+        ),
+      ),
+    ),
+    TextListTile(
+      value: levelReference.comment,
+      onChanged: (final value) {
+        levelReference.comment = value;
+        save();
+      },
+      header: 'Comment',
+      validator: (final value) => validateNonEmptyValue(value: value),
+    ),
+    TextListTile(
+      value: levelReference.title,
+      onChanged: (final value) {
+        levelReference.title = value;
+        save();
+      },
+      header: 'Title',
+      autofocus: true,
+      validator: (final value) => validateNonEmptyValue(value: value),
+    ),
+    SoundListTile(
+      projectContext: projectContext,
+      value: levelReference.music,
+      onChanged: (final value) {
+        levelReference.music = value;
+        save();
+      },
+      title: 'Music',
+    )
+  ];
 }

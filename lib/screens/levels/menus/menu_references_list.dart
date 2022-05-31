@@ -10,13 +10,13 @@ import '../../../widgets/center_text.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/searchable_list_view.dart';
 import '../../../widgets/simple_scaffold.dart';
-import '../levels/levels_list.dart';
+import '../levels/level_references_list.dart';
 import 'edit_menu.dart';
 
 /// A list of menus.
-class MenusList extends StatefulWidget {
+class MenuReferencesList extends StatefulWidget {
   /// Create an instance.
-  const MenusList({
+  const MenuReferencesList({
     required this.projectContext,
     super.key,
   });
@@ -26,11 +26,11 @@ class MenusList extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  MenusListState createState() => MenusListState();
+  MenuReferencesListState createState() => MenuReferencesListState();
 }
 
-/// State for [MenusList].
-class MenusListState extends State<MenusList> {
+/// State for [MenuReferencesList].
+class MenuReferencesListState extends State<MenuReferencesList> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {

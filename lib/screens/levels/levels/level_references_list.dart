@@ -15,9 +15,9 @@ import '../../../widgets/simple_scaffold.dart';
 import 'edit_level_reference.dart';
 
 /// A widget for editing levels.
-class EditLevels extends StatefulWidget {
+class LevelReferencesList extends StatefulWidget {
   /// Create an instance.
-  const EditLevels({
+  const LevelReferencesList({
     required this.projectContext,
     super.key,
   });
@@ -27,11 +27,12 @@ class EditLevels extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  EditLevelsState createState() => EditLevelsState();
+  LevelReferencesListState createState() => LevelReferencesListState();
 }
 
-/// State for [EditLevels].
-class EditLevelsState extends ProjectContextState<EditLevels> {
+/// State for [LevelReferencesList].
+class LevelReferencesListState
+    extends ProjectContextState<LevelReferencesList> {
   /// Initialise state.
   @override
   void initState() {
@@ -106,7 +107,9 @@ class EditLevelsState extends ProjectContextState<EditLevels> {
     await pushWidget(
       context: context,
       builder: (final context) => EditLevelReference(
-          projectContext: projectContext, levelReference: level),
+        projectContext: projectContext,
+        levelReference: level,
+      ),
     );
     setState(() {});
   }

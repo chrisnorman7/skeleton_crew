@@ -6,7 +6,6 @@ import '../../../json/levels/menus/menu_reference.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
-import '../../../validators.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/double_list_tile.dart';
@@ -18,13 +17,12 @@ import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/sounds/ambiances/ambiances_list.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
 import '../../../widgets/sounds/play_sound_semantics.dart';
-import '../../../widgets/sounds/sound_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
-import '../../../widgets/text_list_tile.dart';
 import '../../select_game_controller_axis.dart';
 import '../../select_game_controller_button.dart';
 import '../../select_scan_code.dart';
-import '../levels/levels_list.dart';
+import '../levels/edit_level_reference.dart';
+import '../levels/level_references_list.dart';
 import 'edit_menu_item.dart';
 
 /// A widget for editing the given [menuReference].
@@ -140,47 +138,11 @@ class EditMenuState extends ProjectContextState<EditMenu> {
     final menu = widget.menuReference;
     return ListView(
       children: [
-        TextListTile(
-          value: menu.className,
-          onChanged: (final value) {
-            menu.className = value;
-            save();
-          },
-          header: 'Class Name',
-          validator: (final value) => validateClassName(
-            value: value,
-            classNames: projectContext.project.menus
-                .where((final element) => element.id != menu.id)
-                .map((final e) => e.className),
-          ),
-        ),
-        TextListTile(
-          value: menu.comment,
-          onChanged: (final value) {
-            menu.comment = value;
-            save();
-          },
-          header: 'Comment',
-          validator: (final value) => validateNonEmptyValue(value: value),
-        ),
-        TextListTile(
-          autofocus: true,
-          value: menu.title,
-          onChanged: (final value) {
-            menu.title = value;
-            save();
-          },
-          header: 'Title',
-          validator: (final value) => validateNonEmptyValue(value: value),
-        ),
-        SoundListTile(
+        ...getLevelReferenceListTiles(
           projectContext: projectContext,
-          value: menu.music,
-          onChanged: (final value) {
-            menu.music = value;
-            save();
-          },
-          title: 'Music',
+          levelReference: menu,
+          levels: projectContext.project.menus,
+          onSave: () => setState(() {}),
         ),
         PushWidgetListTile(
           title: 'Move Up Scan Code',

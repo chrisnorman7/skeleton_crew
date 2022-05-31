@@ -13,9 +13,9 @@ import '../../../widgets/simple_scaffold.dart';
 import 'edit_tile_map_reference.dart';
 
 /// A widget for viewing and editing tile maps.
-class TileMapsList extends StatefulWidget {
+class TileMapReferencesList extends StatefulWidget {
   /// Create an instance.
-  const TileMapsList({
+  const TileMapReferencesList({
     required this.projectContext,
     super.key,
   });
@@ -25,11 +25,11 @@ class TileMapsList extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  TileMapsListState createState() => TileMapsListState();
+  TileMapReferencesListState createState() => TileMapReferencesListState();
 }
 
-/// State for [TileMapsList].
-class TileMapsListState extends State<TileMapsList> {
+/// State for [TileMapReferencesList].
+class TileMapReferencesListState extends State<TileMapReferencesList> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {

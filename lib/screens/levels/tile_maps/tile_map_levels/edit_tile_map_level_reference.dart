@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../../../json/levels/tile_maps/tile_map_level_reference.dart';
+import '../../../../src/project_context.dart';
 import '../../../../widgets/simple_scaffold.dart';
 import '../../../../widgets/text_list_tile.dart';
 
 /// A widget for editing the given [tileMapLevelReference].
-class EditTileMapeferenceLevel extends StatefulWidget {
+class EditTileMapLevelReference extends StatefulWidget {
   /// Create an instance.
-  const EditTileMapeferenceLevel({
+  const EditTileMapLevelReference({
     required this.projectContext,
+    required this.tileMapLevelReference,
     super.key,
   });
 
@@ -20,12 +22,12 @@ class EditTileMapeferenceLevel extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  EditTileMapeferenceLevelState createState() =>
-      EditTileMapeferenceLevelState();
+  EditTileMapLevelReferenceState createState() =>
+      EditTileMapLevelReferenceState();
 }
 
-/// State for [EditTileMapeferenceLevel].
-class EditTileMapeferenceLevelState extends State<EditTileMapeferenceLevel> {
+/// State for [EditTileMapLevelReference].
+class EditTileMapLevelReferenceState extends State<EditTileMapLevelReference> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {

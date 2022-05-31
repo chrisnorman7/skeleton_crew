@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../../../constants.dart';
+import '../../../../json/levels/tile_maps/tile_map_level_reference.dart';
+import '../../../../json/levels/tile_maps/tile_map_reference.dart';
+import '../../../../shortcuts.dart';
 import '../../../../src/project_context.dart';
+import '../../../../util.dart';
+import '../../../../widgets/cancel.dart';
 import '../../../../widgets/center_text.dart';
+import '../../../../widgets/push_widget_list_tile.dart';
 import '../../../../widgets/searchable_list_view.dart';
+import '../../../../widgets/simple_scaffold.dart';
+import '../../../lists/select_item.dart';
+import 'edit_tile_map_level_reference.dart';
 
 /// A widget for editing the tile map level references for the given
 /// [projectContext].
-class TileMapReferencesList extends StatefulWidget {
+class TileMapLevelReferencesList extends StatefulWidget {
   /// Create an instance.
-  const TileMapReferencesList({
+  const TileMapLevelReferencesList({
     required this.projectContext,
     super.key,
   });
@@ -18,11 +28,13 @@ class TileMapReferencesList extends StatefulWidget {
 
   /// Create state for this widget.
   @override
-  TileMapReferencesListState createState() => TileMapReferencesListState();
+  TileMapLevelReferencesListState createState() =>
+      TileMapLevelReferencesListState();
 }
 
-/// State for [TileMapReferencesList].
-class TileMapReferencesListState extends State<TileMapReferencesList> {
+/// State for [TileMapLevelReferencesList].
+class TileMapLevelReferencesListState
+    extends State<TileMapLevelReferencesList> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
@@ -35,9 +47,89 @@ class TileMapReferencesListState extends State<TileMapReferencesList> {
       for (var i = 0; i < tileMapLevels.length; i++) {
         final tileMapLevel = tileMapLevels[i];
         children.add(
-          SearchableListTile(searchString: tileMapLevel.title, child: ),
-        )
+          SearchableListTile(
+            searchString: tileMapLevel.title,
+            child: PushWidgetListTile(
+              title: tileMapLevel.title,
+              builder: (final context) => EditTileMapLevelReference(
+                projectContext: widget.projectContext,
+                tileMapLevelReference: tileMapLevel,
+              ),
+              autofocus: i == 0,
+              onSetState: () => setState(() {}),
+              subtitle: '${tileMapLevels.length}',
+            ),
+          ),
+        );
       }
+      child = SearchableListView(children: children);
     }
+    return Cancel(
+      child: CallbackShortcuts(
+        bindings: {
+          newShortcut: () => createTileMapLevelReference(
+                context: context,
+                projectContext: widget.projectContext,
+                onDone: () => setState(() {}),
+              )
+        },
+        child: SimpleScaffold(
+          title: 'Tile Map Levels',
+          body: child,
+          floatingActionButton: FloatingActionButton(
+            autofocus: tileMapLevels.isEmpty,
+            child: addIcon,
+            onPressed: () => createTileMapLevelReference(
+              context: context,
+              projectContext: widget.projectContext,
+              onDone: () => setState(() {}),
+            ),
+            tooltip: 'Add Tile Map Level',
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Create a new tile map level.
+Future<void> createTileMapLevelReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final VoidCallback onDone,
+}) {
+  final project = projectContext.project;
+  final tileMaps = project.tileMaps;
+  if (tileMaps.isEmpty) {
+    return showMessage(
+      context: context,
+      message: 'You must create a tile map first.',
+    );
+  } else {
+    return pushWidget(
+      context: context,
+      builder: (final context) => SelectItem<TileMapReference>(
+        onDone: (final value) async {
+          final level = TileMapLevelReference(
+            id: newId(),
+            tileMapId: value.id,
+          );
+          project.tileMapLevels.add(level);
+          projectContext.save();
+          await pushWidget(
+            context: context,
+            builder: (final context) => EditTileMapLevelReference(
+              projectContext: projectContext,
+              tileMapLevelReference: level,
+            ),
+          );
+          onDone();
+        },
+        values: tileMaps,
+        getSearchString: (final value) => value.name,
+        getWidget: (final value) => Text(value.name),
+        title: 'Select Tile Map',
+      ),
+    );
   }
 }

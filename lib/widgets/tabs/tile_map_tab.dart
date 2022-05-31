@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../screens/levels/tile_maps/tile_map_flags_list.dart';
-import '../../screens/levels/tile_maps/tile_maps_list.dart';
+import '../../screens/levels/tile_maps/tile_map_references_list.dart';
 import '../../src/project_context.dart';
 import '../push_widget_list_tile.dart';
 
@@ -42,7 +42,7 @@ class TileMapTabState extends State<TileMapTab> {
         ),
         PushWidgetListTile(
           title: 'Tile Maps',
-          builder: (final context) => TileMapsList(
+          builder: (final context) => TileMapReferencesList(
             projectContext: projectContext,
           ),
           onSetState: () => setState(() {}),

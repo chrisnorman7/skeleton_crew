@@ -6,6 +6,7 @@ import '../functions/function_reference.dart';
 import '../level_command_reference.dart';
 import '../level_reference.dart';
 import '../sounds/ambiance_reference.dart';
+import '../sounds/sound_reference.dart';
 import 'tile_map_reference.dart';
 
 part 'tile_map_level_reference.g.dart';
