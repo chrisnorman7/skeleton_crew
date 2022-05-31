@@ -13,8 +13,8 @@ class TileMapReference {
     required this.tiles,
     this.width = 10,
     this.height = 10,
-    this.defaultFlags = 0,
-  });
+    final List<String>? defaultFlagIds,
+  }) : defaultFlagIds = defaultFlagIds ?? [];
 
   /// Create an instance from a JSON object.
   factory TileMapReference.fromJson(final Map<String, dynamic> json) =>
@@ -38,10 +38,10 @@ class TileMapReference {
   int height;
 
   /// The default flags for tiles on this map.
-  int defaultFlags;
+  List<String> defaultFlagIds;
 
   /// The populated tiles.
-  final Map<int, Map<int, int>> tiles;
+  final Map<int, Map<int, List<String>>> tiles;
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$TileMapReferenceToJson(this);

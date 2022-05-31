@@ -12,6 +12,7 @@ import '../widgets/tabs/asset_stores_tab.dart';
 import '../widgets/tabs/command_triggers_list.dart';
 import '../widgets/tabs/levels_tab.dart';
 import '../widgets/tabs/project_settings_tab.dart';
+import '../widgets/tabs/tile_map_tab.dart';
 import 'asset_stores/edit_asset_store.dart';
 import 'command_triggers/edit_command_trigger.dart';
 
@@ -89,6 +90,13 @@ class ProjectContextScreenState
           builder: (final context) => LevelsTab(
             projectContext: projectContext,
           ),
+        ),
+        TabbedScaffoldTab(
+          actions: actions,
+          title: 'Tile Maps',
+          icon: const Icon(Icons.map),
+          builder: (final context) =>
+              TileMapTab(projectContext: projectContext),
         ),
         TabbedScaffoldTab(
           actions: actions,

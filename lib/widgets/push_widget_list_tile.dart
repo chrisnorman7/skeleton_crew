@@ -11,6 +11,7 @@ class PushWidgetListTile extends StatefulWidget {
     this.onSetState,
     this.subtitle,
     this.autofocus = false,
+    this.selected = false,
     super.key,
   });
 
@@ -31,6 +32,9 @@ class PushWidgetListTile extends StatefulWidget {
   /// Whether this widget should be autofocused.
   final bool autofocus;
 
+  /// Whether or not the resulting [ListTile] is selected.
+  final bool selected;
+
   /// Create state for this widget.
   @override
   PushWidgetListTileState createState() => PushWidgetListTileState();
@@ -44,6 +48,7 @@ class PushWidgetListTileState extends State<PushWidgetListTile> {
     final subtitle = widget.subtitle;
     return ListTile(
       autofocus: widget.autofocus,
+      selected: widget.selected,
       title: Text(widget.title),
       subtitle: subtitle == null ? null : Text(subtitle),
       onTap: () async {

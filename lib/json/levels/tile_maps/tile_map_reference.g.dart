@@ -15,12 +15,15 @@ TileMapReference _$TileMapReferenceFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(
             int.parse(k),
             (e as Map<String, dynamic>).map(
-              (k, e) => MapEntry(int.parse(k), e as int),
+              (k, e) => MapEntry(int.parse(k),
+                  (e as List<dynamic>).map((e) => e as String).toList()),
             )),
       ),
       width: json['width'] as int? ?? 10,
       height: json['height'] as int? ?? 10,
-      defaultFlags: json['defaultFlags'] as int? ?? 0,
+      defaultFlagIds: (json['defaultFlagIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$TileMapReferenceToJson(TileMapReference instance) =>
@@ -30,7 +33,7 @@ Map<String, dynamic> _$TileMapReferenceToJson(TileMapReference instance) =>
       'variableName': instance.variableName,
       'width': instance.width,
       'height': instance.height,
-      'defaultFlags': instance.defaultFlags,
+      'defaultFlagIds': instance.defaultFlagIds,
       'tiles': instance.tiles.map((k, e) =>
           MapEntry(k.toString(), e.map((k, e) => MapEntry(k.toString(), e)))),
     };

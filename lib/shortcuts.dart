@@ -94,3 +94,17 @@ final editShortcut = SingleActivator(
   control: !macOs,
   meta: macOs,
 );
+
+/// The shortcut for selecting a tile.
+final selectTileShortcut = SingleActivator(
+  LogicalKeyboardKey.space,
+  control: !macOs,
+  meta: macOs,
+);
+
+/// The select all shortcut.
+final selectAllShortcut = SingleActivator(
+  LogicalKeyboardKey.keyA,
+  control: !macOs,
+  meta: macOs,
+);

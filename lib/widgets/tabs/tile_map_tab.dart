@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../screens/levels/tile_maps/tile_map_flags_list.dart';
+import '../../screens/levels/tile_maps/tile_maps_list.dart';
 import '../../src/project_context.dart';
 import '../push_widget_list_tile.dart';
 
@@ -24,16 +26,27 @@ class TileMapTabState extends State<TileMapTab> {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
-    final project = widget.projectContext.project;
+    final projectContext = widget.projectContext;
+    final project = projectContext.project;
     final flags = project.tileMapFlags;
     return ListView(
       children: [
         PushWidgetListTile(
           title: 'Flags',
-          builder: (final context) => const Placeholder(),
+          builder: (final context) => TileMapFlagsList(
+            projectContext: projectContext,
+          ),
           autofocus: true,
           onSetState: () => setState(() {}),
           subtitle: '${flags.length}',
+        ),
+        PushWidgetListTile(
+          title: 'Tile Maps',
+          builder: (final context) => TileMapsList(
+            projectContext: projectContext,
+          ),
+          onSetState: () => setState(() {}),
+          subtitle: '${project.tileMaps.length}',
         )
       ],
     );

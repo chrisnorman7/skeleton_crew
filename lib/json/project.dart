@@ -121,6 +121,14 @@ class Project {
   TileMapFlag getFlag(final String id) =>
       tileMapFlags.firstWhere((final element) => element.id == id);
 
+  /// Convert the given list of [flags] to a list of actual [TileMapFlag]
+  /// instances.
+  List<TileMapFlag> getFlags(final Iterable<String> flags) => flags
+      .map<TileMapFlag>(
+        getFlag,
+      )
+      .toList();
+
   /// The created tile maps.
   final TileMaps tileMaps;
 
