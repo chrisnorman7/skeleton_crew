@@ -68,6 +68,11 @@ class TileMapFlagsListState extends State<TileMapFlagsList> {
           ),
         );
       }
+      children.sort(
+        (final a, final b) => a.searchString.toLowerCase().compareTo(
+              b.searchString.toLowerCase(),
+            ),
+      );
       child = SearchableListView(children: children);
     }
     return Cancel(
