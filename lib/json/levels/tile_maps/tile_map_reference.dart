@@ -81,8 +81,14 @@ class TileMapReference {
       ..writeln('defaultFlags: ${getFlags(defaultFlagIds)},')
       ..writeln('tiles: {');
     for (final xEntry in tiles.entries) {
+      if (xEntry.key >= width) {
+        continue;
+      }
       stringBuffer.writeln('${xEntry.key}: {');
       for (final yEntry in xEntry.value.entries) {
+        if (yEntry.key >= height) {
+          continue;
+        }
         final value = getFlags(yEntry.value);
         stringBuffer.writeln('${yEntry.key}: $value,');
       }

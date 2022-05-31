@@ -5,6 +5,7 @@ import '../../../json/levels/tile_maps/tile_map_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../validators.dart';
 import '../../../widgets/cancel.dart';
+import '../../../widgets/int_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
 import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/tabbed_scaffold.dart';
@@ -113,6 +114,26 @@ class EditTileMapReferenceState
                       : defaultFlagIds
                           .map((final e) => project.getFlag(e).name)
                           .join(', '),
+                ),
+                IntListTile(
+                  value: tileMap.width,
+                  onChanged: (final value) {
+                    tileMap.width = value;
+                    save();
+                  },
+                  title: 'Width',
+                  min: 1,
+                  modifier: 10,
+                ),
+                IntListTile(
+                  value: tileMap.height,
+                  onChanged: (final value) {
+                    tileMap.height = value;
+                    save();
+                  },
+                  title: 'Height',
+                  min: 1,
+                  modifier: 10,
                 )
               ],
             ),
