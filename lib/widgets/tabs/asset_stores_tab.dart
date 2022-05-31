@@ -69,10 +69,13 @@ class AssetStoresTabState extends State<AssetStoresTab> {
     }
     return CallbackShortcuts(
       bindings: {
-        newShortcut: () => createAssetStore(
-              context: context,
-              projectContext: widget.projectContext,
-            )
+        newShortcut: () async {
+          await createAssetStore(
+            context: context,
+            projectContext: widget.projectContext,
+          );
+          setState(() {});
+        }
       },
       child: child,
     );
