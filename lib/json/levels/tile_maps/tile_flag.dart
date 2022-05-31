@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../src/generated_code.dart';
+
 part 'tile_flag.g.dart';
 
 /// A flag for use with tile maps.
@@ -29,4 +31,8 @@ class TileMapFlag {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$TileMapFlagToJson(this);
+
+  /// Get the code for this instance.
+  GeneratedCode getCode(final int value) =>
+      GeneratedCode(code: '/// $name\nconst $variableName = $value;');
 }

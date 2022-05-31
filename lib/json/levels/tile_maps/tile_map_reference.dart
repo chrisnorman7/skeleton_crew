@@ -45,4 +45,6 @@ class TileMapReference {
 
   /// Convert an instance to JSON.
   Map<String, dynamic> toJson() => _$TileMapReferenceToJson(this);
+
+  /// Get the code for this instance.
 }

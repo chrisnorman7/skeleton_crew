@@ -77,3 +77,8 @@ const commandTriggersIcon = Icon(
 
 /// The icon to use for functions.
 const functionsIcon = Icon(Icons.functions);
+
+/// The file where flags will be stored.
+///
+/// This file will be located under the output directory.
+const flagsFilename = 'flags.dart';
