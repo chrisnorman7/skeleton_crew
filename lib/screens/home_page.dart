@@ -223,6 +223,7 @@ class _HomePageState extends State<HomePage> {
       file: file,
       game: _game,
     );
+    await AppPreferences(lastLoadedFilename: path).save();
     await pushWidget(
       context: context,
       builder: (final context) => ProjectContextScreen(
