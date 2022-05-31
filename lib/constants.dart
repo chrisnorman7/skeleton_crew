@@ -82,3 +82,8 @@ const functionsIcon = Icon(Icons.functions);
 ///
 /// This file will be located under the output directory.
 const flagsFilename = 'flags.dart';
+
+/// The file where tile maps where will be written.
+///
+/// This file will be located under the output directory.
+const tileMapsFile = 'tile_maps.dart';
