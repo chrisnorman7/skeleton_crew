@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../constants.dart';
 import '../../../../json/levels/tile_maps/tile_map_level_reference.dart';
 import '../../../../src/project_context.dart';
 import '../../../../widgets/cancel.dart';
@@ -13,6 +14,7 @@ import '../../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart'
 import '../../../../widgets/tabbed_scaffold.dart';
 import '../../levels/edit_level_reference.dart';
 import '../select_tile_map_reference.dart';
+import 'tile_map_level_references_list.dart';
 
 /// A widget for editing the given [tileMapLevelReference].
 class EditTileMapLevelReference extends StatefulWidget {
@@ -104,6 +106,17 @@ class EditTileMapLevelReferenceState
                 )
               ],
             ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => deleteTileMapLevelReference(
+                  context: context,
+                  projectContext: projectContext,
+                  tileMapLevelReference: level,
+                  onYes: () => Navigator.pop(context),
+                ),
+                child: deleteIcon,
+              )
+            ],
           ),
           FunctionsTabbedScaffoldTab(
             context: context,

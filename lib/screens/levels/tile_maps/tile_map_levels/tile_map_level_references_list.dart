@@ -48,14 +48,24 @@ class TileMapLevelReferencesListState
         children.add(
           SearchableListTile(
             searchString: tileMapLevel.title,
-            child: PushWidgetListTile(
-              title: tileMapLevel.title,
-              builder: (final context) => EditTileMapLevelReference(
-                projectContext: widget.projectContext,
-                tileMapLevelReference: tileMapLevel,
+            child: CallbackShortcuts(
+              bindings: {
+                deleteShortcut: () => deleteTileMapLevelReference(
+                      context: context,
+                      projectContext: widget.projectContext,
+                      tileMapLevelReference: tileMapLevel,
+                      onYes: () => setState(() {}),
+                    )
+              },
+              child: PushWidgetListTile(
+                title: tileMapLevel.title,
+                builder: (final context) => EditTileMapLevelReference(
+                  projectContext: widget.projectContext,
+                  tileMapLevelReference: tileMapLevel,
+                ),
+                autofocus: i == 0,
+                onSetState: () => setState(() {}),
               ),
-              autofocus: i == 0,
-              onSetState: () => setState(() {}),
             ),
           ),
         );
@@ -128,3 +138,24 @@ Future<void> createTileMapLevelReference({
     );
   }
 }
+
+/// Delete the given [tileMapLevelReference].
+Future<void> deleteTileMapLevelReference({
+  required final BuildContext context,
+  required final ProjectContext projectContext,
+  required final TileMapLevelReference tileMapLevelReference,
+  required final VoidCallback onYes,
+}) =>
+    confirm(
+      context: context,
+      message: 'Are you sure you want to delete this tile map level?',
+      title: 'Delete Tile Map Level',
+      yesCallback: () {
+        Navigator.pop(context);
+        projectContext.project.tileMapLevels.removeWhere(
+          (final element) => element.id == tileMapLevelReference.id,
+        );
+        projectContext.save();
+        onYes();
+      },
+    );

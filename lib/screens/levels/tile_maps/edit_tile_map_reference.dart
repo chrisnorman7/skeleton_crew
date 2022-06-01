@@ -12,6 +12,7 @@ import '../../../widgets/tabbed_scaffold.dart';
 import '../../../widgets/text_list_tile.dart';
 import 'edit_tile_map_reference_tiles.dart';
 import 'select_flags.dart';
+import 'tile_map_references_list.dart';
 
 /// A widget for editing the given [tileMapReference].
 class EditTileMapReference extends StatefulWidget {
@@ -137,6 +138,17 @@ class EditTileMapReferenceState
                 )
               ],
             ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => deleteTileMapReference(
+                  context: context,
+                  projectContext: projectContext,
+                  tileMapReference: tileMap,
+                  onYes: () => Navigator.pop(context),
+                ),
+                child: deleteIcon,
+              )
+            ],
           ),
           TabbedScaffoldTab(
             title: 'Tiles',
