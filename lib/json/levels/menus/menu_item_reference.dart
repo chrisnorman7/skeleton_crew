@@ -3,7 +3,6 @@ import 'package:ziggurat/menus.dart';
 
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
-import '../../../util.dart';
 import '../../message_reference.dart';
 import '../functions/call_function.dart';
 import '../level_reference.dart';
@@ -44,8 +43,6 @@ class MenuItemReference {
     final LevelReference levelReference,
   ) {
     final imports = <String>{'package:ziggurat/menus.dart'};
-    final sound = message.soundReference;
-    final text = message.text;
     final stringBuffer = StringBuffer();
     final constMenuItem = callFunction == null;
     if (constMenuItem) {
@@ -55,27 +52,23 @@ class MenuItemReference {
     if (!constMenuItem) {
       stringBuffer.write('const ');
     }
-    stringBuffer.writeln('Message(');
-    if (sound != null) {
-      final code = sound.getCode(projectContext);
-      imports.addAll(code.imports);
-      stringBuffer
-        ..writeln('gain: ${sound.gain},')
-        ..writeln('keepAlive: true,')
-        ..writeln('sound: ${code.code},');
-    }
-    if (text != null) {
-      stringBuffer.writeln('text: ${getQuotedString(text)},');
-    }
-    stringBuffer.writeln('),');
-    final code = callFunction?.getCode(projectContext, levelReference);
-    if (code == null) {
+    final messageCode = message.getCode(
+      projectContext: projectContext,
+      keepAlive: true,
+    );
+    imports.addAll(messageCode.imports);
+    stringBuffer
+      ..write(messageCode.code)
+      ..writeln(',');
+    final callFunctionCode =
+        callFunction?.getCode(projectContext, levelReference);
+    if (callFunctionCode == null) {
       stringBuffer.writeln('menuItemLabel,');
     } else {
-      imports.addAll(code.imports);
+      imports.addAll(callFunctionCode.imports);
       stringBuffer
         ..writeln('Button(')
-        ..writeln('${code.code},')
+        ..writeln('${callFunctionCode.code},')
         ..writeln('),');
     }
     stringBuffer.writeln(')');

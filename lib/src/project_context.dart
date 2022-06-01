@@ -241,7 +241,6 @@ class ProjectContext {
     );
     final codeBuffer = StringBuffer()
       ..writeln(generatedHeader)
-      ..writeln('// ignore_for_file: avoid_redundant_argument_values')
       ..writeln('/// Menus.')
       ..writeln(generatedCode.getImports())
       ..write(generatedCode.code);
