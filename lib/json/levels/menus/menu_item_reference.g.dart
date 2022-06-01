@@ -9,11 +9,9 @@ part of 'menu_item_reference.dart';
 MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
     MenuItemReference(
       id: json['id'] as String,
-      title: json['title'] as String?,
-      soundReference: json['soundReference'] == null
+      message: json['message'] == null
           ? null
-          : SoundReference.fromJson(
-              json['soundReference'] as Map<String, dynamic>),
+          : MessageReference.fromJson(json['message'] as Map<String, dynamic>),
       callFunction: json['callFunction'] == null
           ? null
           : CallFunction.fromJson(json['callFunction'] as Map<String, dynamic>),
@@ -22,7 +20,6 @@ MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MenuItemReferenceToJson(MenuItemReference instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
-      'soundReference': instance.soundReference,
+      'message': instance.message,
       'callFunction': instance.callFunction,
     };

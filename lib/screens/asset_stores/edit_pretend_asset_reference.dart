@@ -136,10 +136,12 @@ Future<void> deleteAssetReference({
     }
     if (level is MenuReference) {
       for (final menuItem in level.menuItems) {
-        if (menuItem.soundReference?.assetReferenceId == assetReference.id) {
+        if (menuItem.message.soundReference?.assetReferenceId ==
+            assetReference.id) {
           return showMessage(
             context: context,
-            message: '$prefix sound for the "${menuItem.title}" item of the '
+            message:
+                '$prefix sound for the "${menuItem.message.text}" item of the '
                 '${level.title} menu.',
           );
         }

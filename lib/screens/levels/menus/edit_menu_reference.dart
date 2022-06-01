@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../json/levels/menus/menu_item_reference.dart';
 import '../../../json/levels/menus/menu_reference.dart';
+import '../../../json/message_reference.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
@@ -23,7 +24,7 @@ import '../../select_game_controller_button.dart';
 import '../../select_scan_code.dart';
 import '../levels/edit_level_reference.dart';
 import '../levels/level_references_list.dart';
-import 'edit_menu_item.dart';
+import 'edit_menu_item_reference.dart';
 
 /// A widget for editing the given [menuReference].
 class EditMenuReference extends StatefulWidget {
@@ -83,10 +84,7 @@ class EditMenuReferenceState extends ProjectContextState<EditMenuReference> {
           TabbedScaffoldTab(
             title: 'Menu Items',
             icon: const Icon(Icons.menu_book),
-            builder: (final context) => CallbackShortcuts(
-              bindings: {newShortcut: () => addMenuItem(context)},
-              child: getMenuItemsListView(context),
-            ),
+            builder: getMenuItemsListView,
             floatingActionButton: FloatingActionButton(
               autofocus: menu.menuItems.isEmpty,
               child: addIcon,
@@ -119,12 +117,13 @@ class EditMenuReferenceState extends ProjectContextState<EditMenuReference> {
 
   /// Add a new menu item.
   Future<void> addMenuItem(final BuildContext context) async {
-    final menuItem = MenuItemReference(id: newId());
+    final menuItem =
+        MenuItemReference(id: newId(), message: MessageReference());
     widget.menuReference.menuItems.add(menuItem);
     projectContext.save();
     await pushWidget(
       context: context,
-      builder: (final context) => EditMenuItem(
+      builder: (final context) => EditMenuItemReference(
         projectContext: projectContext,
         menuReference: widget.menuReference,
         value: menuItem,
@@ -315,67 +314,76 @@ class EditMenuReferenceState extends ProjectContextState<EditMenuReference> {
   Widget getMenuItemsListView(final BuildContext context) {
     final menu = widget.menuReference;
     final menuItems = menu.menuItems;
+    final Widget child;
     if (menuItems.isEmpty) {
-      return const CenterText(text: 'There are no items to show.');
-    }
-    return ListView.builder(
-      itemBuilder: (final context, final index) {
-        final menuItem = menuItems[index];
-        final sound = menuItem.soundReference;
-        return CallbackShortcuts(
-          bindings: {
-            deleteShortcut: () => confirm(
-                  context: context,
-                  message: 'Are you sure you want to delete this menu item?',
-                  title: 'Delete Menu Item',
-                  yesCallback: () {
-                    Navigator.pop(context);
-                    menu.menuItems.removeWhere(
-                      (final element) => element.id == menuItem.id,
-                    );
-                    save();
-                  },
-                ),
-            moveUpShortcut: () {
-              if (index > 0) {
-                reorderMenuItems(index, index - 1);
-              }
-            },
-            moveDownShortcut: () {
-              reorderMenuItems(index, index + 1);
-            },
-            moveToStartShortcut: () => reorderMenuItems(index, 0),
-            moveToEndShortcut: () => reorderMenuItems(index, menuItems.length)
-          },
-          child: PlaySoundSemantics(
-            game: projectContext.game,
-            assetReference: sound == null
-                ? null
-                : projectContext.project
-                    .getPretendAssetReference(sound)
-                    .assetReferenceReference
-                    .reference,
-            gain: sound?.gain ?? 0.0,
-            child: Builder(
-              builder: (final builderContext) => PushWidgetListTile(
-                title: menuItem.title ?? 'Untitled Menu Item',
-                builder: (final context) {
-                  PlaySoundSemantics.of(builderContext)?.stop();
-                  return EditMenuItem(
+      child = const CenterText(text: 'There are no items to show.');
+    } else {
+      child = ListView.builder(
+        itemBuilder: (final context, final index) {
+          final menuItem = menuItems[index];
+          final message = menuItem.message;
+          final sound = message.soundReference;
+          return CallbackShortcuts(
+            bindings: {
+              deleteShortcut: () => deleteMenuItemReference(
+                    context: context,
                     projectContext: projectContext,
                     menuReference: menu,
-                    value: menuItem,
-                  );
-                },
-                autofocus: index == 0,
-                onSetState: () => setState(() {}),
+                    menuItemReference: menuItem,
+                    onYes: () => setState(() {}),
+                  ),
+              moveUpShortcut: () {
+                if (index > 0) {
+                  reorderMenuItems(index, index - 1);
+                }
+              },
+              moveDownShortcut: () {
+                reorderMenuItems(index, index + 1);
+              },
+              moveToStartShortcut: () => reorderMenuItems(index, 0),
+              moveToEndShortcut: () => reorderMenuItems(index, menuItems.length)
+            },
+            child: PlaySoundSemantics(
+              game: projectContext.game,
+              assetReference: sound == null
+                  ? null
+                  : projectContext.project
+                      .getPretendAssetReference(sound)
+                      .assetReferenceReference
+                      .reference,
+              gain: sound?.gain ?? 0.0,
+              child: Builder(
+                builder: (final builderContext) => PushWidgetListTile(
+                  title: message.text ?? 'Untitled Menu Item',
+                  builder: (final context) {
+                    PlaySoundSemantics.of(builderContext)?.stop();
+                    return EditMenuItemReference(
+                      projectContext: projectContext,
+                      menuReference: menu,
+                      value: menuItem,
+                    );
+                  },
+                  autofocus: index == 0,
+                  onSetState: () => setState(() {}),
+                ),
               ),
             ),
-          ),
-          key: ValueKey(menuItem.id),
-        );
+            key: ValueKey(menuItem.id),
+          );
+        },
+        itemCount: menuItems.length,
+      );
+    }
+    return CallbackShortcuts(
+      bindings: {
+        newShortcut: () => createMenuItemReference(
+              context: context,
+              projectContext: projectContext,
+              menuReference: menu,
+              onDone: () => setState(() {}),
+            )
       },
-      itemCount: menuItems.length,
+      child: child,
     );
   }
 

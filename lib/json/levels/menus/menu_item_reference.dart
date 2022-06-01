@@ -4,9 +4,9 @@ import 'package:ziggurat/menus.dart';
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
+import '../../message_reference.dart';
 import '../functions/call_function.dart';
 import '../level_reference.dart';
-import '../sounds/sound_reference.dart';
 
 part 'menu_item_reference.g.dart';
 
@@ -16,10 +16,9 @@ class MenuItemReference {
   /// Create an instance.
   MenuItemReference({
     required this.id,
-    this.title,
-    this.soundReference,
+    final MessageReference? message,
     this.callFunction,
-  });
+  }) : message = message ?? MessageReference();
 
   /// Create an instance from a JSON object.
   factory MenuItemReference.fromJson(final Map<String, dynamic> json) =>
@@ -28,11 +27,8 @@ class MenuItemReference {
   /// The ID of this menu.
   final String id;
 
-  /// The title of this menu item.
-  String? title;
-
-  /// The sound that should play for this menu item.
-  SoundReference? soundReference;
+  /// The message for this menu item.
+  final MessageReference message;
 
   /// The function to call when this menu item is is activated.
   ///
@@ -48,8 +44,8 @@ class MenuItemReference {
     final LevelReference levelReference,
   ) {
     final imports = <String>{'package:ziggurat/menus.dart'};
-    final sound = soundReference;
-    final text = title;
+    final sound = message.soundReference;
+    final text = message.text;
     final stringBuffer = StringBuffer();
     final constMenuItem = callFunction == null;
     if (constMenuItem) {
