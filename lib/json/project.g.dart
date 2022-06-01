@@ -37,6 +37,10 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
           ?.map(
               (e) => TileMapLevelReference.fromJson(e as Map<String, dynamic>))
           .toList(),
+      dialogueLevels: (json['dialogueLevels'] as List<dynamic>?)
+          ?.map(
+              (e) => DialogueLevelReference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
@@ -54,4 +58,5 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'tileMapFlags': instance.tileMapFlags,
       'tileMaps': instance.tileMaps,
       'tileMapLevels': instance.tileMapLevels,
+      'dialogueLevels': instance.dialogueLevels,
     };

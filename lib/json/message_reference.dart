@@ -13,6 +13,7 @@ part 'message_reference.g.dart';
 class MessageReference {
   /// Create an instance.
   MessageReference({
+    required this.id,
     this.text,
     this.soundReference,
   });
@@ -20,6 +21,9 @@ class MessageReference {
   /// Create an instance from a JSON object.
   factory MessageReference.fromJson(final Map<String, dynamic> json) =>
       _$MessageReferenceFromJson(json);
+
+  /// The ID for this message.
+  final String id;
 
   /// The text of this message.
   String? text;

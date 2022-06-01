@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../json/levels/menus/menu_item_reference.dart';
 import '../../../json/levels/menus/menu_reference.dart';
+import '../../../json/message_reference.dart';
 import '../../../src/project_context.dart';
 import '../../../util.dart';
 import '../../../widgets/cancel.dart';
@@ -108,7 +109,10 @@ Future<void> createMenuItemReference({
   required final MenuReference menuReference,
   required final VoidCallback onDone,
 }) async {
-  final menuItem = MenuItemReference(id: newId());
+  final menuItem = MenuItemReference(
+    id: newId(),
+    message: MessageReference(id: newId()),
+  );
   menuReference.menuItems.add(menuItem);
   projectContext.save();
   await pushWidget(

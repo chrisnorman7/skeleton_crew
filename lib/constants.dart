@@ -92,3 +92,8 @@ const tileMapsFilename = 'tile_maps.dart';
 ///
 /// This file will be located under the output directory.
 const tileMapLevelsFile = 'tile_map_levels.dart';
+
+/// The file where dialogue levels are stored.
+///
+/// This file will be located under the output directory.
+const dialogueLevelsFile = 'dialogue_levels.dart';

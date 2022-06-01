@@ -9,9 +9,8 @@ part of 'menu_item_reference.dart';
 MenuItemReference _$MenuItemReferenceFromJson(Map<String, dynamic> json) =>
     MenuItemReference(
       id: json['id'] as String,
-      message: json['message'] == null
-          ? null
-          : MessageReference.fromJson(json['message'] as Map<String, dynamic>),
+      message:
+          MessageReference.fromJson(json['message'] as Map<String, dynamic>),
       callFunction: json['callFunction'] == null
           ? null
           : CallFunction.fromJson(json['callFunction'] as Map<String, dynamic>),

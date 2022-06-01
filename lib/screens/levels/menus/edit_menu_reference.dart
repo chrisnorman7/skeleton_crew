@@ -117,8 +117,10 @@ class EditMenuReferenceState extends ProjectContextState<EditMenuReference> {
 
   /// Add a new menu item.
   Future<void> addMenuItem(final BuildContext context) async {
-    final menuItem =
-        MenuItemReference(id: newId(), message: MessageReference());
+    final menuItem = MenuItemReference(
+      id: newId(),
+      message: MessageReference(id: newId()),
+    );
     widget.menuReference.menuItems.add(menuItem);
     projectContext.save();
     await pushWidget(

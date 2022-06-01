@@ -15,9 +15,9 @@ class MenuItemReference {
   /// Create an instance.
   MenuItemReference({
     required this.id,
-    final MessageReference? message,
+    required this.message,
     this.callFunction,
-  }) : message = message ?? MessageReference();
+  });
 
   /// Create an instance from a JSON object.
   factory MenuItemReference.fromJson(final Map<String, dynamic> json) =>
