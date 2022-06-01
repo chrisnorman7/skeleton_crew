@@ -1,16 +1,49 @@
-# skeleton_crew
+# Skeleton Crew
 
-A new Flutter project.
+## Description
 
-## Getting Started
+Skeleton Crew allows you to create the bare bones for an audio game project using the [Ziggurat](https://pub.dev/packages/ziggurat) package. It allows you to create many common parts of the game in a GUI, then generates the code that does all the grunt work.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+Currently, Skeleton Crew can generate code for the following classes:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- CommandTrigger
+- Menu
+- MenuItem
+- Level
+- TileMap
+- TileMapLevel
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Running The Program
+
+To run from source, the standard steps for a [Flutter](https://flutter.dev/) application apply:
+
+### Clone The Repository
+
+```shell
+git clone https://github.com/chrisnorman7/skeleton_crew
+cd skeleton_crew
+```
+
+### Get Packages
+
+```shell
+flutter pub get
+```
+
+### Run The program
+
+```shell
+flutter run -d windows
+```
+
+If you are on another platform, substitute "Windows" for that platform.
+
+## Supported Platforms
+
+Skeleton Crew should run on the following platforms:
+
+- Windows (Heavily tested)
+- Linux (Partially tested - has some problems)
+- Mac OS (Not tested)
