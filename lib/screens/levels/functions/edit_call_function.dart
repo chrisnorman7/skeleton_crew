@@ -133,7 +133,9 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
                   value: function,
                 ),
                 title: 'Function',
-                subtitle: function?.name ?? notSet,
+                subtitle: function == null
+                    ? notSet
+                    : '${function.name}: ${function.comment}',
               ),
             ),
           ],
