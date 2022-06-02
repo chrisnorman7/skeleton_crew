@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../constants.dart';
 import '../../src/generated_code.dart';
 import '../../src/project_context.dart';
-import '../../util.dart';
 import 'functions/call_function.dart';
 import 'level_reference.dart';
 
@@ -52,12 +52,15 @@ class LevelCommandReference {
     final LevelReference levelReference,
   ) {
     final project = projectContext.project;
-    final imports = <String>{'package:ziggurat/ziggurat.dart'};
+    final imports = <String>{
+      'package:ziggurat/ziggurat.dart',
+      commandTriggersFilename,
+    };
     final commandTrigger = project.getCommandTrigger(commandTriggerId);
     final commandInterval = interval;
     final stringBuffer = StringBuffer()
       ..writeln('registerCommand(')
-      ..writeln('${getQuotedString(commandTrigger.commandTrigger.name)},');
+      ..writeln('${commandTrigger.variableName}.name,');
 
     void writeFunction(final CallFunction? func, final String prefix) {
       final code = func?.getCode(projectContext, levelReference);
