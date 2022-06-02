@@ -94,7 +94,17 @@ class DialogueLevelReference extends LevelReference {
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
     }
-    stringBuffer.writeln(');');
+    stringBuffer.write(')');
+    final commandsCode = getCommandsCode(projectContext);
+    if (commandsCode == null) {
+      stringBuffer.writeln(';');
+    } else {
+      imports.addAll(commandsCode.imports);
+      stringBuffer
+        ..writeln(' {')
+        ..writeln(commandsCode.code)
+        ..writeln('}');
+    }
     for (final function in functions) {
       stringBuffer.writeln(function.header);
     }
