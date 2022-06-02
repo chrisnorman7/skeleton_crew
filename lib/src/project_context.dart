@@ -82,9 +82,13 @@ class ProjectContext {
 
   /// Write dialogue levels.
   void writeDialogueLevels() {
+    final dialogueLevels = project.dialogueLevels;
+    if (dialogueLevels.isEmpty) {
+      return;
+    }
     final imports = <String>{'package:ziggurat/levels.dart'};
     final stringBuffer = StringBuffer();
-    for (final dialogueLevel in project.dialogueLevels) {
+    for (final dialogueLevel in dialogueLevels) {
       final code = dialogueLevel.getCode(this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -111,9 +115,13 @@ class ProjectContext {
 
   /// Write tile map levels.
   void writeTileMapLevels() {
+    final tileMapLevels = project.tileMapLevels;
+    if (tileMapLevels.isEmpty) {
+      return;
+    }
     final imports = <String>{};
     final stringBuffer = StringBuffer();
-    for (final level in project.tileMapLevels) {
+    for (final level in tileMapLevels) {
       final code = level.getCode(this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -137,9 +145,13 @@ class ProjectContext {
 
   /// Write tile maps.
   void writeTileMaps() {
+    final tileMaps = project.tileMaps;
+    if (tileMaps.isEmpty) {
+      return;
+    }
     final stringBuffer = StringBuffer();
     final imports = {'package:ziggurat/ziggurat.dart'};
-    for (final tileMap in project.tileMaps) {
+    for (final tileMap in tileMaps) {
       final code = tileMap.getCode(this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -163,6 +175,10 @@ class ProjectContext {
 
   /// Write the flags.
   void writeFlags() {
+    final tileMapFlags = project.tileMapFlags;
+    if (tileMapFlags.isEmpty) {
+      return;
+    }
     final imports = <String>{};
     final libraryName = path.basenameWithoutExtension(flagsFilename);
     final stringBuffer = StringBuffer()
@@ -170,7 +186,7 @@ class ProjectContext {
       ..writeln('/// Tile map flags.')
       ..writeln('library $libraryName;');
     var value = 1;
-    for (final flags in project.tileMapFlags) {
+    for (final flags in tileMapFlags) {
       final code = flags.getCode(value);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -189,13 +205,12 @@ class ProjectContext {
   /// Write the custom game class.
   void writeGame() {
     final className = project.gameClassName;
+    final imports = {
+      'dart:io',
+      'package:dart_sdl/dart_sdl.dart',
+      'package:ziggurat/ziggurat.dart',
+    };
     final stringBuffer = StringBuffer()
-      ..writeln(generatedHeader)
-      ..writeln('/// Provides the [$className] class.')
-      ..writeln("import 'dart:io';")
-      ..writeln("import 'package:dart_sdl/dart_sdl.dart';")
-      ..writeln("import 'package:ziggurat/ziggurat.dart';")
-      ..writeln("import '$commandTriggersFilename';")
       ..writeln('/// ${project.gameClassComment}')
       ..writeln('abstract class $className extends Game {')
       ..writeln('/// Create an instance.')
@@ -204,12 +219,16 @@ class ProjectContext {
       ..writeln('appName = ${getQuotedString(project.appName)},')
       ..writeln('super(${getQuotedString(project.title)},')
       ..writeln('triggerMap: const TriggerMap([');
-    for (final commandTriggerReference in project.commandTriggers) {
-      final comment = commandTriggerReference.comment;
-      final variableName = commandTriggerReference.variableName;
-      stringBuffer
-        ..writeln('/// $comment')
-        ..writeln('$variableName,');
+    final commandTriggers = project.commandTriggers;
+    if (commandTriggers.isNotEmpty) {
+      imports.add(commandTriggersFilename);
+      for (final commandTriggerReference in commandTriggers) {
+        final comment = commandTriggerReference.comment;
+        final variableName = commandTriggerReference.variableName;
+        stringBuffer
+          ..writeln('/// $comment')
+          ..writeln('$variableName,');
+      }
     }
     stringBuffer
       ..writeln('],),);')
@@ -223,16 +242,32 @@ class ProjectContext {
       ..writeln('Directory get preferencesDirectory => Directory(')
       ..writeln('sdl.getPrefPath(orgName, appName));')
       ..writeln('}');
-    final code = dartFormatter.format(stringBuffer.toString());
-    File(path.join(project.outputDirectory, gameFilename))
-        .writeAsStringSync(code);
+    final codeBuffer = StringBuffer();
+    final generatedCode = GeneratedCode(
+      code: stringBuffer.toString(),
+      imports: imports,
+    );
+    codeBuffer
+      ..writeln(generatedHeader)
+      ..writeln('/// Provides the [$className] class.')
+      ..writeln(generatedCode.getImports())
+      ..writeln(generatedCode.code);
+    final file = File(
+      path.join(directory.path, project.outputDirectory, gameFilename),
+    );
+    final code = dartFormatter.format(codeBuffer.toString());
+    file.writeAsStringSync(code);
   }
 
   /// Write all levels.
   void writeLevels() {
+    final levels = project.levels;
+    if (levels.isEmpty) {
+      return;
+    }
     final imports = <String>{};
     final stringBuffer = StringBuffer();
-    for (final level in project.levels) {
+    for (final level in levels) {
       final code = level.getCode(this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -257,9 +292,13 @@ class ProjectContext {
 
   /// Write all menus.
   void writeMenus() {
+    final menus = project.menus;
+    if (menus.isEmpty) {
+      return;
+    }
     final imports = <String>{};
     final stringBuffer = StringBuffer();
-    for (final menu in project.menus) {
+    for (final menu in menus) {
       final code = menu.getCode(this);
       imports.addAll(code.imports);
       stringBuffer.writeln(code.code);
@@ -312,9 +351,12 @@ class ProjectContext {
 
   /// Write command triggers.
   void writeCommandTriggers() {
+    final commandTriggers = project.commandTriggers;
+    if (commandTriggers.isEmpty) {
+      return;
+    }
     final imports = <String>{};
     final stringBuffer = StringBuffer();
-    final commandTriggers = project.commandTriggers;
     for (final reference in commandTriggers) {
       final commandTriggerCode = reference.getCode(this);
       imports.addAll(commandTriggerCode.imports);
@@ -343,18 +385,9 @@ class ProjectContext {
       directory.createSync(recursive: true);
     }
     writeAssetStores();
-    final commandTriggers = project.commandTriggers;
-    if (commandTriggers.isNotEmpty) {
-      writeCommandTriggers();
-    }
-    final menus = project.menus;
-    if (menus.isNotEmpty) {
-      writeMenus();
-    }
-    final levels = project.levels;
-    if (levels.isNotEmpty) {
-      writeLevels();
-    }
+    writeCommandTriggers();
+    writeMenus();
+    writeLevels();
     writeGame();
     writeFlags();
     writeTileMaps();
