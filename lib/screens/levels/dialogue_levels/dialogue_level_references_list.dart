@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
-import '../../../json/levels/functions/call_function.dart';
 import '../../../json/levels/sounds/dialogue_level_reference.dart';
 import '../../../shortcuts.dart';
 import '../../../src/project_context.dart';
@@ -110,7 +109,6 @@ Future<void> createDialogueLevelReference({
   final level = DialogueLevelReference(
     id: newId(),
     title: 'Untitled Dialogue Level',
-    onDoneFunction: CallFunction(id: newId()),
   );
   projectContext.project.dialogueLevels.add(level);
   projectContext.save();

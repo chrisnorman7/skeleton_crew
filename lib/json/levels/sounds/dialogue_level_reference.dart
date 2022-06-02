@@ -4,7 +4,6 @@ import 'package:ziggurat/levels.dart';
 import '../../../src/generated_code.dart';
 import '../../../src/project_context.dart';
 import '../../message_reference.dart';
-import '../functions/call_function.dart';
 import '../functions/function_reference.dart';
 import '../level_command_reference.dart';
 import '../level_reference.dart';
@@ -20,7 +19,6 @@ class DialogueLevelReference extends LevelReference {
   DialogueLevelReference({
     required super.id,
     required super.title,
-    required this.onDoneFunction,
     super.className = 'CustomDialogueLevelBase',
     super.ambiances,
     super.commands,
@@ -37,8 +35,8 @@ class DialogueLevelReference extends LevelReference {
   /// The messages for this level.
   final List<MessageReference> messages;
 
-  /// The function to call when [messages] have been exhausted.
-  final CallFunction onDoneFunction;
+  /// The message to show when calling the `onDone` function.
+  MessageReference? onDoneMessage;
 
   /// Convert an instance to JSON.
   @override
@@ -47,13 +45,18 @@ class DialogueLevelReference extends LevelReference {
   /// Generate code for this instance.
   @override
   GeneratedCode getCode(final ProjectContext projectContext) {
-    final imports = <String>{'package:ziggurat/levels.dart'};
+    final imports = <String>{
+      'package:ziggurat/levels.dart',
+      'package:ziggurat/ziggurat.dart'
+    };
     final stringBuffer = StringBuffer()
       ..writeln('/// $comment')
       ..writeln('abstract class $className extends DialogueLevel {')
       ..writeln('/// Create an instance.')
-      ..writeln('$className({required super.game,}) : super(')
-      ..writeln('messages = [');
+      ..writeln('$className({required super.game,')
+      ..writeln('required final TaskFunction onDone,')
+      ..writeln('}) : super(')
+      ..writeln('messages: [');
     for (final messageReference in messages) {
       final code = messageReference.getCode(
         projectContext: projectContext,
@@ -62,16 +65,36 @@ class DialogueLevelReference extends LevelReference {
       imports.addAll(code.imports);
       stringBuffer
         ..write('const ')
-        ..writeln(code.code);
+        ..write(code.code)
+        ..writeln(',');
     }
     stringBuffer
       ..writeln('],')
       ..write('onDone: ');
-    final code = onDoneFunction.getCode(projectContext, this);
-    imports.addAll(code.imports);
-    stringBuffer
-      ..writeln(code.code)
-      ..writeln(');');
+    final message = onDoneMessage;
+    if (message == null) {
+      stringBuffer.write('onDone');
+    } else {
+      stringBuffer.writeln('() {');
+      final code = message.getCode(
+        projectContext: projectContext,
+        keepAlive: false,
+      );
+      imports.addAll(code.imports);
+      stringBuffer
+        ..writeln('game.outputMessage(')
+        ..writeln('const ${code.code},')
+        ..writeln(');')
+        ..writeln('onDone();')
+        ..write('}');
+    }
+    stringBuffer.writeln(',');
+    final code = getMusicAmbianceCode(projectContext);
+    if (code != null) {
+      imports.addAll(code.imports);
+      stringBuffer.writeln(code.code);
+    }
+    stringBuffer.writeln(');');
     for (final function in functions) {
       stringBuffer.writeln(function.header);
     }

@@ -36,7 +36,7 @@ class AmbianceReference {
 
   /// Output code for this instance.
   GeneratedCode getCode(final ProjectContext projectContext) {
-    final imports = <String>{'dart:math'};
+    final imports = <String>{};
     final project = projectContext.project;
     final assetStore = project.getAssetStore(sound.assetStoreId);
     imports.add(assetStore.getDartFile());
@@ -49,6 +49,7 @@ class AmbianceReference {
       ..writeln('sound: ${pretendAssetReference.variableName},')
       ..writeln('gain: ${sound.gain},');
     if (soundCoordinates != null) {
+      imports.add('dart:math');
       stringBuffer.writeln(
         'position: Point(${soundCoordinates.x}, ${soundCoordinates.y}),',
       );

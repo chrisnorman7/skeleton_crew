@@ -9,12 +9,10 @@ import '../../../util.dart';
 import '../../../widgets/cancel.dart';
 import '../../../widgets/center_text.dart';
 import '../../../widgets/functions/functions_tabbed_scaffold_tab.dart';
-import '../../../widgets/level_commands/call_function_list_tile.dart';
 import '../../../widgets/level_commands/level_commands_tabbed_scaffold_tab.dart';
+import '../../../widgets/message_reference_list_tile.dart';
 import '../../../widgets/project_context_state.dart';
-import '../../../widgets/push_widget_list_tile.dart';
 import '../../../widgets/sounds/ambiances/ambiances_tabbed_scaffold_tab.dart';
-import '../../../widgets/sounds/play_sound_semantics.dart';
 import '../../../widgets/tabbed_scaffold.dart';
 import '../../edit_message_reference.dart';
 import '../levels/edit_level_reference.dart';
@@ -81,14 +79,15 @@ class EditDialogueLevelReferenceState
                   levels: projectContext.project.dialogueLevels,
                   onSave: () => setState(() {}),
                 ),
-                CallFunctionListTile(
+                MessageReferenceListTile(
                   projectContext: projectContext,
-                  levelReference: level,
-                  value: level.onDoneFunction,
+                  value: level.onDoneMessage,
                   onChanged: (final value) {
+                    level.onDoneMessage = value;
                     save();
                   },
-                  title: 'On Done Function',
+                  nullable: true,
+                  title: 'Finished Message',
                 )
               ],
             ),
@@ -106,13 +105,6 @@ class EditDialogueLevelReferenceState
                 child = ListView.builder(
                   itemBuilder: (final context, final index) {
                     final message = messages[index];
-                    final sound = message.soundReference;
-                    final assetReference = sound == null
-                        ? null
-                        : projectContext.project
-                            .getPretendAssetReference(sound)
-                            .assetReferenceReference
-                            .reference;
                     return CallbackShortcuts(
                       bindings: {
                         deleteShortcut: () => deleteMessageReference(
@@ -129,17 +121,12 @@ class EditDialogueLevelReferenceState
                         moveUpShortcut: () =>
                             moveMessageReference(index, index - 1)
                       },
-                      child: PlaySoundSemantics(
-                        child: PushWidgetListTile(
-                          title: '${message.text}',
-                          builder: (final context) => EditMessageReference(
-                            projectContext: projectContext,
-                            messageReference: message,
-                          ),
-                        ),
-                        game: projectContext.game,
-                        assetReference: assetReference,
-                        gain: sound?.gain ?? 1.0,
+                      child: MessageReferenceListTile(
+                        projectContext: projectContext,
+                        value: message,
+                        onChanged: (final value) => save,
+                        autofocus: index == 0,
+                        title: 'Message ${index + 1}',
                       ),
                     );
                   },

@@ -11,8 +11,6 @@ DialogueLevelReference _$DialogueLevelReferenceFromJson(
     DialogueLevelReference(
       id: json['id'] as String,
       title: json['title'] as String,
-      onDoneFunction:
-          CallFunction.fromJson(json['onDoneFunction'] as Map<String, dynamic>),
       className: json['className'] as String? ?? 'CustomDialogueLevelBase',
       ambiances: (json['ambiances'] as List<dynamic>?)
           ?.map((e) => AmbianceReference.fromJson(e as Map<String, dynamic>))
@@ -32,7 +30,10 @@ DialogueLevelReference _$DialogueLevelReferenceFromJson(
       messages: (json['messages'] as List<dynamic>?)
           ?.map((e) => MessageReference.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
+    )..onDoneMessage = json['onDoneMessage'] == null
+        ? null
+        : MessageReference.fromJson(
+            json['onDoneMessage'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$DialogueLevelReferenceToJson(
         DialogueLevelReference instance) =>
@@ -46,5 +47,5 @@ Map<String, dynamic> _$DialogueLevelReferenceToJson(
       'commands': instance.commands,
       'functions': instance.functions,
       'messages': instance.messages,
-      'onDoneFunction': instance.onDoneFunction,
+      'onDoneMessage': instance.onDoneMessage,
     };
