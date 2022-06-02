@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:ziggurat/ziggurat.dart';
 
@@ -103,14 +102,18 @@ class ProjectContext {
       ..writeln(generatedCode.getImports())
       ..writeln(generatedCode.code);
     setClipboardText(codeBuffer.toString());
-    final code = dartFormatter.format(codeBuffer.toString());
-    File(
+    final file = File(
       path.join(
         directory.path,
         project.outputDirectory,
         dialogueLevelsFile,
       ),
-    ).writeAsStringSync(code);
+    );
+    final code = dartFormatter.format(
+      codeBuffer.toString(),
+      uri: file.path,
+    );
+    file.writeAsStringSync(code);
   }
 
   /// Write tile map levels.
@@ -133,14 +136,18 @@ class ProjectContext {
       ..writeln('/// Tile map levels.')
       ..writeln(generatedCode.getImports())
       ..writeln(generatedCode.code);
-    final code = dartFormatter.format(codeStringBuffer.toString());
-    File(
+    final file = File(
       path.join(
         directory.path,
         project.outputDirectory,
         tileMapLevelsFile,
       ),
-    ).writeAsStringSync(code);
+    );
+    final code = dartFormatter.format(
+      codeStringBuffer.toString(),
+      uri: file.path,
+    );
+    file.writeAsStringSync(code);
   }
 
   /// Write tile maps.
@@ -165,12 +172,14 @@ class ProjectContext {
       ..writeln('/// Tile maps.')
       ..writeln(generatedCode.getImports())
       ..writeln(generatedCode.code);
+    final file = File(
+      path.join(directory.path, project.outputDirectory, tileMapsFilename),
+    );
     final code = dartFormatter.format(
       codeBuffer.toString(),
+      uri: file.path,
     );
-    File(
-      path.join(directory.path, project.outputDirectory, tileMapsFilename),
-    ).writeAsString(code);
+    file.writeAsString(code);
   }
 
   /// Write the flags.
@@ -195,10 +204,17 @@ class ProjectContext {
     final generatedCode =
         GeneratedCode(code: stringBuffer.toString(), imports: imports);
     final file = File(
-      path.join(directory.path, project.outputDirectory, flagsFilename),
+      path.join(
+        directory.path,
+        project.outputDirectory,
+        flagsFilename,
+      ),
     );
     final sortedImports = generatedCode.getImports();
-    final code = dartFormatter.format('$sortedImports\n${generatedCode.code}');
+    final code = dartFormatter.format(
+      '$sortedImports\n${generatedCode.code}',
+      uri: file.path,
+    );
     file.writeAsStringSync(code);
   }
 
@@ -255,7 +271,10 @@ class ProjectContext {
     final file = File(
       path.join(directory.path, project.outputDirectory, gameFilename),
     );
-    final code = dartFormatter.format(codeBuffer.toString());
+    final code = dartFormatter.format(
+      codeBuffer.toString(),
+      uri: file.path,
+    );
     file.writeAsStringSync(code);
   }
 
@@ -281,13 +300,18 @@ class ProjectContext {
       ..writeln('/// Levels.')
       ..writeln(generatedCode.getImports())
       ..write(generatedCode.code);
-    final levelPath = path.join(project.outputDirectory, levelFilename);
-    Clipboard.setData(ClipboardData(text: codeBuffer.toString()));
+    final file = File(
+      path.join(
+        directory.path,
+        project.outputDirectory,
+        levelFilename,
+      ),
+    );
     final code = dartFormatter.format(
       codeBuffer.toString(),
-      uri: levelPath,
+      uri: file.path,
     );
-    File(levelPath).writeAsStringSync(code);
+    file.writeAsStringSync(code);
   }
 
   /// Write all menus.
@@ -312,12 +336,18 @@ class ProjectContext {
       ..writeln('/// Menus.')
       ..writeln(generatedCode.getImports())
       ..write(generatedCode.code);
-    final menuPath = path.join(project.outputDirectory, menuFilename);
+    final file = File(
+      path.join(
+        directory.path,
+        project.outputDirectory,
+        menuFilename,
+      ),
+    );
     final code = dartFormatter.format(
       codeBuffer.toString(),
-      uri: menuPath,
+      uri: file.path,
     );
-    File(menuPath).writeAsStringSync(code);
+    file.writeAsStringSync(code);
   }
 
   /// Write the given [assetStoreReference].
@@ -328,25 +358,35 @@ class ProjectContext {
       ..writeln('/// ${assetStoreReference.comment}')
       ..writeln(storeCode.getImports())
       ..writeln(storeCode.code);
-    final code = dartFormatter.format(stringBuffer.toString());
-    File(
+    final file = File(
       path.join(
+        directory.path,
         project.outputDirectory,
         assetStoresDirectory,
         assetStoreReference.dartFilename,
       ),
-    ).writeAsStringSync(code);
+    );
+    final code = dartFormatter.format(
+      stringBuffer.toString(),
+      uri: file.path,
+    );
+    file.writeAsStringSync(code);
   }
 
   /// Write asset stores.
   void writeAssetStores() {
-    final directory = Directory(
-      path.join(project.outputDirectory, assetStoresDirectory),
+    final assetStores = project.assetStores;
+    final storesDirectory = Directory(
+      path.join(
+        directory.path,
+        project.outputDirectory,
+        assetStoresDirectory,
+      ),
     );
-    if (!directory.existsSync()) {
-      directory.createSync(recursive: true);
+    if (!storesDirectory.existsSync() && assetStores.isNotEmpty) {
+      storesDirectory.createSync(recursive: true);
     }
-    project.assetStores.forEach(writeAssetStore);
+    assetStores.forEach(writeAssetStore);
   }
 
   /// Write command triggers.
@@ -366,16 +406,18 @@ class ProjectContext {
       code: stringBuffer.toString(),
       imports: imports,
     );
-    final code = dartFormatter.format(
-      '$generatedHeader\n/// Command triggers.\n${generatedCode.getImports()}\n${generatedCode.code}',
-    );
-    File(
+    final file = File(
       path.join(
-        file.parent.path,
+        directory.path,
         project.outputDirectory,
         commandTriggersFilename,
       ),
-    ).writeAsStringSync(code);
+    );
+    final code = dartFormatter.format(
+      '$generatedHeader\n/// Command triggers.\n${generatedCode.getImports()}\n${generatedCode.code}',
+      uri: file.path,
+    );
+    file.writeAsStringSync(code);
   }
 
   /// Build the dart for [project].
