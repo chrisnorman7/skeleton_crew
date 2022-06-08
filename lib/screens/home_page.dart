@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dart_sdl/dart_sdl.dart';
 import 'package:dart_synthizer/dart_synthizer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final Sdl _sdl;
   late final Synthizer _synthizer;
   late final Context _audioContext;
   late final Game _game;
@@ -42,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _sdl = Sdl();
     _synthizer = Synthizer();
     String? libsndfilePath;
     if (Platform.isLinux) {
@@ -56,7 +59,10 @@ class _HomePageState extends State<HomePage> {
     }
     _synthizer.initialize(libsndfilePath: libsndfilePath);
     _audioContext = _synthizer.createContext();
-    _game = Game('Skeleton Crew');
+    _game = Game(
+      title: 'Skeleton Crew',
+      sdl: _sdl,
+    );
     _projectSoundManager = ProjectSoundManager(
       game: _game,
       context: _audioContext,

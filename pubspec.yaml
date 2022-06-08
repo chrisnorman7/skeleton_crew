@@ -9,7 +9,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   dart_sdl: ^0.10.0
   dart_style: ^2.2.3
   dart_synthizer: ^0.10.0
@@ -20,11 +20,11 @@ dependencies:
   json_annotation: ^4.5.0
   meta: ^1.8.0
   path: ^1.8.1
-  path_provider: ^2.0.10
+  path_provider: ^2.0.11
   shared_preferences: ^2.0.15
   short_uuids: ^2.0.0
-  ziggurat: ^0.47.0
-  ziggurat_sounds: ^0.27.0
+  ziggurat: ^0.48.0
+  ziggurat_sounds: ^0.28.1
 
 dev_dependencies:
   analyzer: ^4.1.0
