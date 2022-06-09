@@ -49,7 +49,6 @@ class Project {
     final AssetStores? assetStores,
     this.orgName = 'com.example',
     this.appName = 'untitled_game',
-    this.version = '0.0.0',
     this.outputDirectory = 'lib/generated',
     final Menus? menus,
     final Levels? levels,
@@ -80,9 +79,6 @@ class Project {
 
   /// The app name.
   String appName;
-
-  /// The version string for the game.
-  String version;
 
   /// The output directory for files.
   String outputDirectory;

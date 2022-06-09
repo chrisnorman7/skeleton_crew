@@ -19,7 +19,6 @@ Project _$ProjectFromJson(Map<String, dynamic> json) => Project(
           .toList(),
       orgName: json['orgName'] as String? ?? 'com.example',
       appName: json['appName'] as String? ?? 'untitled_game',
-      version: json['version'] as String? ?? '0.0.0',
       outputDirectory: json['outputDirectory'] as String? ?? 'lib/generated',
       menus: (json['menus'] as List<dynamic>?)
           ?.map((e) => MenuReference.fromJson(e as Map<String, dynamic>))
@@ -47,7 +46,6 @@ Map<String, dynamic> _$ProjectToJson(Project instance) => <String, dynamic>{
       'title': instance.title,
       'orgName': instance.orgName,
       'appName': instance.appName,
-      'version': instance.version,
       'outputDirectory': instance.outputDirectory,
       'gameClassName': instance.gameClassName,
       'gameClassComment': instance.gameClassComment,

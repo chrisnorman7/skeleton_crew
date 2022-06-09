@@ -50,15 +50,6 @@ class ProjectSettingsTabState extends ProjectContextState<ProjectSettingsTab> {
           ),
         ),
         TextListTile(
-          value: project.version,
-          onChanged: (final value) {
-            project.version = value;
-            save();
-          },
-          header: 'Project Version',
-          labelText: 'Version',
-        ),
-        TextListTile(
           value: project.orgName,
           onChanged: (final value) {
             project.orgName = value;

@@ -21,9 +21,10 @@ dependencies:
   meta: ^1.8.0
   path: ^1.8.1
   path_provider: ^2.0.11
+  pubspec_parse: ^1.2.0
   shared_preferences: ^2.0.15
   short_uuids: ^2.0.0
-  ziggurat: ^0.48.0
+  ziggurat: ^0.48.2
   ziggurat_sounds: ^0.28.1
 
 dev_dependencies:
