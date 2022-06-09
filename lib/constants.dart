@@ -97,3 +97,8 @@ const tileMapLevelsFile = 'tile_map_levels.dart';
 ///
 /// This file will be located under the output directory.
 const dialogueLevelsFile = 'dialogue_levels.dart';
+
+/// The file where the version string will be saved.
+///
+/// This file will be located under the output directory.
+const versionFile = 'project_version.dart';
