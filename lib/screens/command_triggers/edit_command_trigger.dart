@@ -141,7 +141,7 @@ class EditCommandTriggerState extends ProjectContextState<EditCommandTrigger> {
                   keyboardKey: commandTrigger.keyboardKey,
                 ),
                 getSearchString: (final value) =>
-                    value == null ? '' : value.name,
+                    value == null ? 'clear' : value.name,
                 getWidget: (final value) =>
                     value == null ? const Text('Clear') : Text(value.name),
                 title: 'Select Game Controller Button',
