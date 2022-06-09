@@ -85,6 +85,7 @@ class EditMenuItemReferenceState
                 message.soundReference = value;
                 save();
               },
+              title: 'Focus Sound',
             ),
             CallFunctionListTile(
               projectContext: widget.projectContext,

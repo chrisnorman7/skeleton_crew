@@ -99,6 +99,13 @@ class EditCallFunctionState extends ProjectContextState<EditCallFunction> {
                     ),
                   );
                   setState(() {});
+                },
+                deleteShortcut: () {
+                  if (function == null) {
+                    return;
+                  }
+                  widget.value.functionId = null;
+                  save();
                 }
               },
               child: PushWidgetListTile(
