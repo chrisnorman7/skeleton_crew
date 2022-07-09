@@ -64,7 +64,6 @@ class CallFunction {
         ..writeln('game.outputMessage(')
         ..writeln('const Message(');
       if (sound != null) {
-        stringBuffer.writeln('keepAlive: true,');
         final code = sound.getCode(projectContext);
         imports.addAll(code.imports);
         final gain = sound.gain;
