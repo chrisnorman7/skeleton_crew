@@ -46,7 +46,7 @@ class PlaySoundSemantics extends StatefulWidget {
 
 /// State for [PlaySoundSemantics].
 class PlaySoundSemanticsState extends State<PlaySoundSemantics> {
-  PlaySound? _playSound;
+  Sound? _playSound;
   SoundChannel? _soundChannel;
 
   /// Build a widget.
@@ -74,7 +74,7 @@ class PlaySoundSemanticsState extends State<PlaySoundSemantics> {
       );
       _soundChannel = soundChannel;
       _playSound = soundChannel.playSound(
-        assetReference,
+        assetReference: assetReference,
         gain: widget.gain,
         keepAlive: true,
         looping: widget.looping,

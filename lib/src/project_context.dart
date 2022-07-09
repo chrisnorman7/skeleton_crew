@@ -256,7 +256,10 @@ class ProjectContext {
       ..writeln('/// ${project.gameClassComment}')
       ..writeln('abstract class $className extends Game {')
       ..writeln('/// Create an instance.')
-      ..writeln('$className({required super.sdl,}): super(')
+      ..writeln(
+        '$className({required super.sdl, required super.soundBackend,})',
+      )
+      ..writeln(': super(')
       ..writeln('title: ${getQuotedString(project.title)},')
       ..writeln('orgName: ${getQuotedString(project.orgName)},')
       ..writeln('appName: ${getQuotedString(project.appName)},')

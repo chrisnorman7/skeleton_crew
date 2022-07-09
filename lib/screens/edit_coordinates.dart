@@ -48,7 +48,7 @@ class EditCoordinates extends StatefulWidget {
 /// State for [EditCoordinates].
 class EditCoordinatesState extends State<EditCoordinates> {
   SoundChannel? _soundChannel;
-  PlaySound? _sound;
+  Sound? _sound;
 
   /// Build a widget.
   @override
@@ -121,7 +121,10 @@ class EditCoordinatesState extends State<EditCoordinates> {
         soundChannel.position = position;
       }
       _sound?.destroy();
-      _sound = soundChannel.playSound(assetReference, keepAlive: true);
+      _sound = soundChannel.playSound(
+        assetReference: assetReference,
+        keepAlive: true,
+      );
     }
   }
 

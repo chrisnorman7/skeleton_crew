@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
+import 'package:ziggurat/ziggurat.dart';
 
 import '../../constants.dart';
 import '../../src/generated_code.dart';

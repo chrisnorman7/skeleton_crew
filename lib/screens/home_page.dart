@@ -8,12 +8,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:ziggurat/sound.dart';
 import 'package:ziggurat/ziggurat.dart';
-import 'package:ziggurat_sounds/ziggurat_sounds.dart';
 
 import '../json/app_preferences.dart';
 import '../json/project.dart';
-import '../project_sound_manager.dart';
+import '../project_buffer_cache.dart';
 import '../shortcuts.dart';
 import '../src/project_context.dart';
 import '../util.dart';
@@ -33,10 +33,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final Sdl _sdl;
-  late final Synthizer _synthizer;
-  late final Context _audioContext;
+  late final ProjectBufferCache _bufferCache;
+  late final SynthizerSoundBackend _soundBackend;
   late final Game _game;
-  late final ProjectSoundManager _projectSoundManager;
   AppPreferences? _appPreferences;
   Directory? _documentsDirectory;
 
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _sdl = Sdl();
-    _synthizer = Synthizer();
+    final synthizer = Synthizer();
     String? libsndfilePath;
     if (Platform.isLinux) {
       libsndfilePath = './libsndfile.so';
@@ -57,33 +56,21 @@ class _HomePageState extends State<HomePage> {
     if (libsndfilePath == null || File(libsndfilePath).existsSync() == false) {
       libsndfilePath = null;
     }
-    _synthizer.initialize(libsndfilePath: libsndfilePath);
-    _audioContext = _synthizer.createContext();
+    synthizer.initialize(libsndfilePath: libsndfilePath);
+    final context = synthizer.createContext();
+    _bufferCache = ProjectBufferCache(
+      synthizer: synthizer,
+      random: Random(),
+      soundsDirectory: '.',
+    );
+    _soundBackend = SynthizerSoundBackend(
+      context: context,
+      bufferCache: _bufferCache,
+    );
     _game = Game(
       title: 'Skeleton Crew',
       sdl: _sdl,
-    );
-    _projectSoundManager = ProjectSoundManager(
-      game: _game,
-      context: _audioContext,
-      soundsDirectory: '.',
-      bufferCache: BufferCache(
-        synthizer: _synthizer,
-        maxSize: pow(1024, 3).floor(),
-        random: _game.random,
-      ),
-    );
-    _game.sounds.listen(
-      (final event) {
-        print(event);
-        _projectSoundManager.handleEvent(event);
-      },
-      onDone: () => print('Sound manager shut down.'),
-      onError: (final dynamic e, final dynamic s) {
-        print('*** SOUND ERROR ***');
-        print(e);
-        print(s);
-      },
+      soundBackend: _soundBackend,
     );
   }
 
@@ -148,7 +135,7 @@ class _HomePageState extends State<HomePage> {
           file: File(filename),
           game: _game,
         );
-        _projectSoundManager.soundsDirectory = projectContext.directory.path;
+        _bufferCache.soundsDirectory = projectContext.directory.path;
         return ProjectContextScreen(
           projectContext: projectContext,
           onClose: () => setState(
@@ -183,7 +170,7 @@ class _HomePageState extends State<HomePage> {
       appName: path.basename(file.parent.path),
     );
     await AppPreferences(lastLoadedFilename: result).save();
-    _projectSoundManager.soundsDirectory = file.parent.path;
+    _bufferCache.soundsDirectory = file.parent.path;
     final projectContext = ProjectContext(
       project: project,
       file: file,
@@ -224,7 +211,7 @@ class _HomePageState extends State<HomePage> {
         message: 'File does not exist: $path.',
       );
     }
-    _projectSoundManager.soundsDirectory = file.parent.path;
+    _bufferCache.soundsDirectory = file.parent.path;
     final projectContext = ProjectContext.fromFile(
       file: file,
       game: _game,
@@ -242,7 +229,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    _audioContext.destroy();
-    _synthizer.shutdown();
+    _soundBackend.shutdown();
+    _bufferCache.destroy();
   }
 }

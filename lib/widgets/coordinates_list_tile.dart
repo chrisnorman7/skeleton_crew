@@ -54,7 +54,7 @@ class CoordinatesListTile extends StatefulWidget {
 
 class _CoordinatesListTileState extends State<CoordinatesListTile> {
   SoundChannel? _soundChannel;
-  PlaySound? _playSound;
+  Sound? _playSound;
 
   /// Build the widget.
   @override
@@ -89,7 +89,10 @@ class _CoordinatesListTileState extends State<CoordinatesListTile> {
             soundChannel.position = position;
           }
           _playSound?.destroy();
-          _playSound = soundChannel.playSound(sound, keepAlive: true);
+          _playSound = soundChannel.playSound(
+            assetReference: sound,
+            keepAlive: true,
+          );
         }
       },
       onDidLoseAccessibilityFocus: () {
