@@ -1,5 +1,5 @@
 name: skeleton_crew
-description: A new Flutter project.
+description: Code generation for [Ziggurat](https://pub.dev/packages/ziggurat).
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
@@ -12,8 +12,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   dart_sdl: ^0.10.0
   dart_style: ^2.2.3
-  dart_synthizer: ^0.11.0
-  file_picker: ^4.6.1
+  dart_synthizer: ^0.11.1
+  file_picker: ^5.0.0
   filesize: ^2.0.1
   flutter:
     sdk: flutter
@@ -24,11 +24,11 @@ dependencies:
   pubspec_parse: ^1.2.0
   shared_preferences: ^2.0.15
   short_uuids: ^2.0.0
-  ziggurat: ^0.50.0
+  ziggurat: ^0.50.2
 
 dev_dependencies:
-  analyzer: ^4.2.0
-  build_runner: ^2.1.11
+  analyzer: ^4.3.1
+  build_runner: ^2.2.0
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
