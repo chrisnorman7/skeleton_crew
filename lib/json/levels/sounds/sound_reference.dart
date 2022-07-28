@@ -38,7 +38,6 @@ class SoundReference {
     return GeneratedCode(
       code: pretendAssetReference.variableName,
       imports: {
-        'package:ziggurat/sound.dart',
         projectContext.project.getAssetStore(assetStoreId).getDartFile()
       },
     );

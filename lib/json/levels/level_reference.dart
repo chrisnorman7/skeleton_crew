@@ -124,7 +124,6 @@ class LevelReference {
   GeneratedCode getCode(final ProjectContext projectContext) {
     final imports = <String>{
       'package:ziggurat/levels.dart',
-      'package:ziggurat/sound.dart',
     };
     final stringBuffer = StringBuffer()
       ..writeln('/// $comment')
