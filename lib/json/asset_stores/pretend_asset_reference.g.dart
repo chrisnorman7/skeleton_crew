@@ -27,7 +27,7 @@ Map<String, dynamic> _$PretendAssetReferenceToJson(
       'variableName': instance.variableName,
       'comment': instance.comment,
       'name': instance.name,
-      'assetType': _$AssetTypeEnumMap[instance.assetType],
+      'assetType': _$AssetTypeEnumMap[instance.assetType]!,
       'encryptionKey': instance.encryptionKey,
       'isAudio': instance.isAudio,
     };
