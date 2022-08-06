@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../screens/levels/dialogue_levels/dialogue_level_references_list.dart';
 import '../../screens/levels/levels/level_references_list.dart';
 import '../../screens/levels/menus/menu_references_list.dart';
 import '../../screens/levels/tile_maps/tile_map_levels/tile_map_level_references_list.dart';
+import '../../shortcuts.dart';
 import '../../src/project_context.dart';
+import '../../util.dart';
+import '../keyboard_shortcuts_list.dart';
 import '../push_widget_list_tile.dart';
 
 /// A tab to show level types.
@@ -31,41 +35,115 @@ class LevelsTabState extends State<LevelsTab> {
     final project = widget.projectContext.project;
     final menus = project.menus;
     final levels = project.levels;
-    return ListView(
-      children: [
-        PushWidgetListTile(
-          title: 'Levels',
-          builder: (final context) =>
-              LevelReferencesList(projectContext: widget.projectContext),
-          autofocus: true,
-          onSetState: () => setState(() {}),
-          subtitle: '${levels.length}',
+    final levelsListTile = PushWidgetListTile(
+      title: 'Levels',
+      builder: (final context) =>
+          LevelReferencesList(projectContext: widget.projectContext),
+      autofocus: true,
+      onSetState: () => setState(() {}),
+      subtitle: '${levels.length}',
+    );
+    final tileMapLevelsListTile = PushWidgetListTile(
+      title: 'Tile Map Levels',
+      builder: (final context) => TileMapLevelReferencesList(
+        projectContext: widget.projectContext,
+      ),
+      onSetState: () => setState(() {}),
+      subtitle: '${project.tileMapLevels.length}',
+    );
+    final dialogueLevelsListTile = PushWidgetListTile(
+      title: 'Dialogue Levels',
+      builder: (final context) => DialogueLevelReferencesList(
+        projectContext: widget.projectContext,
+      ),
+      onSetState: () => setState(() {}),
+      subtitle: '${project.dialogueLevels.length}',
+    );
+    final menusListTile = PushWidgetListTile(
+      title: 'Menus',
+      builder: (final context) => MenuReferencesList(
+        projectContext: widget.projectContext,
+      ),
+      onSetState: () => setState(() {}),
+      subtitle: '${menus.length}',
+    );
+    return WithKeyboardShortcuts(
+      keyboardShortcuts: const [
+        KeyboardShortcut(
+          description: 'Edit levels.',
+          keyName: 'L',
+          control: true,
         ),
-        PushWidgetListTile(
-          title: 'Tile Map Levels',
-          builder: (final context) => TileMapLevelReferencesList(
-            projectContext: widget.projectContext,
-          ),
-          onSetState: () => setState(() {}),
-          subtitle: '${project.tileMapLevels.length}',
+        KeyboardShortcut(
+          description: 'Edit tile map levels.',
+          keyName: 'T',
+          control: true,
         ),
-        PushWidgetListTile(
-          title: 'Dialogue Levels',
-          builder: (final context) => DialogueLevelReferencesList(
-            projectContext: widget.projectContext,
-          ),
-          onSetState: () => setState(() {}),
-          subtitle: '${project.dialogueLevels.length}',
+        KeyboardShortcut(
+          description: 'Edit dialogue levels.',
+          keyName: 'D',
+          control: true,
         ),
-        PushWidgetListTile(
-          title: 'Menus',
-          builder: (final context) => MenuReferencesList(
-            projectContext: widget.projectContext,
-          ),
-          onSetState: () => setState(() {}),
-          subtitle: '${menus.length}',
+        KeyboardShortcut(
+          description: 'Edit menus.',
+          keyName: 'M',
+          control: true,
         )
       ],
+      child: CallbackShortcuts(
+        bindings: {
+          SingleActivator(
+            LogicalKeyboardKey.keyL,
+            control: !macOs,
+            meta: macOs,
+          ): () => pushBuilder(
+                context: context,
+                builder: levelsListTile.builder,
+              ),
+          SingleActivator(
+            LogicalKeyboardKey.keyT,
+            control: !macOs,
+            meta: macOs,
+          ): () => pushBuilder(
+                context: context,
+                builder: tileMapLevelsListTile.builder,
+              ),
+          SingleActivator(
+            LogicalKeyboardKey.keyD,
+            control: !macOs,
+            meta: macOs,
+          ): () => pushBuilder(
+                context: context,
+                builder: dialogueLevelsListTile.builder,
+              ),
+          SingleActivator(
+            LogicalKeyboardKey.keyM,
+            control: !macOs,
+            meta: macOs,
+          ): () =>
+              pushBuilder(context: context, builder: menusListTile.builder),
+        },
+        child: ListView(
+          children: [
+            levelsListTile,
+            tileMapLevelsListTile,
+            dialogueLevelsListTile,
+            menusListTile,
+          ],
+        ),
+      ),
     );
+  }
+
+  /// Push a widget with the given [builder].
+  Future<void> pushBuilder({
+    required final BuildContext context,
+    required final WidgetBuilder builder,
+  }) async {
+    await pushWidget(
+      context: context,
+      builder: builder,
+    );
+    setState(() {});
   }
 }
