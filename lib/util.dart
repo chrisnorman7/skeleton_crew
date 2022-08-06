@@ -141,3 +141,18 @@ String getQuotedString(final String string) {
   final result = string.replaceAll('"', '"');
   return "'$result'";
 }
+
+/// A mixin to add a [pushBuilder] method.
+mixin PushBuilderMixin<T extends StatefulWidget> on State<T> {
+  /// Push a widget with the given [builder].
+  Future<void> pushBuilder({
+    required final BuildContext context,
+    required final WidgetBuilder builder,
+  }) async {
+    await pushWidget(
+      context: context,
+      builder: builder,
+    );
+    setState(() {});
+  }
+}

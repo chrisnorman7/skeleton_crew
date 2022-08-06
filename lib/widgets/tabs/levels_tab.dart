@@ -28,7 +28,7 @@ class LevelsTab extends StatefulWidget {
 }
 
 /// State for [LevelsTab].
-class LevelsTabState extends State<LevelsTab> {
+class LevelsTabState extends State<LevelsTab> with PushBuilderMixin {
   /// Build a widget.
   @override
   Widget build(final BuildContext context) {
@@ -133,17 +133,5 @@ class LevelsTabState extends State<LevelsTab> {
         ),
       ),
     );
-  }
-
-  /// Push a widget with the given [builder].
-  Future<void> pushBuilder({
-    required final BuildContext context,
-    required final WidgetBuilder builder,
-  }) async {
-    await pushWidget(
-      context: context,
-      builder: builder,
-    );
-    setState(() {});
   }
 }
